@@ -4,9 +4,7 @@
 #include "crea_tiff_3.h"
 #include "convol.h"
 
-typedef int bool;
-#define true 1
-#define false 0
+typedef enum { false, true } bool;
 
 /*
 Ce code a été initialement écrit pour une convolution (LK_2008), ce qui explique certains noms de vcariables comme 'psf'. 

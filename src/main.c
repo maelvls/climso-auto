@@ -53,7 +53,7 @@ const int marge_pic = 20;           // nb de pixels à prendre en compte autour 
 const double pas_interp = 1/8.0;    // le pas d'interpolation dans un pixel (précision de la position du pic).
 const double marge_interp = marge_pic/pas_interp; //nb total de pts qu'il y aura dans le tableau interpolé contenant le pic et sa marge
 
-const char *POINT_SLASH = "/Users/mael65/prog/correl_images/"; // remplacer par un moyen de trouver le directory local
+const char *POINT_SLASH = "/Users/mael65/prog/images-de-correlation/"; // remplacer par un moyen de trouver le directory local
 // ------------------------------
 
 int main (int argc, char * const argv[])

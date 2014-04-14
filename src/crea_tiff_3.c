@@ -147,7 +147,7 @@ void traitement_stream(int *buffer_int,int length)
 	{	if( (buffer_int[i]>=0) && (buffer_int[i] <=127) )
 		{	// nada
 		}
-		else if( (buffer_int[i]<0) && (buffer_int[i] >= -128) ) // XXX Hein ??
+		else if( (buffer_int[i]<0) && (buffer_int[i] >= -128) )
 		{	buffer_int[i] = buffer_int[i] + 256;
 		}
 		else
