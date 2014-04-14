@@ -3,6 +3,11 @@
 #include "fcts_LK3.h"
 #include "crea_tiff_3.h"
 #include "convol.h"
+
+typedef int bool;
+#define true 1
+#define false 0
+
 /*
 Ce code a été initialement écrit pour une convolution (LK_2008), ce qui explique certains noms de vcariables comme 'psf'. 
 Il est utilisé ici pour une corrélation, ce qui est équivalent à une convolution au signe des axes près.

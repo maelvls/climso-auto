@@ -508,10 +508,10 @@ void draw_doughnut (double **galette, int size_h, int size_v, int h_centre, int 
     double rc2 = rc * rc;
     double rd2 = rd * rd;
 
-    int h_min = int (h_centre - (freq_max + marge_ext));	// shrink bounds, for speed
-    int h_max = int (h_centre + (freq_max + marge_ext));
-    int v_min = int (v_centre - (freq_max + marge_ext));
-    int v_max = int (v_centre + (freq_max + marge_ext));
+    int h_min = (int) (h_centre - (freq_max + marge_ext));	// shrink bounds, for speed
+    int h_max = (int) (h_centre + (freq_max + marge_ext));
+    int v_min = (int) (v_centre - (freq_max + marge_ext));
+    int v_max = (int) (v_centre + (freq_max + marge_ext));
 
     if (h_min < 0) h_min=0; 	// securities. Sould be shorter syntax such as 'cap((i_min,i_max,j_min,j_max), domainshape)'
     if (h_max < 0) h_max=0;
@@ -539,7 +539,7 @@ void draw_doughnut (double **galette, int size_h, int size_v, int h_centre, int 
             else if (r2 < rc2)      galette[v][h] = 1.;
             else if (r2 < rd2)		// from 1 to 0, smoothly
             {
-                double dr = (sqrt(r2) - rc)  / float(marge_ext);
+                double dr = (sqrt(r2) - rc)  / (float)(marge_ext);
                 galette[v][h] = 0.5 * (1. + cos(PI * dr));
             }
             else galette[v][h] = 0.;

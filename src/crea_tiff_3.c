@@ -62,7 +62,11 @@
 	28/11/06: manquait une prise en compte du 16 bits dans le crea_tiff_4_ppc_complex
 		; ajout de l'option 5 pour la creation du .tiff complex
  
-  10/04/2014 suppression des complex
+    10/04/2014 (LK) suppression des complex
+    14/04/2014 (Mael) passage de la fonction C++ fread à la fonction C POSIX fread pour homogénéiser
+        l'ensemble du code en C. Les delete() sont aussi passés en free() et les new en malloc()
+ 
+ 
 		
 	*/
 
@@ -71,8 +75,6 @@
 #include <math.h>
 #include <string.h>
 #include <stdio.h>
-#include <fstream>
-using namespace std;
 
 #include "fcts_LK3.h"
 #include "crea_tiff_3.h"
@@ -145,7 +147,7 @@ void traitement_stream(int *buffer_int,int length)
 	{	if( (buffer_int[i]>=0) && (buffer_int[i] <=127) )
 		{	// nada
 		}
-		else if( (buffer_int[i]<0) && (buffer_int[i] >= -128) )
+		else if( (buffer_int[i]<0) && (buffer_int[i] >= -128) ) // XXX Hein ??
 		{	buffer_int[i] = buffer_int[i] + 256;
 		}
 		else
@@ -179,34 +181,23 @@ void return_dim_tiff(int *nbpts,char str[256])
 	int *adresse_258 = (int*) malloc(2*sizeof(int));
 	int nb_bits;
 	
-	// ---- securite: on verifie la presence du fichier
-	FILE *txt_test = NULL;
-	txt_test = fopen(str,"rb");
-	if(txt_test == NULL)
+    // NOTE Mael : j'ai modifié la lecture pour que ça respecte le standard C POSIX (et non c++)
+    FILE* fichier = fopen(str, "r+"); // On ouvre le fichier "binaire" en mode lecture
+    if(fichier == NULL) // Securite: on verifie la presence du fichier
 	{	printf("pb dans return_dim_tiff!!!!: fichier %s inexistant\n",str);
 		exit(1);
 	}
-	fclose(txt_test);
-	
-	ifstream is;
-	
-	is.open (str,ios::binary);		// open file
-	
-	// get length of the file
-	is.seekg(0,ios::end);
-	length = is.tellg();
-	is.seekg(0,ios::beg);
-	
-	// allocate memory
-	buffer = new char [length];
-	buffer_int = new int [length];
-	
-	// read data as block
-	is.read (buffer,length);
-	is.close();
-	
-	for(i=0;i<length;i++)
-	{	buffer_int[i] = (int)(buffer[i]);
+    fseek(fichier, 0, SEEK_END); // On positionne le curseur à la fin
+    length = (int)ftell(fichier); // On garde la position de fin, qui correspon à la longueur du fichier
+    rewind(fichier); // On positionne le curseur au début
+    buffer = malloc(length*sizeof(char));
+    fread(buffer, sizeof(char), length, fichier); // On lit l'ensemble
+    fclose(fichier);
+
+    buffer_int = malloc(length*sizeof(int)); // On crée un autre tableau d'int
+	for(i=0;i<length;i++) // On met les char dans le tableau d'int
+	{
+        buffer_int[i] = (int)(buffer[i]);
 	}
 	
 	traitement_stream(buffer_int,length);
@@ -337,8 +328,8 @@ void return_dim_tiff(int *nbpts,char str[256])
     free(adresse_256);
     free(adresse_257);
     free(adresse_258);
-	delete(buffer);
-	delete(buffer_int);
+	free(buffer);
+	free(buffer_int);
 }
 
 
@@ -393,36 +384,25 @@ void read_tiff_3(double **tableau_result,int nbpts_x,int nbpts_y,char str[256])
 	int nb_bits = -1;
 	int nb_bandes,temp_int;
 	
-	// ---- securite: on verifie la presence du fichier
-	FILE *txt_test = NULL;
-	txt_test = fopen(str,"rb");
-	if(txt_test == NULL)
-	{	printf("pb dans read_tiff!!!!: fichier %s inexistant\n",str);
+    // NOTE Mael : j'ai modifié la lecture pour que ça respecte le standard C POSIX (et non c++)
+    FILE* fichier = fopen(str, "r+"); // On ouvre le fichier "binaire" en mode lecture
+    if(fichier == NULL) // Securite: on verifie la presence du fichier
+	{	printf("pb dans return_dim_tiff!!!!: fichier %s inexistant\n",str);
 		exit(1);
 	}
-	fclose(txt_test);
-	
-	ifstream is;
-	
-	is.open (str,ios::binary);		// open file
-	
-	// get length of the file
-	is.seekg(0,ios::end);
-	length = is.tellg();
-	is.seekg(0,ios::beg);
-	
-	// allocate memory
-	buffer = new char [length];
-	buffer_int = new int [length];
-	
-	// read data as block
-	is.read (buffer,length);
-	is.close();
-	
-	for(i=0;i<length;i++)
-	{	buffer_int[i] = (int)(buffer[i]);
+    fseek(fichier, 0, SEEK_END); // On positionne le curseur à la fin
+    length = (int)ftell(fichier); // On garde la position de fin, qui correspon à la longueur du fichier
+    rewind(fichier); // On positionne le curseur au début
+    buffer = malloc(length*sizeof(char));
+    fread(buffer, sizeof(char), length, fichier); // On lit l'ensemble
+    fclose(fichier);
+    
+    buffer_int = malloc(length*sizeof(int)); // On crée un autre tableau d'int
+	for(i=0;i<length;i++) // On met les char dans le tableau d'int
+	{
+        buffer_int[i] = (int)(buffer[i]);
 	}
-	
+    
 	traitement_stream(buffer_int,length);
 	// en sortie on a toutes les valeurs du fichier en memoire, en entier, entre 0 et 255
 	
@@ -667,8 +647,8 @@ void read_tiff_3(double **tableau_result,int nbpts_x,int nbpts_y,char str[256])
 	}
 	
    	free(value_16);
-	delete(buffer);
-	delete(buffer_int);
+	free(buffer);
+	free(buffer_int);
 	//free(buffer);
     //free(buffer_int);
     free(adresse_273);
