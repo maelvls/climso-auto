@@ -7,12 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C026FA018FC053800635AF4 /* convol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9618FC053800635AF4 /* convol.c */; };
-		1C026FA118FC053800635AF4 /* crea_tiff_3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9818FC053800635AF4 /* crea_tiff_3.c */; };
-		1C026FA218FC053800635AF4 /* fcts_LK3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9A18FC053800635AF4 /* fcts_LK3.c */; };
-		1C026FA318FC053800635AF4 /* interpol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9C18FC053800635AF4 /* interpol.c */; };
-		1C026FA418FC053800635AF4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9E18FC053800635AF4 /* main.c */; };
 		1C026FA518FC053800635AF4 /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9F18FC053800635AF4 /* makefile */; };
+		1CD57EA418FC342200210E05 /* fcts_MV_en_C.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD57EA318FC342200210E05 /* fcts_MV_en_C.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -39,6 +35,10 @@
 		1C026F9E18FC053800635AF4 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = main.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		1C026F9F18FC053800635AF4 /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
 		1C2B15C918F81D760038A475 /* climso-auto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "climso-auto"; sourceTree = BUILT_PRODUCTS_DIR; };
+		1CD57EA118FC177600210E05 /* fcts_MV_en_C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fcts_MV_en_C.h; sourceTree = "<group>"; };
+		1CD57EA318FC342200210E05 /* fcts_MV_en_C.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fcts_MV_en_C.c; sourceTree = "<group>"; };
+		1CD57EA518FC346800210E05 /* date.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = date.cpp; sourceTree = "<group>"; };
+		1CD57EA618FC346800210E05 /* date.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = date.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,15 +56,19 @@
 			isa = PBXGroup;
 			children = (
 				1C026F9618FC053800635AF4 /* convol.c */,
-				1C026F9718FC053800635AF4 /* convol.h */,
 				1C026F9818FC053800635AF4 /* crea_tiff_3.c */,
-				1C026F9918FC053800635AF4 /* crea_tiff_3.h */,
 				1C026F9A18FC053800635AF4 /* fcts_LK3.c */,
-				1C026F9B18FC053800635AF4 /* fcts_LK3.h */,
 				1C026F9C18FC053800635AF4 /* interpol.c */,
-				1C026F9D18FC053800635AF4 /* interpol.h */,
 				1C026F9E18FC053800635AF4 /* main.c */,
+				1C026F9718FC053800635AF4 /* convol.h */,
+				1C026F9918FC053800635AF4 /* crea_tiff_3.h */,
+				1C026F9B18FC053800635AF4 /* fcts_LK3.h */,
+				1C026F9D18FC053800635AF4 /* interpol.h */,
 				1C026F9F18FC053800635AF4 /* makefile */,
+				1CD57EA318FC342200210E05 /* fcts_MV_en_C.c */,
+				1CD57EA118FC177600210E05 /* fcts_MV_en_C.h */,
+				1CD57EA518FC346800210E05 /* date.cpp */,
+				1CD57EA618FC346800210E05 /* date.h */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -136,12 +140,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C026FA018FC053800635AF4 /* convol.c in Sources */,
-				1C026FA118FC053800635AF4 /* crea_tiff_3.c in Sources */,
+				1CD57EA418FC342200210E05 /* fcts_MV_en_C.c in Sources */,
 				1C026FA518FC053800635AF4 /* makefile in Sources */,
-				1C026FA318FC053800635AF4 /* interpol.c in Sources */,
-				1C026FA418FC053800635AF4 /* main.c in Sources */,
-				1C026FA218FC053800635AF4 /* fcts_LK3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
