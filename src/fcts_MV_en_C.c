@@ -51,10 +51,10 @@ short differenceEntreJoursDuneAnnee(Date d1, Date d2) {
 double diametreSoleilRadian(int jour, int mois) {
     static double pi =   3.14159265359;
     static double diametreSoleil = 1.392E09;
-    static double a =    1.496010E11; // Demi grand-axe Terre
+    static double a =    1.496010E11; // Demi grand-axe Terre 
     static double e =    0.01671; // Excentricité Terre
     static double annee = 365.2564; // Année sidérale moyenne en jours
-    static Date dateRef; dateRef.jour=4; dateRef.mois=1;
+    static Date dateRef; dateRef.jour=4; dateRef.mois=1; // !!!
     
     Date date; date.jour=jour; date.mois=mois;
     short diffJours = differenceEntreJoursDuneAnnee(dateRef,date);
@@ -62,6 +62,7 @@ double diametreSoleilRadian(int jour, int mois) {
     double M = 2*pi*diffJours/annee; // Anomalie moyenne (orbite circulaire)
     double U1 = M+e*sin(M); // Anomalie excentrique U1
     double U2 = M+e*sin(U1); // Anomalie excentrique U2
+    printf("U2=%.10f",U2);
     double v = 2*atan(tan(U2/2)*sqrt((1+e)/1-e)); // Anomalie vraie
     double distanceTerreSoleil = a*(1-e*e) / (1+e*cos(v));
     // Sachant que l'angle alpha << 1, alpha approche tan(alpha). Ainsi :
