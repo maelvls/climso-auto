@@ -13,27 +13,27 @@ double it_pol_neville2D (
 	int gridX,			// taille de la zone prise pour interpolation en x
 	int gridY,			// taille de la zone prise pour interpolation en y
 	double **f,			// tableau source
-	double x1,			// coordonnée x du point pour lequel on veut une val interpolée
-	double y1);			// coordonnée y du point pour lequel on veut une val interpolée
+	double x1,			// coordonn√©e x du point pour lequel on veut une val interpol√©e
+	double y1);			// coordonn√©e y du point pour lequel on veut une val interpol√©e
 
 double it_pol_neville2D_s4 (
 	int n,				// taille du tableau source en x
 	int m,				// taille du tableau source en y
 	double **f,			// tableau source
-	double x1,			// coordonnée x du point pour lequel on veut une val interpolée
-	double y1);			// coordonnée y du point pour lequel on veut une val interpolée
+	double x1,			// coordonn√©e x du point pour lequel on veut une val interpol√©e
+	double y1);			// coordonn√©e y du point pour lequel on veut une val interpol√©e
 
 
 double it_pol_neville2D_s3 (
 	int n,				// taille du tableau source en x
 	int m,				// taille du tableau source en y
 	double **f,			// tableau source
-	double x1,			// coordonnée x du point pour lequel on veut une val interpolée
-	double y1);			// coordonnée y du point pour lequel on veut une val interpolée
+	double x1,			// coordonn√©e x du point pour lequel on veut une val interpol√©e
+	double y1);			// coordonn√©e y du point pour lequel on veut une val interpol√©e
 
 double it_pol_neville2D_s2 (
 	int n,				// taille du tableau source en x
 	int m,				// taille du tableau source en y
 	double **f,			// tableau source
-	double x1,			// coordonnée x du point pour lequel on veut une val interpolée
-	double y1);			// coordonnée y du point pour lequel on veut une val interpolée
+	double x1,			// coordonn√©e x du point pour lequel on veut une val interpol√©e
+	double y1);			// coordonn√©e y du point pour lequel on veut une val interpol√©e

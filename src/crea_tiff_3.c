@@ -63,8 +63,8 @@
 		; ajout de l'option 5 pour la creation du .tiff complex
  
     10/04/2014 (LK) suppression des complex
-    14/04/2014 (Mael) passage de la fonction C++ fread à la fonction C POSIX fread pour homogénéiser
-        l'ensemble du code en C. Les delete() sont aussi passés en free() et les new en malloc()
+    14/04/2014 (Mael) passage de la fonction C++ fread √† la fonction C POSIX fread pour homog√©n√©iser
+        l'ensemble du code en C. Les delete() sont aussi pass√©s en free() et les new en malloc()
  
  
 		
@@ -112,7 +112,7 @@ void hexadec (int j, int *hexa)
 	j=j-hexa[0]*256*256*256;
 	hexa[1] = j / (256*256);
 	j=j-hexa[1]*256*256;	
-	hexa[2] = j / 256;	// division entière : donne les trois octets de poids fort
+	hexa[2] = j / 256;	// division enti√®re : donne les trois octets de poids fort
 	hexa[3] = j % 256; // reste : donne l'octet de poids faible
 }
 
@@ -181,20 +181,20 @@ void return_dim_tiff(int *nbpts,char str[256])
 	int *adresse_258 = (int*) malloc(2*sizeof(int));
 	int nb_bits;
 	
-    // NOTE Mael : j'ai modifié la lecture pour que ça respecte le standard C POSIX (et non c++)
+    // NOTE Mael : j'ai modifi√© la lecture pour que √ßa respecte le standard C POSIX (et non c++)
     FILE* fichier = fopen(str, "r+"); // On ouvre le fichier "binaire" en mode lecture
     if(fichier == NULL) // Securite: on verifie la presence du fichier
 	{	printf("pb dans return_dim_tiff!!!!: fichier %s inexistant\n",str);
 		exit(1);
 	}
-    fseek(fichier, 0, SEEK_END); // On positionne le curseur à la fin
-    length = (int)ftell(fichier); // On garde la position de fin, qui correspon à la longueur du fichier
-    rewind(fichier); // On positionne le curseur au début
+    fseek(fichier, 0, SEEK_END); // On positionne le curseur √† la fin
+    length = (int)ftell(fichier); // On garde la position de fin, qui correspon √† la longueur du fichier
+    rewind(fichier); // On positionne le curseur au d√©but
     buffer = malloc(length*sizeof(char));
     fread(buffer, sizeof(char), length, fichier); // On lit l'ensemble
     fclose(fichier);
 
-    buffer_int = malloc(length*sizeof(int)); // On crée un autre tableau d'int
+    buffer_int = malloc(length*sizeof(int)); // On cr√©e un autre tableau d'int
 	for(i=0;i<length;i++) // On met les char dans le tableau d'int
 	{
         buffer_int[i] = (int)(buffer[i]);
@@ -384,20 +384,20 @@ void read_tiff_3(double **tableau_result,int nbpts_x,int nbpts_y,char str[256])
 	int nb_bits = -1;
 	int nb_bandes,temp_int;
 	
-    // NOTE Mael : j'ai modifié la lecture pour que ça respecte le standard C POSIX (et non c++)
+    // NOTE Mael : j'ai modifi√© la lecture pour que √ßa respecte le standard C POSIX (et non c++)
     FILE* fichier = fopen(str, "r+"); // On ouvre le fichier "binaire" en mode lecture
     if(fichier == NULL) // Securite: on verifie la presence du fichier
 	{	printf("pb dans return_dim_tiff!!!!: fichier %s inexistant\n",str);
 		exit(1);
 	}
-    fseek(fichier, 0, SEEK_END); // On positionne le curseur à la fin
-    length = (int)ftell(fichier); // On garde la position de fin, qui correspon à la longueur du fichier
-    rewind(fichier); // On positionne le curseur au début
+    fseek(fichier, 0, SEEK_END); // On positionne le curseur √† la fin
+    length = (int)ftell(fichier); // On garde la position de fin, qui correspon √† la longueur du fichier
+    rewind(fichier); // On positionne le curseur au d√©but
     buffer = malloc(length*sizeof(char));
     fread(buffer, sizeof(char), length, fichier); // On lit l'ensemble
     fclose(fichier);
     
-    buffer_int = malloc(length*sizeof(int)); // On crée un autre tableau d'int
+    buffer_int = malloc(length*sizeof(int)); // On cr√©e un autre tableau d'int
 	for(i=0;i<length;i++) // On met les char dans le tableau d'int
 	{
         buffer_int[i] = (int)(buffer[i]);
@@ -704,7 +704,7 @@ void crea_tiff_4(int nbpts_x,int nbpts_y,int resolution,double val_sat_haute,dou
 	str[1]=0x49;
 	str[2]=0x2A; /* version 42 */
 	str[3]=0x00;
-	str[4]=0x08; /* premier directory au byte n°8 */
+	str[4]=0x08; /* premier directory au byte n¬∞8 */
 	str[5]=0x00;
 	str[6]=0x00;
 	str[7]=0x00;
@@ -1071,7 +1071,7 @@ void crea_tiff_4_color(int nbpts_x,int nbpts_y,int resolution,double *val_sat_ha
 	str[1]=0x49;
 	str[2]=0x2A; /* version 42 */
 	str[3]=0x00;
-	str[4]=0x08; /* premier directory au byte n°8 */
+	str[4]=0x08; /* premier directory au byte n¬∞8 */
 	str[5]=0x00;
 	str[6]=0x00;
 	str[7]=0x00;

@@ -1,5 +1,5 @@
 /*   11/2/1999 EG et LK   fonctions d'interpolations de Neville-Aitken
-						sur des tableaux de réels 1D et 2D
+						sur des tableaux de r√©els 1D et 2D
 	18/6/2007 LK		correction d'un bug :
 						remplacement de (round) par (floor) dans le calcul de l'indice de depart
 						pour les interpolations 2D.
@@ -69,8 +69,8 @@ double it_pol_neville2D_s4 (
 	int n,				// taille du tableau source en y
 	int m,				// taille du tableau source en x
 	double **f,			// tableau source
-	double y_1,			// coordonnée y du point pour lequel on veut une val interpolée
-	double x_1)			// coordonnée x du point pour lequel on veut une val interminpolée
+	double y_1,			// coordonn√©e y du point pour lequel on veut une val interpol√©e
+	double x_1)			// coordonn√©e x du point pour lequel on veut une val interminpol√©e
 {
 	int i;
 	static double	x_interm [4];	// tableau intermediaire declare en statique
@@ -102,8 +102,8 @@ double it_pol_neville2D_s3 (
 	int n,				// taille du tableau source en y
 	int m,				// taille du tableau source en x
 	double **f,			// tableau source
-	double y_1,			// coordonnée y du point pour lequel on veut une val interpolée
-	double x_1)			// coordonnée x du point pour lequel on veut une val interpolée
+	double y_1,			// coordonn√©e y du point pour lequel on veut une val interpol√©e
+	double x_1)			// coordonn√©e x du point pour lequel on veut une val interpol√©e
 {
 	int i;
 	static double	x_interm [3];	// tableau intermediaire declare en statique
@@ -137,8 +137,8 @@ double it_pol_neville2D_s2 (
 	int n,				// taille du tableau source en y
 	int m,				// taille du tableau source en x
 	double **f,			// tableau source
-	double y_1,			// coordonnée y du point pour lequel on veut une val interpolée
-	double x_1)			// coordonnée x du point pour lequel on veut une val interpolée
+	double y_1,			// coordonn√©e y du point pour lequel on veut une val interpol√©e
+	double x_1)			// coordonn√©e x du point pour lequel on veut une val interpol√©e
 {
 	static double	x_interm [2];	// tableau intermediaire declare en statique
 
