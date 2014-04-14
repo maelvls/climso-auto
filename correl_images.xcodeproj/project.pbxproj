@@ -7,11 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C026FA018FC053800635AF4 /* convol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9618FC053800635AF4 /* convol.cpp */; };
-		1C026FA118FC053800635AF4 /* crea_tiff_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9818FC053800635AF4 /* crea_tiff_3.cpp */; };
-		1C026FA218FC053800635AF4 /* fcts_LK3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9A18FC053800635AF4 /* fcts_LK3.cpp */; };
-		1C026FA318FC053800635AF4 /* interpol.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9C18FC053800635AF4 /* interpol.cpp */; };
-		1C026FA418FC053800635AF4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9E18FC053800635AF4 /* main.cpp */; };
+		1C026FA018FC053800635AF4 /* convol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9618FC053800635AF4 /* convol.c */; };
+		1C026FA118FC053800635AF4 /* crea_tiff_3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9818FC053800635AF4 /* crea_tiff_3.c */; };
+		1C026FA218FC053800635AF4 /* fcts_LK3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9A18FC053800635AF4 /* fcts_LK3.c */; };
+		1C026FA318FC053800635AF4 /* interpol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9C18FC053800635AF4 /* interpol.c */; };
+		1C026FA418FC053800635AF4 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9E18FC053800635AF4 /* main.c */; };
 		1C026FA518FC053800635AF4 /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9F18FC053800635AF4 /* makefile */; };
 /* End PBXBuildFile section */
 
@@ -28,15 +28,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1C026F9618FC053800635AF4 /* convol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = convol.cpp; sourceTree = "<group>"; };
+		1C026F9618FC053800635AF4 /* convol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = convol.c; sourceTree = "<group>"; };
 		1C026F9718FC053800635AF4 /* convol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convol.h; sourceTree = "<group>"; };
-		1C026F9818FC053800635AF4 /* crea_tiff_3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crea_tiff_3.cpp; sourceTree = "<group>"; };
+		1C026F9818FC053800635AF4 /* crea_tiff_3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crea_tiff_3.c; sourceTree = "<group>"; };
 		1C026F9918FC053800635AF4 /* crea_tiff_3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crea_tiff_3.h; sourceTree = "<group>"; };
-		1C026F9A18FC053800635AF4 /* fcts_LK3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fcts_LK3.cpp; sourceTree = "<group>"; };
+		1C026F9A18FC053800635AF4 /* fcts_LK3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fcts_LK3.c; sourceTree = "<group>"; };
 		1C026F9B18FC053800635AF4 /* fcts_LK3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fcts_LK3.h; sourceTree = "<group>"; };
-		1C026F9C18FC053800635AF4 /* interpol.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = interpol.cpp; sourceTree = "<group>"; };
+		1C026F9C18FC053800635AF4 /* interpol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpol.c; sourceTree = "<group>"; };
 		1C026F9D18FC053800635AF4 /* interpol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interpol.h; sourceTree = "<group>"; };
-		1C026F9E18FC053800635AF4 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		1C026F9E18FC053800635AF4 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		1C026F9F18FC053800635AF4 /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
 		1C2B15C918F81D760038A475 /* correl_images */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = correl_images; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -55,15 +55,15 @@
 		1C026F9518FC053800635AF4 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				1C026F9618FC053800635AF4 /* convol.cpp */,
+				1C026F9618FC053800635AF4 /* convol.c */,
 				1C026F9718FC053800635AF4 /* convol.h */,
-				1C026F9818FC053800635AF4 /* crea_tiff_3.cpp */,
+				1C026F9818FC053800635AF4 /* crea_tiff_3.c */,
 				1C026F9918FC053800635AF4 /* crea_tiff_3.h */,
-				1C026F9A18FC053800635AF4 /* fcts_LK3.cpp */,
+				1C026F9A18FC053800635AF4 /* fcts_LK3.c */,
 				1C026F9B18FC053800635AF4 /* fcts_LK3.h */,
-				1C026F9C18FC053800635AF4 /* interpol.cpp */,
+				1C026F9C18FC053800635AF4 /* interpol.c */,
 				1C026F9D18FC053800635AF4 /* interpol.h */,
-				1C026F9E18FC053800635AF4 /* main.cpp */,
+				1C026F9E18FC053800635AF4 /* main.c */,
 				1C026F9F18FC053800635AF4 /* makefile */,
 			);
 			path = src;
@@ -136,12 +136,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1C026FA018FC053800635AF4 /* convol.cpp in Sources */,
-				1C026FA118FC053800635AF4 /* crea_tiff_3.cpp in Sources */,
+				1C026FA018FC053800635AF4 /* convol.c in Sources */,
+				1C026FA118FC053800635AF4 /* crea_tiff_3.c in Sources */,
 				1C026FA518FC053800635AF4 /* makefile in Sources */,
-				1C026FA318FC053800635AF4 /* interpol.cpp in Sources */,
-				1C026FA418FC053800635AF4 /* main.cpp in Sources */,
-				1C026FA218FC053800635AF4 /* fcts_LK3.cpp in Sources */,
+				1C026FA318FC053800635AF4 /* interpol.c in Sources */,
+				1C026FA418FC053800635AF4 /* main.c in Sources */,
+				1C026FA218FC053800635AF4 /* fcts_LK3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
