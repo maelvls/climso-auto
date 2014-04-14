@@ -12,6 +12,8 @@
 
 #include "fcts_MV_en_C.h"
 
+
+
 int estBissextile(Date d) {
     return (d.annee % 4 == 0 && d.annee % 100 != 0) || d.annee % 400 == 0;
 }
@@ -44,13 +46,26 @@ short differenceEntreJoursDuneAnnee(Date d1, Date d2) {
     }
     return diff;
 }
+int diffDates(Date a, Date b) {
+    double duree;
+    struct tm tm_a, tm_b;
+    tm_a.tm_mday = a.jour; tm_a.tm_mon = a.mois-1; tm_a.tm_year = a.annee-1900;
+    tm_b.tm_mday = b.jour; tm_b.tm_mon = b.mois-1; tm_b.tm_year = b.annee-1900;
+    time_t tm_time_a = mktime(&tm_a);
+    time_t tm_time_b = mktime(&tm_b);
+    printf("\n[Date a : %s Date b : %s",ctime(&tm_time_a),ctime(&tm_time_b));
+    
+    duree = difftime(tm_time_a, tm_time_b); // en secondes
+    duree = duree/3600/24; // passage en jours
+    return duree;
+}
 /*=====================================================
  Donne le diametre du soleil en radians
  Retours: l'angle en radian modulo 2pi
  =====================================================*/
 double diametreSoleilRadian(int jour, int mois, int annee) {
-    const double pi =   3.14159265359;
     const double diametreSoleil = 1.392E09;
+    const double pi =   3.14159265359;
     const double a =    1.496010E11; // Demi grand-axe Terre
     const double e =    0.01671; // Excentricité Terre
     const double anneeJours = 365.2564; // Année sidérale moyenne en jours
@@ -63,8 +78,8 @@ double diametreSoleilRadian(int jour, int mois, int annee) {
     double U1 = M+e*sin(M); // Anomalie excentrique U1
     double U2 = M+e*sin(U1); // Anomalie excentrique U2
     printf("U2=%.10f",U2);
-    double v = 2*atan(tan(U2/2)*sqrt((1+e)/1-e)); // Anomalie vraie
-    double distanceTerreSoleil = a*(1-e*e) / (1+e*cos(v));
+    double nu = 2*atan(tan(U2/2)*sqrt((1+e)/1-e)); // Anomalie vraie
+    double distanceTerreSoleil = a*(1-e*e) / (1+e*cos(nu));
     // Sachant que l'angle alpha << 1, alpha approche tan(alpha). Ainsi :
     return diametreSoleil/distanceTerreSoleil;
 }
@@ -73,7 +88,9 @@ int main(int argc, const char *argv[])
 {
 	Date a; a.mois = 1; a.jour = 4; a.annee=2014;
     Date b; b.mois = 1; b.jour = 3; b.annee=2014;
+    
     printf("Diff entre a et b : %d", differenceEntreJoursDuneAnnee(a, b));
     printf("Le %d/%d  : %.20f",a.jour,a.mois,diametreSoleilRadian(a.jour, a.mois, a.annee));
+    printf("Difference en jours : %d",diffDates(a, b));
 	return 0;
 }
