@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "1C2B15C818F81D760038A475"
-               BuildableName = "correl_images"
+               BuildableName = "climso-auto"
                BlueprintName = "climso-auto"
                ReferencedContainer = "container:climso-auto.xcodeproj">
             </BuildableReference>
@@ -33,7 +33,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1C2B15C818F81D760038A475"
-            BuildableName = "correl_images"
+            BuildableName = "climso-auto"
             BlueprintName = "climso-auto"
             ReferencedContainer = "container:climso-auto.xcodeproj">
          </BuildableReference>
@@ -52,7 +52,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1C2B15C818F81D760038A475"
-            BuildableName = "correl_images"
+            BuildableName = "climso-auto"
             BlueprintName = "climso-auto"
             ReferencedContainer = "container:climso-auto.xcodeproj">
          </BuildableReference>
@@ -70,7 +70,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "1C2B15C818F81D760038A475"
-            BuildableName = "correl_images"
+            BuildableName = "climso-auto"
             BlueprintName = "climso-auto"
             ReferencedContainer = "container:climso-auto.xcodeproj">
          </BuildableReference>

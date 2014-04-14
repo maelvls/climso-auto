@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D7F23EBD-7F86-42EF-8B34-4E3732FB585B</string>
+	<key>IDESourceControlProjectName</key>
+	<string>climso-auto</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>1133AE06-64E9-46D9-ADF2-CE150077C2BA</key>
+		<string>https://github.com/mael65/climso-auto.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>climso-auto.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>1133AE06-64E9-46D9-ADF2-CE150077C2BA</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/mael65/climso-auto.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>1133AE06-64E9-46D9-ADF2-CE150077C2BA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>1133AE06-64E9-46D9-ADF2-CE150077C2BA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>climso-auto</string>
+		</dict>
+	</array>
+</dict>
+</plist>
