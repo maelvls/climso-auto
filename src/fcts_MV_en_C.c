@@ -48,18 +48,18 @@ short differenceEntreJoursDuneAnnee(Date d1, Date d2) {
  Donne le diametre du soleil en radians
  Retours: l'angle en radian modulo 2pi
  =====================================================*/
-double diametreSoleilRadian(int jour, int mois) {
-    static double pi =   3.14159265359;
-    static double diametreSoleil = 1.392E09;
-    static double a =    1.496010E11; // Demi grand-axe Terre 
-    static double e =    0.01671; // Excentricité Terre
-    static double annee = 365.2564; // Année sidérale moyenne en jours
-    static Date dateRef; dateRef.jour=4; dateRef.mois=1; // !!!
+double diametreSoleilRadian(int jour, int mois, int annee) {
+    const double pi =   3.14159265359;
+    const double diametreSoleil = 1.392E09;
+    const double a =    1.496010E11; // Demi grand-axe Terre
+    const double e =    0.01671; // Excentricité Terre
+    const double anneeJours = 365.2564; // Année sidérale moyenne en jours
+    Date dateRef; dateRef.jour=4; dateRef.mois=1; dateRef.annee=2014;
     
-    Date date; date.jour=jour; date.mois=mois;
+    Date date; date.jour=jour; date.mois=mois; date.annee=annee;
     short diffJours = differenceEntreJoursDuneAnnee(dateRef,date);
 
-    double M = 2*pi*diffJours/annee; // Anomalie moyenne (orbite circulaire)
+    double M = 2*pi*diffJours/anneeJours; // Anomalie moyenne (orbite circulaire)
     double U1 = M+e*sin(M); // Anomalie excentrique U1
     double U2 = M+e*sin(U1); // Anomalie excentrique U2
     printf("U2=%.10f",U2);
@@ -71,9 +71,9 @@ double diametreSoleilRadian(int jour, int mois) {
 
 int main(int argc, const char *argv[])
 {
-	Date a; a.mois = 1; a.jour = 4;
-    Date b; b.mois = 1; b.jour = 3;
+	Date a; a.mois = 1; a.jour = 4; a.annee=2014;
+    Date b; b.mois = 1; b.jour = 3; b.annee=2014;
     printf("Diff entre a et b : %d", differenceEntreJoursDuneAnnee(a, b));
-    printf("Le %d/%d  : %.20f",a.jour,a.mois,diametreSoleilRadian(a.jour, a.mois));
+    printf("Le %d/%d  : %.20f",a.jour,a.mois,diametreSoleilRadian(a.jour, a.mois, a.annee));
 	return 0;
 }
