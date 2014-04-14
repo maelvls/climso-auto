@@ -15,8 +15,6 @@ typedef struct _date {
     int annee;
 } Date;
 
-int estBissextile(Date d);
-short numeroDuJourDansAnnee(Date d);
-short differenceEntreJoursDuneAnnee(Date d1, Date d2);
+int diffDates(Date fin, Date deb);
 
 #endif

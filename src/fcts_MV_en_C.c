@@ -12,51 +12,25 @@
 
 #include "fcts_MV_en_C.h"
 
-
-
-int estBissextile(Date d) {
-    return (d.annee % 4 == 0 && d.annee % 100 != 0) || d.annee % 400 == 0;
-}
-short numeroDuJourDansAnnee(Date d) {
-    short numeroDuJour = d.jour;
-    short m;
-    for (m = d.mois-1; m > 0; m--) { // On ne prend pas le mois en cour
-        switch (m) {
-            case 1: case 3: case 5: case 7: case 8: case 10: case 12:
-                numeroDuJour += 31; break;
-            case 2: numeroDuJour += estBissextile(d)?29:28; break;
-            case 4: case 6: case 9: case 11:
-                numeroDuJour += 30; break;
-            default: break;
-        }
-    }
-    return numeroDuJour;
-}
-
-/* =====================================================
- * Donne le nombre de jours entre les deux dates selon d1 - d2 
- *
- * Entrées: d1, d2 : les deux dates
- * Returns: le nombre de jours de différence modulo le nombre de jours dans l'année
- * =====================================================*/
-short differenceEntreJoursDuneAnnee(Date d1, Date d2) {
-    short diff = numeroDuJourDansAnnee(d1) - numeroDuJourDansAnnee(d2);
-    if (diff < 0) {
-        diff = estBissextile(d2)?366:365 + diff;
-    }
-    return diff;
-}
-int diffDates(Date a, Date b) {
+int diffDates(Date fin, Date deb) {
     double duree;
-    struct tm tm_a, tm_b;
-    tm_a.tm_mday = a.jour; tm_a.tm_mon = a.mois-1; tm_a.tm_year = a.annee-1900;
-    tm_b.tm_mday = b.jour; tm_b.tm_mon = b.mois-1; tm_b.tm_year = b.annee-1900;
-    time_t tm_time_a = mktime(&tm_a);
-    time_t tm_time_b = mktime(&tm_b);
-    printf("\n[Date a : %s Date b : %s",ctime(&tm_time_a),ctime(&tm_time_b));
+    time_t t = time(NULL);
+    struct tm *tm_fin = localtime(&t), *tm_deb = localtime(&t);
+    tm_fin->tm_mday = fin.jour;
+    tm_fin->tm_mon = fin.mois-1;
+    tm_fin->tm_year = fin.annee-1900;
     
-    duree = difftime(tm_time_a, tm_time_b); // en secondes
-    duree = duree/3600/24; // passage en jours
+    tm_deb->tm_mday = deb.jour;
+    tm_deb->tm_mon = deb.mois-1;
+    tm_deb->tm_year = deb.annee-1900;
+    
+    time_t tm_time_fin = mktime(tm_fin);
+    time_t tm_time_deb = mktime(tm_deb);
+    
+    printf("Debut : %sFin : %s",ctime(&tm_time_deb),ctime(&tm_time_fin));
+    
+    duree = difftime(tm_time_fin, tm_time_deb); // en secondes
+    duree = duree/86400; // passage en jours
     return duree;
 }
 /*=====================================================
@@ -72,12 +46,12 @@ double diametreSoleilRadian(int jour, int mois, int annee) {
     Date dateRef; dateRef.jour=4; dateRef.mois=1; dateRef.annee=2014;
     
     Date date; date.jour=jour; date.mois=mois; date.annee=annee;
-    short diffJours = differenceEntreJoursDuneAnnee(dateRef,date);
+    short diffJours = diffDates(dateRef,date);
 
     double M = 2*pi*diffJours/anneeJours; // Anomalie moyenne (orbite circulaire)
     double U1 = M+e*sin(M); // Anomalie excentrique U1
     double U2 = M+e*sin(U1); // Anomalie excentrique U2
-    printf("U2=%.10f",U2);
+    printf("U2=%.10f\n",U2);
     double nu = 2*atan(tan(U2/2)*sqrt((1+e)/1-e)); // Anomalie vraie
     double distanceTerreSoleil = a*(1-e*e) / (1+e*cos(nu));
     // Sachant que l'angle alpha << 1, alpha approche tan(alpha). Ainsi :
@@ -86,11 +60,11 @@ double diametreSoleilRadian(int jour, int mois, int annee) {
 
 int main(int argc, const char *argv[])
 {
-	Date a; a.mois = 1; a.jour = 4; a.annee=2014;
-    Date b; b.mois = 1; b.jour = 3; b.annee=2014;
+	Date fin; fin.mois = 10; fin.jour = 10; fin.annee=2014;
+    Date deb; deb.mois = 6; deb.jour = 6; deb.annee=2014;
     
-    printf("Diff entre a et b : %d", differenceEntreJoursDuneAnnee(a, b));
-    printf("Le %d/%d  : %.20f",a.jour,a.mois,diametreSoleilRadian(a.jour, a.mois, a.annee));
-    printf("Difference en jours : %d",diffDates(a, b));
+    printf("Difference en jours : %d\n",diffDates(fin, deb));
+
+    printf("Le %d/%d  : %.20f\n",fin.jour,fin.mois,diametreSoleilRadian(fin.jour, fin.mois, fin.annee));
 	return 0;
 }
