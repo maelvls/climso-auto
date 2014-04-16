@@ -7,6 +7,7 @@
 //
 //  Historique des modifs
 //  2014_04_15 LK : indiquees par "/**/" dans la marge
+//  2014_04_15 MV : ajout du parametre d'entree "time_t t" pour diametreSoleilRadian
 
 #include <stdio.h>
 #include <math.h>
@@ -32,9 +33,9 @@ double diametreSoleilRadian(time_t t) {
     t_0_tm.tm_year = 114; // et pas 2014 car le calendrier Unixien commence en 1900
     t_0_tm.tm_mon = 0; // 0 pour Janvier et pas 1 car les indices commencent a 0 chez les Unixiens
     t_0_tm.tm_mday = 4; // 1-31 pour les jours
-    t_0_tm.tm_hour = 12;
-    t_0_tm.tm_min = 0;
-    t_0_tm.tm_sec = 0;
+    t_0_tm.tm_hour = 12; // 0-23
+    t_0_tm.tm_min = 0; // 0-59
+    t_0_tm.tm_sec = 0; // 0-59
     time_t t_0_time = mktime(&t_0_tm); // 't_0_time' contiendra cette date du perihelie traduite en secondes
     
     
@@ -74,14 +75,23 @@ double diametreSoleilRadian(time_t t) {
 //-------------------------------------------------------------------
 int diametreSoleilPixels() {
     const int diametreReference = 1638; // d'après une image I
-    struct tm t; t.tm_year=2014-1900; t.tm_mon=7-1; t.tm_mday=14; t.tm_hour=12;
-    time_t dReference = mktime(&t);// La date (en sec) de prise de vue de l'image I (le 14 juillet 2014 à 12h30m00sec UTC (UTC=GMT))
-    return diametreReference * diametreSoleilRadian(time(NULL))/diametreSoleilRadian(dReference);
-    return 0;
+    struct tm tmRef;
+    tmRef.tm_year=2014-1900; // années depuis 1900
+    tmRef.tm_mon=7-1; // 0-11
+    tmRef.tm_mday=14; // 1-31
+    tmRef.tm_hour=12; // 0-23
+    time_t tRef = mktime(&tmRef);// La date (en sec) de prise de vue de l'image I (le 14 juillet 2014 à 12h30m00sec UTC (UTC=GMT))
+    return diametreReference * diametreSoleilRadian(time(NULL))/diametreSoleilRadian(tRef);
 }
+
+/*
 int main(int argc, const char *argv[])
 {
-	printf("%.10f",diametreSoleilRadian(time(NULL)));
-    printf("Taille en pixels : %d",diametreSoleilPixels());
+    struct tm t; t.tm_year=2014-1900; t.tm_mon=3-1; t.tm_mday=1; t.tm_hour=12;
+
+	printf("Diametre au jour t : %.10f\n",diametreSoleilRadian(mktime(&t)));
+    printf("Taille en pixels : %d\n",diametreSoleilPixels());
 	return 0;
 }
+*/
+

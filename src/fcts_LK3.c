@@ -482,7 +482,7 @@ Draws a doughnut-shaped region that can be used for example as a spatial frequen
  freq_max           # Outer radius of doughnut
  marge_ext          # width in pixels of the outer margin of doughnut (Hanning smooth)
  
- out :  for example a 2D 'corona' for filtering in the Foutier domain or in direct space.
+ out :  for example a 2D 'corona' for filtering in the Fourier domain or in direct space.
  */
 //-----------------------------------------------------------------------------
 
