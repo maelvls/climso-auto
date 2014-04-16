@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C026FA518FC053800635AF4 /* makefile in Sources */ = {isa = PBXBuildFile; fileRef = 1C026F9F18FC053800635AF4 /* makefile */; };
-		1CD57EA418FC342200210E05 /* fcts_MV_en_C.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD57EA318FC342200210E05 /* fcts_MV_en_C.c */; };
+		1C8CB96218FDBCB800268570 /* csbigcam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8CB95018FDBC8D00268570 /* csbigcam.cpp */; };
+		1C8CB96318FDBCB800268570 /* csbigimg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8CB95318FDBC8D00268570 /* csbigimg.cpp */; };
+		1C8CB96418FDBCB800268570 /* sbig2fits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C8CB95D18FDBC8D00268570 /* sbig2fits.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -34,11 +35,25 @@
 		1C026F9D18FC053800635AF4 /* interpol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interpol.h; sourceTree = "<group>"; };
 		1C026F9E18FC053800635AF4 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; lineEnding = 0; path = main.c; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.c; };
 		1C026F9F18FC053800635AF4 /* makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = makefile; sourceTree = "<group>"; };
+		1C27432D18FD79DC00D42C19 /* camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = camera.c; sourceTree = "<group>"; };
 		1C2B15C918F81D760038A475 /* climso-auto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "climso-auto"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1CD57EA118FC177600210E05 /* fcts_MV_en_C.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fcts_MV_en_C.h; sourceTree = "<group>"; };
-		1CD57EA318FC342200210E05 /* fcts_MV_en_C.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fcts_MV_en_C.c; sourceTree = "<group>"; };
-		1CD57EA518FC346800210E05 /* date.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = date.cpp; sourceTree = "<group>"; };
-		1CD57EA618FC346800210E05 /* date.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = date.h; sourceTree = "<group>"; };
+		1C8CB95018FDBC8D00268570 /* csbigcam.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = csbigcam.cpp; sourceTree = "<group>"; };
+		1C8CB95118FDBC8D00268570 /* csbigcam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csbigcam.h; sourceTree = "<group>"; };
+		1C8CB95318FDBC8D00268570 /* csbigimg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = csbigimg.cpp; sourceTree = "<group>"; };
+		1C8CB95418FDBC8D00268570 /* csbigimg.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csbigimg.h; sourceTree = "<group>"; };
+		1C8CB95618FDBC8D00268570 /* fitsio.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = fitsio.h; sourceTree = "<group>"; };
+		1C8CB95718FDBC8D00268570 /* longnam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = longnam.h; sourceTree = "<group>"; };
+		1C8CB95818FDBC8D00268570 /* lpardrv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = lpardrv.h; sourceTree = "<group>"; };
+		1C8CB95918FDBC8D00268570 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		1C8CB95B18FDBC8D00268570 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		1C8CB95D18FDBC8D00268570 /* sbig2fits.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sbig2fits.cpp; sourceTree = "<group>"; };
+		1C8CB96018FDBC8D00268570 /* sbigudrv.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sbigudrv.h; sourceTree = "<group>"; };
+		1C8CB96A18FE750F00268570 /* picture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = picture.cpp; sourceTree = "<group>"; };
+		1C8CB96B18FE750F00268570 /* picture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = picture.h; sourceTree = "<group>"; };
+		1C8CB96D18FE752900268570 /* camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = camera.cpp; sourceTree = "<group>"; };
+		1C8CB96E18FE752900268570 /* camera.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = camera.h; sourceTree = "<group>"; };
+		1CD57EA118FC177600210E05 /* diametre_soleil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = diametre_soleil.h; sourceTree = "<group>"; };
+		1CD57EA318FC342200210E05 /* diametre_soleil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = diametre_soleil.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,20 +70,9 @@
 		1C026F9518FC053800635AF4 /* src */ = {
 			isa = PBXGroup;
 			children = (
-				1C026F9618FC053800635AF4 /* convol.c */,
-				1C026F9818FC053800635AF4 /* crea_tiff_3.c */,
-				1C026F9A18FC053800635AF4 /* fcts_LK3.c */,
-				1C026F9C18FC053800635AF4 /* interpol.c */,
-				1C026F9E18FC053800635AF4 /* main.c */,
-				1C026F9718FC053800635AF4 /* convol.h */,
-				1C026F9918FC053800635AF4 /* crea_tiff_3.h */,
-				1C026F9B18FC053800635AF4 /* fcts_LK3.h */,
-				1C026F9D18FC053800635AF4 /* interpol.h */,
-				1C026F9F18FC053800635AF4 /* makefile */,
-				1CD57EA318FC342200210E05 /* fcts_MV_en_C.c */,
-				1CD57EA118FC177600210E05 /* fcts_MV_en_C.h */,
-				1CD57EA518FC346800210E05 /* date.cpp */,
-				1CD57EA618FC346800210E05 /* date.h */,
+				1C8CB96918FE74E300268570 /* camera */,
+				1C8CB96818FE74D800268570 /* asservissement */,
+				1C8CB96718FE74C600268570 /* calcul_position */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -87,6 +91,63 @@
 				1C2B15C918F81D760038A475 /* climso-auto */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1C8CB94F18FDBC8D00268570 /* sbig_class_library */ = {
+			isa = PBXGroup;
+			children = (
+				1C8CB95018FDBC8D00268570 /* csbigcam.cpp */,
+				1C8CB95118FDBC8D00268570 /* csbigcam.h */,
+				1C8CB95318FDBC8D00268570 /* csbigimg.cpp */,
+				1C8CB95418FDBC8D00268570 /* csbigimg.h */,
+				1C8CB95618FDBC8D00268570 /* fitsio.h */,
+				1C8CB95718FDBC8D00268570 /* longnam.h */,
+				1C8CB95818FDBC8D00268570 /* lpardrv.h */,
+				1C8CB95918FDBC8D00268570 /* main.cpp */,
+				1C8CB95B18FDBC8D00268570 /* Makefile */,
+				1C8CB95D18FDBC8D00268570 /* sbig2fits.cpp */,
+				1C8CB96018FDBC8D00268570 /* sbigudrv.h */,
+			);
+			path = sbig_class_library;
+			sourceTree = "<group>";
+		};
+		1C8CB96718FE74C600268570 /* calcul_position */ = {
+			isa = PBXGroup;
+			children = (
+				1C026F9618FC053800635AF4 /* convol.c */,
+				1C026F9818FC053800635AF4 /* crea_tiff_3.c */,
+				1C026F9A18FC053800635AF4 /* fcts_LK3.c */,
+				1C026F9C18FC053800635AF4 /* interpol.c */,
+				1C026F9E18FC053800635AF4 /* main.c */,
+				1C026F9718FC053800635AF4 /* convol.h */,
+				1C026F9918FC053800635AF4 /* crea_tiff_3.h */,
+				1C026F9B18FC053800635AF4 /* fcts_LK3.h */,
+				1C026F9D18FC053800635AF4 /* interpol.h */,
+				1C026F9F18FC053800635AF4 /* makefile */,
+				1CD57EA318FC342200210E05 /* diametre_soleil.c */,
+				1CD57EA118FC177600210E05 /* diametre_soleil.h */,
+			);
+			name = calcul_position;
+			sourceTree = "<group>";
+		};
+		1C8CB96818FE74D800268570 /* asservissement */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = asservissement;
+			sourceTree = "<group>";
+		};
+		1C8CB96918FE74E300268570 /* camera */ = {
+			isa = PBXGroup;
+			children = (
+				1C8CB96A18FE750F00268570 /* picture.cpp */,
+				1C27432D18FD79DC00D42C19 /* camera.c */,
+				1C8CB96D18FE752900268570 /* camera.cpp */,
+				1C8CB96B18FE750F00268570 /* picture.h */,
+				1C8CB96E18FE752900268570 /* camera.h */,
+				1C8CB94F18FDBC8D00268570 /* sbig_class_library */,
+			);
+			name = camera;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -140,8 +201,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CD57EA418FC342200210E05 /* fcts_MV_en_C.c in Sources */,
-				1C026FA518FC053800635AF4 /* makefile in Sources */,
+				1C8CB96318FDBCB800268570 /* csbigimg.cpp in Sources */,
+				1C8CB96218FDBCB800268570 /* csbigcam.cpp in Sources */,
+				1C8CB96418FDBCB800268570 /* sbig2fits.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,13 +283,26 @@
 		1C2B15D318F81D760038A475 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				"HEADER_SEARCH_PATHS[arch=*]" = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/usr/local/lib,
+				);
+				"LIBRARY_SEARCH_PATHS[arch=*]" = /usr/local/lib;
+				OTHER_CFLAGS = "-lsbigudrv";
+				"OTHER_LDFLAGS[arch=*]" = "-lsbigudrv";
 				PRODUCT_NAME = "climso-auto";
+				USER_HEADER_SEARCH_PATHS = /usr/local/include;
 			};
 			name = Debug;
 		};
 		1C2B15D418F81D760038A475 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				OTHER_CFLAGS = "-lsbigudrv";
+				"OTHER_LDFLAGS[arch=*]" = "-lsbigudrv";
 				PRODUCT_NAME = "climso-auto";
 			};
 			name = Release;
