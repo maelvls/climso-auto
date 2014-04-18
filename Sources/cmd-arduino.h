@@ -9,6 +9,8 @@
 #ifndef __climso_auto__cmd_arduino__
 #define __climso_auto__cmd_arduino__
 
+#include <stdio.h>
+
 #define VERS_NORD   1
 #define VERS_EST    2
 #define VERS_SUD    3

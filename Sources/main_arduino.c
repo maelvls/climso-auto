@@ -1,8 +1,8 @@
 //
-//  camera.c
+//  main_arduino.c
 //  climso-auto
 //
-//  Created by Maël Valais on 15/04/2014.
+//  Created by Maël Valais on 18/04/2014.
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
 

@@ -5,87 +5,55 @@
 # Makefile principal
 #
 
-OPT=-g -lsbigudrv
+OPT=-g
 CC=clang
 CPP=clang++
-INCLUDES=-I Sources/arduino_library Sources/camera_sbig_library
 LIBS=-L /usr/local/lib
+SOURCES=
 
 BIN=a.out
+# Attention, "all", "arduino"... ont besoin d'un main.c
+MAIN_TEST_ALL=main_global.c
+MAIN_TEST_ARDUINO=main_arduino.c
+MAIN_TEST_CAMERA=main_camera.c
+MAIN_TEST_POSITION=main_position.c
+
 
 SRCDIR=Sources
 OBJDIR=Builds
-BINDIR=.
-LE_MAIN=main.c
 
-LIST_SOURCES_C=$(filter-out %main.c, $(wildcard $(SRCDIR)/*.c)) # */ # On enlève les main.c
-LIST_SOURCES_CPP=$(filter-out %main.cpp, $(wildcard $(SRCDIR)/*.cpp)) # */ # On enlève les main.cpp
+# On prépare la liste des .c/cpp puis la liste des .o
+LIST_SOURCES_C=$(filter-out %main%, $(wildcard $(SRCDIR)/*.c)) # */ # On enlève les main.c
+LIST_SOURCES_CPP=$(filter-out %main%, $(wildcard $(SRCDIR)/*.cpp)) # */ # On enlève les main.cpp
 LIST_OBJ_1=$(LIST_SOURCES_C:.c=.o) # On ajoute les .c et on remplace par .o
 LIST_OBJ_1+=$(LIST_SOURCES_CPP:.cpp=.o) # On ajoute les .cpp et on remplace par .o
-LIST_OBJ_1+=$(LE_MAIN:.c=.o) # On ajoute LE MAIN
 LIST_OBJ_2=$(notdir $(LIST_OBJ_1))
 LIST_OBJ=$(addprefix $(OBJDIR)/,$(LIST_OBJ_2)) # Tous les objets sont Builds/objet.o
+# On a une liste de tous les .c/.cpp et une liste de .o
 
-LIST_SRC_LIB_C=$(filter-out %main.c, $(wildcard $(SRCDIR)/*/*.c)) # */ # On enlève les main.c
-LIST_SRC_LIB_CPP=$(filter-out %main.cpp, $(wildcard $(SRCDIR)/*/*.cpp)) # */ # On enlève les main.cpp
-LIST_OBJ_LIB_0=$(LIST_SRC_LIB_C:.c=.o) # On ajoute les .c et on remplace par .o
-LIST_OBJ_LIB_0+=$(LIST_SRC_LIB_CPP:.cpp=.o) # On ajoute les .cpp et on remplace par .o
-LIST_OBJ_LIB_1=$(notdir $(LIST_OBJ_LIB_0))
-LIST_OBJ_LIB=$(addprefix $(OBJDIR)/,$(LIST_OBJ_LIB_1)) # Tous les objets sont Builds/objet.o
+arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) build
 
-# On a une liste de tous les .c et .cpp et une liste de .o
+camera: $(OBJDIR)/$(MAIN_TEST_CAMERA:.c=.o) build
 
-all: $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CPP) $^ -o $(BIN) $(OPT) $(LIBS)
+position: $(OBJDIR)/$(MAIN_TEST_POSITION:.c=.o) build
+
+all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) build
+
+build: $(LIST_OBJ)
+	@echo $(LIST_OBJ)
+	$(CPP) $^ -o $(OBJDIR)/$(BIN) $(OPT) $(LIBS)
 
 #
 # Build des Sources
 #
-
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	$(CC) $(INCLUDES) -o $@ -c $<
+	$(CC)  -I. -o $@ -c $<
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
-	$(CPP) $(INCLUDES) -o $@ -c $<
-
-#
-# Build des librairies
-#
+	$(CPP) -I. -o $@ -c $<
 
 
-
-# arduino_library
-$(OBJDIR)/%.o: $(SRCDIR)/arduino_library/%.c
-	$(CC) -o $@ -c $<
-$(OBJDIR)/%.o: $(SRCDIR)/arduino_library/%.cpp
-	$(CPP) -o $@ -c $<
-# camera_sbig_library
-# Attention, on ajoute -lsbigudrv
-$(OBJDIR)/%.o: $(SRCDIR)/camera_sbig_library/%.c
-	$(CC) -o $@ -c $<
-$(OBJDIR)/%.o: $(SRCDIR)/camera_sbig_library/%.cpp
-	$(CPP) -o $@ -c $<
-#
-# Eventuels fichiers dans Sources
-#
-$(OBJDIR)/%.o: %.c
-	$(CC) $(INCLUDES) -o $@ -c $<
-
-%: $(filter %.c %.cpp, wildcard($(SRCDIR)/$@/*)) # */ # On prend les
-	@echo "lol"
-
-
-	
-	
 clean:
-	rm -rf $(BINDIR)/$(BIN) $(OBJDIR)/*.o #*/
-
-
-
-
-
-
-
-
+	rm -rf $(OBJDIR)/*.o #*/
 
 
 
