@@ -7,3 +7,9 @@
 //
 
 #include <stdio.h>
+
+int main(int argc, const char *argv[])
+{
+    printf("Camera");
+	return 0;
+}
