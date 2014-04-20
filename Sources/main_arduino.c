@@ -7,3 +7,10 @@
 //
 
 #include <stdio.h>
+#include "cmd-arduino.h"
+
+int main(int argc, const char *argv[])
+{
+	envoyerCommande(VERS_NORD, 10000);
+	return 0;
+}
