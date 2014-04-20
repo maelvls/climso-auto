@@ -2,7 +2,7 @@
 # makefile
 # Mael Valais, 2014-04-07 15:23
 #
-# Makefile principal
+# Makefile permettant la compilation du projet climso-auto
 # NOTE: les # */ sont là à cause de Xcode
 #
 # A faire :
@@ -11,10 +11,20 @@
 #	- comprendre ce qu'est un CFLAGS, CXXFLAGS
 #
 
-OPT=-g
-CC=clang
-CXX=clang++
-LIBS= #-L /usr/local/lib
+#
+# Les variables des règles implicites et explicites
+#
+RM=rm- rf
+CFLAGS=		# Les flags de compilation des .c
+CXXFLAGS=	# Les flags de compilation des .cpp
+CPPFLAGS=	# Les flags de pré-processeur (cc -E)
+CC=clang	# Compilateur .c
+CXX=clang++ # Compilateur .cpp
+
+#
+# Variables diverses
+#
+LIBS=		# Li
 
 # CC et CFLAGS sont des variables qui conditionnent les règles implicites ;
 # Par exemple, si une dépendance foo.o ne trouve aucune règle exlicite
@@ -23,29 +33,29 @@ LIBS= #-L /usr/local/lib
 #				$(CC) -c (la compilation)
 
 
-SRCDIR=Sources
+SRCDIR=Sources	# Dossier des .c, .cpp
 SRC_LIBRARIES=Libraries/arduino_serial_lib #Libraries/camera_sbig_lib
 # dossiers dans lesquelles sont les libs qui seront compilées
 
-OBJDIR=Builds
+OBJDIR=Builds	# Dossier des objets .o
 
-BINDIR=Binaries
-BIN=a.out
+BINDIR=Binaries	# Dossier des exécutables .out
+BIN=a.out		# Nom de l'exécutable en sortie
 
-# Attention, "all", "arduino"... ont besoin d'un main.c
+#
+# Définition des différents main.c liés à chaque règle (arduino, all...)
+# NOTE: "all", "arduino"... ont besoin d'un main.c
+#
 MAIN_TEST_ALL=main_global.c
 MAIN_TEST_ARDUINO=main_arduino.c
 MAIN_TEST_CAMERA=main_camera.c
 MAIN_TEST_POSITION=main_position.c
 
-# Petit truc pour transformer un " " en ":" (pour SRC_LIBRARIES)
-espace := $(subst ,, ) # On prend un espace pour pouvoir substituer avec $(subst)
-
 #
 # Préparation du VPATH qui permettra à make de chercher les sources aux bons endroits
 # lors de la phase de build
 #
-VPATH := $(SRCDIR) $(subst $espace,:,$(SRC_LIBRARIES)) # */ # Où trouver les SOURCES (libs, .c...)
+VPATH := $(SRCDIR) $(SRC_LIBRARIES) # */ # Où trouver les SOURCES (libs, .c...)
 
 
 # Une fonction "FILTER-OUT" pour supprmier les éventuels main.c
@@ -75,27 +85,23 @@ INCLUDES := $(addprefix -I,$(INCLUDES))
 #
 $(OBJDIR)/%.o: %.c
 #$(CC)  # Construction des dépendances
-	$(CC) $(INCLUDES) -o $@ -c $<
+	$(CC) $(INCLUDES) -o $@ -c $< $(CFLAGS)
 $(OBJDIR)/%.o: %.cpp
-	$(CXX) $(INCLUDES) -o $@ -c $<
+	$(CXX) $(INCLUDES) -o $@ -c $< $(CXXFLAGS)
 
-# ATTENTION : apparement MAKE fait un cc -c -o cmd_arduino.o Sources/cmd_arduino.c
-# tout seul de son côté à cause du VPATH ?
+
 
 arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	@echo "----------> Liste des objets librairie : $(LIST_OBJ_LIB) -----"
-	@echo "----------> Vpath : $(VPATH) ----"
-	@echo "----------> Includes : $(INCLUDES) ----"
-	$(CXX) $^ -o $(BINDIR)/$(BIN) $(OPT) $(LIBS)
+	$(CXX) $^ -o $(BINDIR)/$(BIN)
 
 camera: $(OBJDIR)/$(MAIN_TEST_CAMERA:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $^ -o $(BINDIR)/$(BIN) $(OPT) $(LIBS)
+	$(CXX) $^ -o $(BINDIR)/$(BIN)
 
 position: $(OBJDIR)/$(MAIN_TEST_POSITION:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $^ -o $(BINDIR)/$(BIN) $(OPT) $(LIBS)
+	$(CXX) $^ -o $(BINDIR)/$(BIN)
 
 all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $^ -o $(BINDIR)/$(BIN) $(OPT) $(LIBS)
+	$(CXX) $^ -o $(BINDIR)/$(BIN)
 
 clean:
 	rm -rf $(OBJDIR)/*.o $(BIN) #*/
@@ -105,11 +111,15 @@ clean:
 # VPATH=$(SRCDIR):$(LIBDIR)...
 # Ou utiliser vpath
 
-#$@	 Le nom de la cible
-#$<	 Le nom de la première dépendance
-#$^	 La liste des dépendances
-#$?	 La liste des dépendances plus récentes que la cible
-#$*	 Le nom du fichier sans suffixe
+# ATTENTION : apparement MAKE fait un cc -c -o cmd_arduino.o Sources/cmd_arduino.c
+# tout seul de son côté à cause du VPATH ?
+
+### Memo des variables automatiques ###
+#	$@	 Le nom de la cible
+#	$<	 Le nom de la première dépendance
+#	$^	 La liste des dépendances
+#	$?	 La liste des dépendances plus récentes que la cible
+#	$*	 Le nom du fichier sans suffixe
 
 # vim:ft=make
 #
