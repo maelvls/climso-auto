@@ -11,21 +11,40 @@
 #	- comprendre ce qu'est un CFLAGS, CXXFLAGS
 #
 
+# Déroulement d'une compil :
+#		cc -E
 #
-# Les variables des règles implicites et explicites
 #
-RM=rm- rf
-CFLAGS=		# Les flags de compilation des .c
-CXXFLAGS=	# Les flags de compilation des .cpp
-CPPFLAGS=	# Les flags de pré-processeur (cc -E)
-CC=clang	# Compilateur .c
-CXX=clang++ # Compilateur .cpp
+#
+#
 
 #
 # Variables diverses
 #
-LIBS=		# Li
+# Dossier des .c, .cpp
+SRCDIR=Sources
+# Dossiers dans lesquels sont les libs qui seront compilées
+SRCLIBDIR=Libraries/arduino_serial_lib #Libraries/camera_sbig_lib
+# Dossier des objets .o
+OBJDIR=Builds
+# Dossier des exécutables .out
+BINDIR=Binaries
+# Nom de l'exécutable en sortie
+BIN=a.out
+# Librairies (exple -L/usr/local/lib) utilisées par le linker
+LIBS=
 
+
+#
+# Les variables des règles implicites et explicites
+#
+CFLAGS=-g		# Les flags de compilation des .c
+CXXFLAGS=-g	# Les flags de compilation des .cpp
+CPPFLAGS=		# Les flags de pré-processeur (cc -E)
+CC=clang		# Compilateur .c
+CXX=clang++		# Compilateur .cpp
+RM=rm -rf $(OBJDIR)/* # */
+# EXPLICATION :
 # CC et CFLAGS sont des variables qui conditionnent les règles implicites ;
 # Par exemple, si une dépendance foo.o ne trouve aucune règle exlicite
 # "foo.o: foo.c", alors make fait appel à la règle implicite
@@ -33,14 +52,6 @@ LIBS=		# Li
 #				$(CC) -c (la compilation)
 
 
-SRCDIR=Sources	# Dossier des .c, .cpp
-SRC_LIBRARIES=Libraries/arduino_serial_lib #Libraries/camera_sbig_lib
-# dossiers dans lesquelles sont les libs qui seront compilées
-
-OBJDIR=Builds	# Dossier des objets .o
-
-BINDIR=Binaries	# Dossier des exécutables .out
-BIN=a.out		# Nom de l'exécutable en sortie
 
 #
 # Définition des différents main.c liés à chaque règle (arduino, all...)
@@ -55,7 +66,7 @@ MAIN_TEST_POSITION=main_position.c
 # Préparation du VPATH qui permettra à make de chercher les sources aux bons endroits
 # lors de la phase de build
 #
-VPATH := $(SRCDIR) $(SRC_LIBRARIES) # */ # Où trouver les SOURCES (libs, .c...)
+VPATH := $(SRCDIR) $(SRCLIBDIR) # */ # Où trouver les SOURCES (libs, .c...)
 
 
 # Une fonction "FILTER-OUT" pour supprmier les éventuels main.c
@@ -70,25 +81,24 @@ LIST_OBJ := $(addprefix $(OBJDIR)/,$(notdir $(LIST_OBJ))) # On enlève les reper
 #
 # Construction de la liste des objets à build des les librairies
 #
-LIST_OBJ_LIB := $(subst .c,.o,$(foreach v,$(SRC_LIBRARIES),$(wildcard $(v)/*.c))) # */
-LIST_OBJ_LIB += $(subst .cpp,.o,$(foreach v,$(SRC_LIBRARIES),$(wildcard $(v)/*.cpp))) # */
+LIST_OBJ_LIB := $(subst .c,.o,$(foreach v,$(SRCLIBDIR),$(wildcard $(v)/*.c))) # */
+LIST_OBJ_LIB += $(subst .cpp,.o,$(foreach v,$(SRCLIBDIR),$(wildcard $(v)/*.cpp))) # */
 LIST_OBJ_LIB := $(call FILTER_OUT,main,$(LIST_OBJ_LIB)) # */ # On enlève les main
 LIST_OBJ_LIB := $(addprefix $(OBJDIR)/,$(notdir $(LIST_OBJ_LIB))) # On enlève les repertoires
 #
 # Construction des includes (les headers)
 #
-INCLUDES := $(SRCDIR) $(SRC_LIBRARIES)
+INCLUDES := $(SRCDIR) $(SRCLIBDIR)
 INCLUDES := $(addprefix -I,$(INCLUDES))
 
 #
 # Build (sources, librairies)
 #
-$(OBJDIR)/%.o: %.c
-#$(CC)  # Construction des dépendances
-	$(CC) $(INCLUDES) -o $@ -c $< $(CFLAGS)
-$(OBJDIR)/%.o: %.cpp
-	$(CXX) $(INCLUDES) -o $@ -c $< $(CXXFLAGS)
 
+$(OBJDIR)/%.o: %.c
+	$(CC) $(INCLUDES) $(CFLAGS) -o $@ -c $<
+$(OBJDIR)/%.o: %.cpp
+	$(CXX) $(INCLUDES) $(CXXFLAGS) -o $@ -c $<
 
 
 arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
@@ -104,8 +114,7 @@ all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
 	$(CXX) $^ -o $(BINDIR)/$(BIN)
 
 clean:
-	rm -rf $(OBJDIR)/*.o $(BIN) #*/
-
+	$(RM)
 
 # On peut utiliser VPATH pour indiquer les chemins des dépendances :
 # VPATH=$(SRCDIR):$(LIBDIR)...
@@ -113,6 +122,15 @@ clean:
 
 # ATTENTION : apparement MAKE fait un cc -c -o cmd_arduino.o Sources/cmd_arduino.c
 # tout seul de son côté à cause du VPATH ?
+
+# Les fichiers de dépendance .d (cc -E appelle le pré-processeur)
+#		$(CC) -E -MM $^ -MF leFichierDesDependances.d
+# Exemple d'appel :
+#		foo.o: foo.c
+#			cc -E -MM $^ -MF leFichierDesDependances.d ($^ == foo.c)
+# donnera dans leFichierDesDependances.d :
+#		foo.o: foo.c foo.h bar.c bar.h
+#
 
 ### Memo des variables automatiques ###
 #	$@	 Le nom de la cible
