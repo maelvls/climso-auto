@@ -7,7 +7,7 @@
 //
 
 #include <stdio.h>
-#include "cmd-arduino.h"
+#include "cmd_arduino.h"
 
 int main(int argc, const char *argv[])
 {

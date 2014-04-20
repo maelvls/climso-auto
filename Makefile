@@ -79,7 +79,7 @@ $(OBJDIR)/%.o: %.c
 $(OBJDIR)/%.o: %.cpp
 	$(CXX) $(INCLUDES) -o $@ -c $<
 
-# ATTENTION : apparement MAKE fait un cc -c -o cmd-arduino.o Sources/cmd-arduino.c
+# ATTENTION : apparement MAKE fait un cc -c -o cmd_arduino.o Sources/cmd_arduino.c
 # tout seul de son côté à cause du VPATH ?
 
 arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)

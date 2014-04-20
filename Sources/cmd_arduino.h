@@ -1,5 +1,5 @@
 //
-//  cmd-arduino.h
+//  cmd_arduino.h
 //  climso-auto
 //
 //  Created by Maël Valais on 18/04/2014.

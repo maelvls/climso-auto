@@ -1,5 +1,5 @@
 //
-//  cmd-arduino.c
+//  cmd_arduino.c
 //  climso-auto
 //
 //  Created by Maël Valais on 18/04/2014.
@@ -16,7 +16,7 @@
 #define UNIX_DEVICE "/dev/tty.usbmodemfa131"
 
 
-#include "cmd-arduino.h"
+#include "cmd_arduino.h"
 #include "arduino-serial-lib.h"
 
 
