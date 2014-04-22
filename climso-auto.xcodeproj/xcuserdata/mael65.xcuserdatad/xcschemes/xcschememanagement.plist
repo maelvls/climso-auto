@@ -19,6 +19,11 @@
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
+		<key>Image.xcscheme</key>
+		<dict>
+			<key>orderHint</key>
+			<integer>6</integer>
+		</dict>
 		<key>Position.xcscheme</key>
 		<dict>
 			<key>orderHint</key>
@@ -68,6 +73,11 @@
 			<true/>
 		</dict>
 		<key>1CBBF558190164E400680226</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>1CEC1A9D190556BF0016A024</key>
 		<dict>
 			<key>primary</key>
 			<true/>
