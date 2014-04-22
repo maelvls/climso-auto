@@ -10,6 +10,6 @@
 
 int main(int argc, const char *argv[])
 {
-    printf("Camera");
+    printf("Main global");
 	return 0;
 }

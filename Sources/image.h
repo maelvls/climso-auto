@@ -9,7 +9,16 @@
 #ifndef __climso_auto__picture__
 #define __climso_auto__picture__
 
+#include <exception>
 #include <iostream>
+#include <sstream>
+#include <tiffio.h>
+
+#define NOMBRE_BITS_PAR_SAMPLE		16 // Taille arbitraire (uint16_t)
+#define NOMBRE_SAMPLES_PAR_PIXEL	1  // Car c'est des niveaux de gris
+
+
+#include "exceptions.h"
 using namespace::std;
 
 typedef struct {
@@ -19,16 +28,16 @@ typedef struct {
 
 class Image {
 private:
-    int h, l; // hauteur, largeur
-    int **img;
+    int lignes, colonnes; // hauteur, largeur
+    uint16_t **img; // Des pixels nuances de gris sur 16 bits
 public:
     Image();
     Image(int hauteur, int largeur);
-    Image(Image&);
+    //Image(Image&);
     Image(Image&,int decal_x, int decal_y, int longueur, int largeur);
     Image(Image&, int facteur_bin);
     
-    int chargerTiff(string fichierEntree);
+    static Image& chargerTiff(string fichierEntree);
     int ecrireTiff(string fichierSortie);
     
     short pix(int x, int y); // Il faudrait faire un itérateur
@@ -39,8 +48,9 @@ public:
     Image& convolution(Image& p);
     Image& operator*(Image&); // convolution
     Image& correlation(Image& p);
-    
+	
     ~Image();
 };
+
 
 #endif /* defined(__climso_auto__picture__) */

@@ -11,10 +11,12 @@
 #	- comprendre ce qu'est un CFLAGS, CXXFLAGS
 #
 
-# Déroulement d'une compil :
-#		cc -E
-#
-#
+# Déroulement d'une compilation :
+#	- pré-compilation puis compilation en .o grâce à CC (-I pour les includes)
+#	- linkage des .o grâce à LD (-L pour les répertoires des librairies, -l pour les archives .a)
+#		-lm cherche donc libm.a ou libm.dylib
+#		-L/usr/local/lib permet à LD de trouver des trucs qui ne sont pas dans le PATH_LIB_JECONNAISPAS
+#			par défaut
 #
 #
 
@@ -23,7 +25,7 @@
 #
 # Dossier des .c, .cpp
 SRCDIR=Sources
-# Dossiers dans lesquels sont les libs qui seront compilées
+# Librairies INTERNES en source qui devront être compilées
 SRCLIBDIR=Libraries/arduino_serial_lib #Libraries/camera_sbig_lib
 # Dossier des objets .o
 OBJDIR=Builds
@@ -31,19 +33,23 @@ OBJDIR=Builds
 BINDIR=Binaries
 # Nom de l'exécutable en sortie
 BIN=a.out
-# Librairies (exple -L/usr/local/lib) utilisées par le linker
-LIBS=
 
+# Librairies EXTERNES (exple -L/usr/local/lib) utilisées par le linker
+# Par défaut, c'est dans LD_LIBRARY_PATH (mais pas sur MacOSX je crois)
+LIBS=-L/usr/local/lib -L/opt/local/lib
+LIBS_INCLUDES=-I/usr/local/include -I/opt/local/include
 
 #
 # Les variables des règles implicites et explicites
 #
-CFLAGS=-g		# Les flags de compilation des .c
-CXXFLAGS=-g	# Les flags de compilation des .cpp
-CPPFLAGS=		# Les flags de pré-processeur (cc -E)
-CC=clang		# Compilateur .c
+CFLAGS=		# Les flags de compilation des .c
+CXXFLAGS=	# Les flags de compilation des .cpp
+CPPFLAGS=-g		# Les flags de pré-processeur (cc -E...)
+CC=clang++		# Compilateur .c
 CXX=clang++		# Compilateur .cpp
+LDFLAGS=-lm -ltiff
 RM=rm -rf $(OBJDIR)/* # */
+
 # EXPLICATION :
 # CC et CFLAGS sont des variables qui conditionnent les règles implicites ;
 # Par exemple, si une dépendance foo.o ne trouve aucune règle exlicite
@@ -61,6 +67,7 @@ MAIN_TEST_ALL=main_global.c
 MAIN_TEST_ARDUINO=main_arduino.c
 MAIN_TEST_CAMERA=main_camera.c
 MAIN_TEST_POSITION=main_position.c
+MAIN_TEST_IMAGE=main_image.c
 
 #
 # Préparation du VPATH qui permettra à make de chercher les sources aux bons endroits
@@ -89,29 +96,32 @@ LIST_OBJ_LIB := $(addprefix $(OBJDIR)/,$(notdir $(LIST_OBJ_LIB))) # On enlève l
 # Construction des includes (les headers)
 #
 INCLUDES := $(SRCDIR) $(SRCLIBDIR)
-INCLUDES := $(addprefix -I,$(INCLUDES))
+INCLUDES := $(addprefix -I,$(INCLUDES)) $(LIBS_INCLUDES)
 
 #
 # Build (sources, librairies)
 #
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(INCLUDES) $(CFLAGS) -o $@ -c $<
+	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -o $@ -c $<
 $(OBJDIR)/%.o: %.cpp
-	$(CXX) $(INCLUDES) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 
 arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 camera: $(OBJDIR)/$(MAIN_TEST_CAMERA:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 position: $(OBJDIR)/$(MAIN_TEST_POSITION:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
+
+image: $(OBJDIR)/$(MAIN_TEST_IMAGE:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
+	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 clean:
 	$(RM)
