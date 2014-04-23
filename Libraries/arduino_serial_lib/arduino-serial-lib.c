@@ -3,6 +3,10 @@
 //
 // 2006-2013, Tod E. Kurt, http://todbot.com/blog/
 //
+// 2014-04 modifications by Mael Valais :
+//		Added serialport_writebytes function
+//
+
 
 #include "arduino-serial-lib.h"
 
@@ -101,6 +105,18 @@ int serialport_writebyte( int fd, uint8_t b)
 {
     int n = write(fd,&b,1);
     if( n!=1)
+        return -1;
+    return 0;
+}
+
+/**
+	Fonction pour envoyer une série de bytes
+	@author Mael Valais
+ */
+int serialport_writebytes( int fd, uint8_t* b, size_t len)
+{
+    int n = write(fd,b,len);
+    if( n!=len)
         return -1;
     return 0;
 }

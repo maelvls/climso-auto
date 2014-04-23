@@ -7,8 +7,8 @@
 #
 # A faire :
 #	- comprendre VPATH (les espaces ? pas d'espaces?) (OK)
-#	- essayer de comprendre les .d et -MF
-#	- comprendre ce qu'est un CFLAGS, CXXFLAGS
+#	- essayer de comprendre les .d et -MF (PRESQUE OK)
+#	- comprendre ce qu'est un CFLAGS, CXXFLAGS (OK -> -g)
 #
 
 # Déroulement d'une compilation :
@@ -16,17 +16,18 @@
 #	- linkage des .o grâce à LD (-L pour les répertoires des librairies, -l pour les archives .a)
 #		-lm cherche donc libm.a ou libm.dylib
 #		-L/usr/local/lib permet à LD de trouver des trucs qui ne sont pas dans le PATH_LIB_JECONNAISPAS
-#			par défaut
-#
-#
+#		par défaut
 
 #
 # Variables diverses
 #
-# Dossier des .c, .cpp
+# Dossier des Sources (.c, .cpp,.h)
 SRCDIR=Sources
-# Librairies INTERNES en source qui devront être compilées
-SRCLIBDIR=Libraries/arduino_serial_lib #Libraries/camera_sbig_lib
+# Dossier des librairies (.c, .cpp, .h)
+SRCLIBDIR=Libraries
+
+FILTER=main camera_sbig_lib
+
 # Dossier des objets .o
 OBJDIR=Builds
 # Dossier des exécutables .out
@@ -58,7 +59,6 @@ RM=rm -rf $(OBJDIR)/* # */
 #				$(CC) -c (la compilation)
 
 
-
 #
 # Définition des différents main.c liés à chaque règle (arduino, all...)
 # NOTE: "all", "arduino"... ont besoin d'un main.c
@@ -75,37 +75,53 @@ MAIN_TEST_IMAGE=main_image.c
 #
 VPATH := $(SRCDIR) $(SRCLIBDIR) # */ # Où trouver les SOURCES (libs, .c...)
 
+#
+# Fonctions
+#
 
-# Une fonction "FILTER-OUT" pour supprmier les éventuels main.c
-FILTER_OUT = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
+
+# Supprimer les blancs
+# $(call nospaces,a b c  d ) donne abcd
+space:=$(subst , ,)
+nospaces=$(subst $(space),,$(1))
+# NOTE : Wildcard permet de "développer" le contenu avec * par exemple (comme en shell)
+# Wildcard récursif. Appel : $(call rwildcard, , *.c) pour le rep. courant
+rwildcard=$(foreach d,$(wildcard $(1)*),$(call rwildcard,$d/,$(2)) $(filter $(subst *,%,$(2)),$d))
+# Supprime tous les termes de CHAINE contenant TERME quelque part
+# $(call filter_out_multiple,TERME,CHAINE)
+filter_out = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
+# Supprime tous les termes de CHAINE où existent le TERME1 ou TERME2...
+# $(call filter_out_multiple,TERME1 TERME2 (...),CHAINE)
+filter_out_multiple = $(foreach v,$(2), $(if $(call nospaces,$(foreach p,$(1),$(if $(findstring $(p),$(v)),n,))),,$(v)))
+
 #
 # Construction de la liste des objets à build des les sources
 #
-LIST_OBJ := $(subst .c,.o,$(wildcard $(SRCDIR)/*.c)) # */
-LIST_OBJ += $(subst .cpp,.o,$(wildcard $(SRCDIR)/*.cpp)) # */
-LIST_OBJ := $(call FILTER_OUT,main,$(LIST_OBJ)) # */ # On enlève les main
+LIST_OBJ := $(subst .c,.o,$(call rwildcard,$(SRCDIR),*.c))
+LIST_OBJ += $(subst .cpp,.o,$(call rwildcard,$(SRCDIR),*.cpp))
+LIST_OBJ := $(call filter_out_multiple,$(FILTER),$(LIST_OBJ)) # On filtre (main.c..)
 LIST_OBJ := $(addprefix $(OBJDIR)/,$(notdir $(LIST_OBJ))) # On enlève les repertoires
 #
 # Construction de la liste des objets à build des les librairies
 #
-LIST_OBJ_LIB := $(subst .c,.o,$(foreach v,$(SRCLIBDIR),$(wildcard $(v)/*.c))) # */
-LIST_OBJ_LIB += $(subst .cpp,.o,$(foreach v,$(SRCLIBDIR),$(wildcard $(v)/*.cpp))) # */
-LIST_OBJ_LIB := $(call FILTER_OUT,main,$(LIST_OBJ_LIB)) # */ # On enlève les main
+LIST_OBJ_LIB := $(subst .c,.o,$(call rwildcard,$(SRCLIBDIR),*.c))
+LIST_OBJ_LIB += $(subst .cpp,.o,$(call rwildcard,$(SRCLIBDIR),*.cpp))
+LIST_OBJ_LIB := $(call filter_out_multiple,$(FILTER),$(LIST_OBJ_LIB)) # On filtre (main.c..)
 LIST_OBJ_LIB := $(addprefix $(OBJDIR)/,$(notdir $(LIST_OBJ_LIB))) # On enlève les repertoires
 #
 # Construction des includes (les headers)
 #
-INCLUDES := $(SRCDIR) $(SRCLIBDIR)
-INCLUDES := $(addprefix -I,$(INCLUDES)) $(LIBS_INCLUDES)
-
+#USER_INCLUDES := $(SRCDIR) $(SRCLIBDIR)
+#USER_INCLUDES := $(addprefix -I,$(USER_INCLUDES)) $(LIBS_INCLUDES)
+USER_INCLUDES := $(addprefix -I,$(dir $(call rwildcard, ,*.h)))
 #
 # Build (sources, librairies)
 #
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -o $@ -c $<
+	$(CC) $(USER_INCLUDES) $(CPPFLAGS) $(CFLAGS) -o $@ -c $<
 $(OBJDIR)/%.o: %.cpp
-	$(CXX) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(USER_INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 
 arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
@@ -125,6 +141,12 @@ all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
 
 clean:
 	$(RM)
+
+
+essai:
+	@echo "---------------ESSAI----------------"
+	@echo "Liste des objets : $(LIST_OBJ)"
+	@echo "Liste des objets librairie : $(LIST_OBJ_LIB)"
 
 # On peut utiliser VPATH pour indiquer les chemins des dépendances :
 # VPATH=$(SRCDIR):$(LIBDIR)...

@@ -13,23 +13,23 @@
 #include <sstream>
 using namespace std;
 
-class Not16bitsGrayScalePicture: public exception {
+class FormatException: public exception {
 private:
 	int bitsPerSample,samplePerPixel;
 	string file;
 public:
-    Not16bitsGrayScalePicture(int bitsPerSample,int samplePerPixel, string file) throw();
+    FormatException(int bitsPerSample,int samplePerPixel, string file) throw();
 	virtual const char* what() const throw();
-    virtual ~Not16bitsGrayScalePicture() throw();
+    virtual ~FormatException() throw();
 };
 
-class ErrorOpeningPicture: public exception {
+class OpeningException: public exception {
 private:
 	string file;
 public:
-	ErrorOpeningPicture(string file) throw();
+	OpeningException(string file) throw();
 	virtual const char* what() const throw();
-	virtual ~ErrorOpeningPicture() throw();
+	virtual ~OpeningException() throw();
 };
 
 #endif /* defined(__climso_auto__exceptions__) */

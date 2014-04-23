@@ -9,10 +9,10 @@
 
 #include "exceptions.h"
 
-Not16bitsGrayScalePicture::Not16bitsGrayScalePicture(int bitsPerSample,int samplePerPixel, string file) throw() :bitsPerSample(bitsPerSample),samplePerPixel(samplePerPixel),file(file)
+FormatException::FormatException(int bitsPerSample,int samplePerPixel, string file) throw() :bitsPerSample(bitsPerSample),samplePerPixel(samplePerPixel),file(file)
 {}
 	
-const char* Not16bitsGrayScalePicture::what() const throw()
+const char* FormatException::what() const throw()
 {
 	//TODO: essayer de donner une vrai exception
 	//ostringstream stream;
@@ -23,16 +23,16 @@ const char* Not16bitsGrayScalePicture::what() const throw()
 	return "L'image ne semble pas etre en 16bits niveaux de gris\n";
 }
 
-Not16bitsGrayScalePicture::~Not16bitsGrayScalePicture() throw() {
+FormatException::~FormatException() throw() {
 	//TODO: faut il delete des trucs ?
 }
 
 
 
-ErrorOpeningPicture::ErrorOpeningPicture(string file) throw() :file(file) {
+OpeningException::OpeningException(string file) throw() :file(file) {
 }
 
-const char* ErrorOpeningPicture::what() const throw()
+const char* OpeningException::what() const throw()
 {
 	//TODO: essayer de donner une vrai exception
 	//ostringstream stream;
@@ -41,6 +41,6 @@ const char* ErrorOpeningPicture::what() const throw()
 	return "L'image n'a pas pu etre lue\n";
 }
 
-ErrorOpeningPicture::~ErrorOpeningPicture() throw() {
+OpeningException::~OpeningException() throw() {
 	//TODO: faut il delete des trucs ?
 }

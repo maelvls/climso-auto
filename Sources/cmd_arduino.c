@@ -13,11 +13,12 @@
 //          ou alors /dev/ttyAMC0 sous unix...
 //
 
-#define UNIX_DEVICE "/dev/tty.usbmodemfa131"
-
 
 #include "cmd_arduino.h"
 #include "arduino-serial-lib.h"
+
+#define START_BYTE	0xFF
+#define SPEED_BAUD	9600
 
 
 /**
@@ -25,16 +26,41 @@
     
     @param direction La direction 
     @param La duree en ms
-    @return 1 si tout s'est bien passé, 0 si problème d'ouverture du /dev/tty...
+    @return 0 si tout s'est bien passé, 1 si problème d'ouverture du /dev/tty...
 */
-int envoyerCommande(int direction, int duree) {
-    int fd;
-    fd = serialport_init(UNIX_DEVICE, 9600);
-    if(fd == 0) // Impossible de lire sur ce device
-        return 0;
-    char commande [30];
-    printf(commande, 30, "%d %d", direction, duree);
-    serialport_write(fd, commande);
-    serialport_close(fd);
-    return 1;
+int envoyerCommande(uint8_t direction, uint16_t duree, int fd) {
+	/*
+		On envoie d'abord un octet pour la commande (entre 3 et 13)
+		Puis on envoie deux octets pour la duree (entre 1 et 65500)
+	 */
+
+	//
+	// Initialisation de la communication
+	//
+	if(serialport_writebyte(fd, START_BYTE) == -1) {
+		printf("Erreur lors de l'envoi du byte START\n");
+		return 2;
+	}
+	//
+	// Direction
+	//
+	if(serialport_writebyte(fd, direction) == -1) {
+		printf("Erreur lors de l'envoi de la direction\n");
+		return 3;
+	}
+	//
+	// Durée : On envoie en big indian les deux parties du uint16_t
+	//
+	if(serialport_writebytes(fd,(uint8_t*)&duree,sizeof(uint16_t)) == -1) {
+		printf("Erreur lors de l'envoi de la direction\n");
+		return 4;
+	}
+    return 0;
+}
+
+int allumerCommunication(const char* device) {
+	return serialport_init(device, SPEED_BAUD);
+}
+void eteindreCommunication(int fd_device) {
+	serialport_close(fd_device);
 }
