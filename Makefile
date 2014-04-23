@@ -31,14 +31,15 @@ FILTER=main camera_sbig_lib
 # Dossier des objets .o
 OBJDIR=Builds
 # Dossier des exécutables .out
-BINDIR=Binaries
+BINDIR=.
 # Nom de l'exécutable en sortie
 BIN=a.out
 
 # Librairies EXTERNES (exple -L/usr/local/lib) utilisées par le linker
 # Par défaut, c'est dans LD_LIBRARY_PATH (mais pas sur MacOSX je crois)
-LIBS=-L/usr/local/lib -L/opt/local/lib
-LIBS_INCLUDES=-I/usr/local/include -I/opt/local/include
+EXTERN_INCLUDES=-I/usr/local/include -I/opt/local/include
+EXTERN_LIBS_DIR=-L/usr/local/lib -L/opt/local/lib
+EXTERN_LIBS=-lm -ltiff
 
 #
 # Les variables des règles implicites et explicites
@@ -48,7 +49,7 @@ CXXFLAGS=	# Les flags de compilation des .cpp
 CPPFLAGS=-g		# Les flags de pré-processeur (cc -E...)
 CC=clang++		# Compilateur .c
 CXX=clang++		# Compilateur .cpp
-LDFLAGS=-lm -ltiff
+LDFLAGS=$(EXTERN_LIBS)
 RM=rm -rf $(OBJDIR)/* # */
 
 # EXPLICATION :
@@ -112,32 +113,32 @@ LIST_OBJ_LIB := $(addprefix $(OBJDIR)/,$(notdir $(LIST_OBJ_LIB))) # On enlève l
 # Construction des includes (les headers)
 #
 #USER_INCLUDES := $(SRCDIR) $(SRCLIBDIR)
-#USER_INCLUDES := $(addprefix -I,$(USER_INCLUDES)) $(LIBS_INCLUDES)
-USER_INCLUDES := $(addprefix -I,$(dir $(call rwildcard, ,*.h)))
+#USER_INCLUDES := $(addprefix -I,$(USER_INCLUDES))
+USER_INCLUDES := $(addprefix -I,$(sort $(dir $(call rwildcard, ,*.h))))
 #
 # Build (sources, librairies)
 #
 
 $(OBJDIR)/%.o: %.c
-	$(CC) $(USER_INCLUDES) $(CPPFLAGS) $(CFLAGS) -o $@ -c $<
+	$(CC) $(USER_INCLUDES) $(EXTERN_INCLUDES) $(CPPFLAGS) $(CFLAGS) -o $@ -c $<
 $(OBJDIR)/%.o: %.cpp
-	$(CXX) $(USER_INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
+	$(CXX) $(USER_INCLUDES) $(EXTERN_INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 
 arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 camera: $(OBJDIR)/$(MAIN_TEST_CAMERA:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 position: $(OBJDIR)/$(MAIN_TEST_POSITION:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 image: $(OBJDIR)/$(MAIN_TEST_IMAGE:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $(LIBS) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
+	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 clean:
 	$(RM)
@@ -147,6 +148,10 @@ essai:
 	@echo "---------------ESSAI----------------"
 	@echo "Liste des objets : $(LIST_OBJ)"
 	@echo "Liste des objets librairie : $(LIST_OBJ_LIB)"
+	@echo "USER_INCLUDES : $(USER_INCLUDES)"
+	@echo "EXTERN_INCLUDES : $(EXTERN_INCLUDES)"
+	@echo "EXTERN_LIBS_DIR : $(EXTERN_LIBS_DIR)"
+	@echo "EXTERN_LIBS : $(EXTERN_LIBS)"
 
 # On peut utiliser VPATH pour indiquer les chemins des dépendances :
 # VPATH=$(SRCDIR):$(LIBDIR)...
