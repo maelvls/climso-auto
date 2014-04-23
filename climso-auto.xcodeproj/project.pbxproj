@@ -42,6 +42,7 @@
 		1C0770B2190191080090130D /* main_global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_global.c; sourceTree = "<group>"; usesTabs = 1; };
 		1C2B15C918F81D760038A475 /* climso-auto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "climso-auto"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C55A36819042EB40075BEE4 /* main_camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_camera.c; sourceTree = "<group>"; usesTabs = 1; };
+		1C92E2D9190807BE00F34FDA /* climso-auto.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "climso-auto.xcodeproj"; sourceTree = "<group>"; };
 		1CBBF5211901438D00680226 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
 		1CBBF5221901438D00680226 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		1CBBF57A1901697300680226 /* camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = camera.c; sourceTree = "<group>"; usesTabs = 1; };
@@ -102,6 +103,7 @@
 			children = (
 				1C077072190185030090130D /* Makefiles */,
 				1CBBF5211901438D00680226 /* Makefile */,
+				1C92E2D9190807BE00F34FDA /* climso-auto.xcodeproj */,
 				1CBBF5221901438D00680226 /* README.md */,
 				1CBBF5791901697300680226 /* Sources */,
 				1CC0968F19065F9B00E53BBA /* Libraries */,
@@ -115,6 +117,11 @@
 			children = (
 				1C2B15C918F81D760038A475 /* climso-auto */,
 			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1C92E2DA190807BE00F34FDA /* Products */ = {
+			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
 		};
@@ -328,6 +335,12 @@
 			mainGroup = 1C2B15C018F81D760038A475;
 			productRefGroup = 1C2B15CA18F81D760038A475 /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 1C92E2DA190807BE00F34FDA /* Products */;
+					ProjectRef = 1C92E2D9190807BE00F34FDA /* climso-auto.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1C0770A019018F220090130D /* Arduino */,
