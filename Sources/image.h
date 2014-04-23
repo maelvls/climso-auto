@@ -40,11 +40,17 @@ public:
     static Image& chargerTiff(string fichierEntree);
     int ecrireTiff(string fichierSortie);
     
-    short pix(int x, int y); // Il faudrait faire un itérateur
-    int hauteur();
-    int largeur();
+    void copier(Image& src, int x, int y);
+    void copier(Image& src);
+    void init(int val);
+
+    double getPix(int l, int c); // Il faudrait faire un itérateur
+    void setPix(int l, int c, double intensite);
+    int getLignes();
+    int getColonnes();
     
     Pixel& trouverMaximum();
+    Image& convolution(Image& p, double seuil);
     Image& convolution(Image& p);
     Image& operator*(Image&); // convolution
     Image& correlation(Image& p);
