@@ -39,13 +39,13 @@ Image::~Image() {
 			veut dire que quelques tags du fichier TIFF n'ont pas pu être interprétés, ce qui veut
 			certainement dire que le fichier contient des metadata personnalisés non reconnus.
 			L'erreur n'a aucune influence sur le traitement.
-	@exception Not16bitsGrayScalePicture L'image n'est pas en échelles de gris sur 16 bits
-	@exception ErrorOpeningPicture L'image ne peut être lue
+	@exception FormatPictureException L'image n'est pas en échelles de gris sur 16 bits
+	@exception OpeningPictureException L'image ne peut être lue
 */
 Image& Image::chargerTiff(string fichierEntree) {
     TIFF* tif = TIFFOpen(fichierEntree.c_str(), "r");
     if (tif == NULL) {
-		throw ErrorOpeningPicture(fichierEntree);
+		throw OpeningException(fichierEntree);
 	}
 	uint32_t imagelength,imagewidth;
 	tdata_t buffer;
@@ -62,7 +62,7 @@ Image& Image::chargerTiff(string fichierEntree) {
 	TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &samplePerPixel);
 	
 	if(bitsPerSample != 16 || samplePerPixel != 1) {
-		throw Not16bitsGrayScalePicture(bitsPerSample,samplePerPixel,fichierEntree);
+		throw FormatException(bitsPerSample,samplePerPixel,fichierEntree);
 	}
 
 	// Préparation de la nouvelle image
@@ -77,7 +77,7 @@ Image& Image::chargerTiff(string fichierEntree) {
 	{
 		TIFFReadScanline(tif, buffer, ligne, 0); // 0 = le sample numéro 0
 		out->img[ligne] = new uint16_t[imagewidth];
-		for(int col=0; col<imagewidth; col++) {
+		for(int col=0; col<imagewidth; col++) { // Copie de la ligne buf dans img[]
 			out->img[ligne][col] = ((uint16_t*)buffer)[col]; // XXX
 		}
 	}
@@ -90,19 +90,23 @@ Image& Image::chargerTiff(string fichierEntree) {
 int Image::ecrireTiff(string fichierSortie) {
 	TIFF* out = TIFFOpen(fichierSortie.c_str(), "w");
 	if (out == NULL) {
-		throw ErrorOpeningPicture(fichierSortie);
+		
+		throw OpeningException(fichierSortie);
 	}
-	TIFFSetDirectory(out, 0);
-
+	TIFFSetField(out, TIFFTAG_SUBFILETYPE,0); // Nécessaire pour etre lue
 	TIFFSetField(out, TIFFTAG_IMAGELENGTH, lignes);
 	TIFFSetField(out, TIFFTAG_IMAGEWIDTH, colonnes);
 	TIFFSetField(out, TIFFTAG_SAMPLESPERPIXEL, NOMBRE_SAMPLES_PAR_PIXEL);
 	TIFFSetField(out, TIFFTAG_BITSPERSAMPLE, NOMBRE_BITS_PAR_SAMPLE);
-	TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT); // Orig de l'image
+	//TIFFSetField(out, TIFFTAG_STRIPBYTECOUNTS);
+	TIFFSetField(out, TIFFTAG_MINSAMPLEVALUE,0);
+	TIFFSetField(out, TIFFTAG_MAXSAMPLEVALUE,255);
+	//TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT); // Orig de l'image
 	//   Some other essential fields to set that you do not have to understand for now.
 	TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-	TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
-	TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION,"Image cree par la methode Image::ecrireTiff");
+	TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK); // 0 means black, 255 white
+	TIFFSetField(out, TIFFTAG_IMAGEDESCRIPTION,"Image generee");
+	
 	
 	tsize_t linebytes = colonnes * NOMBRE_SAMPLES_PAR_PIXEL * NOMBRE_BITS_PAR_SAMPLE/8; // length in memory of one row of pixel in the image.
 	cout << "Nombre de bytes par ligne : " << linebytes << endl;
@@ -119,9 +123,14 @@ int Image::ecrireTiff(string fichierSortie) {
 	// Now writing image to the file one strip at a time
 	for (uint32 l = 0; l < lignes; l++)
 	{
-		memcpy(buf, img[l], linebytes);    // check the index here, and figure out why not using h*linebytes
+		memcpy(buf, img[l], linebytes);    // Devrait-on lire à l'envers ?
+		
+		// --------- AFFICHAGE POUR DEBUG ---------
 		for(int i=0; i<3; i++)
 			cout << *((uint16*)buf+i) << " ";
+		cout << endl;
+		// --------- FIN AFFICHAGE POUR DEBUG ---------
+
 		if (TIFFWriteScanline(out, buf, l, 0) < 0)
 			break;
 	}
