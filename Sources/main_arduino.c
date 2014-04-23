@@ -25,6 +25,7 @@ int main(int argc, const char *argv[])
 		scanf("%s",choix);
 		switch (choix[0]) {
 			case 'e':
+			{
 				err_choix = 0;
 				printf("Envoyons une commande\n");
 				printf("D'abord, quelle direction ? (n,s,o,e)\n");
@@ -52,7 +53,7 @@ int main(int argc, const char *argv[])
 					printf("Une erreur de communication s'est produite (numero %d)\n",retour);
 				}
 				break;
-				
+			}
 			default:
 				break;
 		}

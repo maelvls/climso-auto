@@ -147,7 +147,6 @@ essai:
 	@echo "---------------ESSAI----------------"
 	@echo "Liste des objets : $(LIST_OBJ)"
 	@echo "Liste des objets librairie : $(LIST_OBJ_LIB)"
-	@echo "Essai filter_out_multiple : $(call filter_out_multiple,a b d,dd ee ab a)"
 
 # On peut utiliser VPATH pour indiquer les chemins des dépendances :
 # VPATH=$(SRCDIR):$(LIBDIR)...
