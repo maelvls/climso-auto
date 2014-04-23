@@ -21,7 +21,5 @@
 *.i*86
 *.x86_64
 *.hex
-/test.tif
-/test2-3.tif
-/test2.tif
-/climso-auto.xcodeproj
+# Project files
+*.xcodeproj
