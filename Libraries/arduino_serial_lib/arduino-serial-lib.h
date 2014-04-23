@@ -3,12 +3,16 @@
 //
 // 2006-2013, Tod E. Kurt, http://todbot.com/blog/
 //
+// 2014-04 modifications by Mael Valais :
+//		Added serialport_writebytes function
+//
 
 
 #ifndef __ARDUINO_SERIAL_LIB_H__
 #define __ARDUINO_SERIAL_LIB_H__
 
-#include <stdint.h>   // Standard types 
+#include <stdint.h>		// Standard types
+#include <string.h>		// size_t (added by Mael Valais)
 
 int serialport_init(const char* serialport, int baud);
 int serialport_close(int fd);

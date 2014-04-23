@@ -3,6 +3,10 @@
 //
 // 2006-2013, Tod E. Kurt, http://todbot.com/blog/
 //
+// 2014-04 modifications by Mael Valais :
+//		Added serialport_writebytes function
+//
+
 
 #include "arduino-serial-lib.h"
 
@@ -13,7 +17,6 @@
 #include <termios.h>  // POSIX terminal control definitions 
 #include <string.h>   // String function definitions 
 #include <sys/ioctl.h>
-#include <stddef.h>		// size_t (Mael Valais)
 
 // uncomment this to debug reads
 //#define SERIALPORTDEBUG 

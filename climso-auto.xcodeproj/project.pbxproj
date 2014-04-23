@@ -15,9 +15,9 @@
 		1C077098190188BA0090130D /* diametre_soleil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5821901697300680226 /* diametre_soleil.c */; };
 		1C077099190188BA0090130D /* fcts_LK3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5841901697300680226 /* fcts_LK3.c */; };
 		1C07709A190188BA0090130D /* interpol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5881901697300680226 /* interpol.c */; };
+		1C2797C91907A99A00BDB940 /* main_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC1A9B1905532A0016A024 /* main_image.cpp */; };
 		1CC0969F19065FA900E53BBA /* arduino-serial-lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969119065F9B00E53BBA /* arduino-serial-lib.c */; };
 		1CC096A919068D2E00E53BBA /* exceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC096A61906832100E53BBA /* exceptions.cpp */; };
-		1CC096AA1906A17A00E53BBA /* main_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC1A9B1905532A0016A024 /* main_image.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -348,7 +348,7 @@
 				1C077096190188BA0090130D /* convol.c in Sources */,
 				1C077093190188BA0090130D /* camera.c in Sources */,
 				1C077095190188BA0090130D /* image.cpp in Sources */,
-				1CC096AA1906A17A00E53BBA /* main_image.cpp in Sources */,
+				1C2797C91907A99A00BDB940 /* main_image.cpp in Sources */,
 				1C077098190188BA0090130D /* diametre_soleil.c in Sources */,
 				1C077099190188BA0090130D /* fcts_LK3.c in Sources */,
 				1C07709A190188BA0090130D /* interpol.c in Sources */,
