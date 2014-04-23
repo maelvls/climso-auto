@@ -91,6 +91,10 @@ int Image::ecrireTiff(string fichierSortie) {
 	TIFF* out = TIFFOpen(fichierSortie.c_str(), "w");
 	if (out == NULL) {
 		
+		
+		
+		
+		
 		throw OpeningException(fichierSortie);
 	}
 	TIFFSetField(out, TIFFTAG_SUBFILETYPE,0); // Nécessaire pour etre lue
