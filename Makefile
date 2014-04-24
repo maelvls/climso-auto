@@ -38,13 +38,13 @@ BIN=a.out
 # Librairies EXTERNES (exple -L/usr/local/lib) utilisées par le linker
 # Par défaut, c'est dans LD_LIBRARY_PATH (mais pas sur MacOSX je crois)
 EXTERN_INCLUDES=-I/usr/local/include -I/opt/local/include
-EXTERN_LIBS_DIR=-L/usr/local/
+EXTERN_LIBS_DIR=-L/usr/local/lib
 EXTERN_LIBS=-lm -ltiff
 
 #
 # Les variables des règles implicites et explicites
 #
-CFLAGS=		# Les flags de compilation des .c
+CFLAGS=-std=c99		# Les flags de compilation des .c
 CXXFLAGS=	# Les flags de compilation des .cpp
 CPPFLAGS=-g		# Les flags de pré-processeur (cc -E...)
 CC=gcc		# Compilateur .c
