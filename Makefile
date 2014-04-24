@@ -48,13 +48,13 @@ EXTERN_LIBS=-lm -ltiff
 #
 # Les variables des règles implicites et explicites
 #
-CFLAGS=-std=c99		# Les flags de compilation des .c
-CXXFLAGS=	# Les flags de compilation des .cpp
-CPPFLAGS=-g		# Les flags de pré-processeur (cc -E...)
-CC=gcc		# Compilateur .c
-CXX=g++		# Compilateur .cpp
+CFLAGS=-std=c99 # Les flags de compilation des .c
+CXXFLAGS= # Les flags de compilation des .cpp
+CPPFLAGS=-g # Les flags de pré-processeur (cc -E...)
+CC=gcc # Compilateur .c
+CXX=g++ # Compilateur .cpp
 LDFLAGS=$(EXTERN_LIBS)
-RM=rm -rf $(OBJDIR)/* # */
+RM=rm -rf $(OBJDIR)/*.o $(BINDIR)/$(BIN) # */
 
 # EXPLICATION :
 # CC et CFLAGS sont des variables qui conditionnent les règles implicites ;
@@ -131,9 +131,9 @@ USER_INCLUDES := $(addprefix -I,$(sort $(dir $(call rwildcard, ,*.h))))
 # Build (sources, librairies)
 #
 
-$(OBJDIR)/%.o: %.c
+$(OBJDIR)/%.o: %.c $(OBJDIR)
 	$(CC) $(USER_INCLUDES) $(EXTERN_INCLUDES) $(CPPFLAGS) $(CFLAGS) -o $@ -c $<
-$(OBJDIR)/%.o: %.cpp
+$(OBJDIR)/%.o: %.cpp $(OBJDIR)
 	$(CXX) $(USER_INCLUDES) $(EXTERN_INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 
@@ -149,12 +149,16 @@ position: $(OBJDIR)/$(MAIN_TEST_POSITION:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
 image: $(OBJDIR)/$(MAIN_TEST_IMAGE:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
 	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
-all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
+all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB) $(BINDIR)
 	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 clean:
 	$(RM)
 
+$(BINDIR):
+$(OBJDIR):
+	@echo "--------- Creation du dossier $@ ---------"
+	@mkdir $@
 
 essai:
 	@echo "---------------ESSAI----------------"
