@@ -18,6 +18,10 @@
 #		-L/usr/local/lib permet à LD de trouver des trucs qui ne sont pas dans le PATH_LIB_JECONNAISPAS
 #		par défaut
 
+# Il faut tester si BINDIR et OBJDIR existent
+# Si pas en std=c99, alors on ne peut pas déclarer une variable dans un for(int...)
+
+
 #
 # Variables diverses
 #
@@ -58,6 +62,7 @@ RM=rm -rf $(OBJDIR)/* # */
 # "foo.o: foo.c", alors make fait appel à la règle implicite
 #			foo.o: foo.c
 #				$(CC) -c (la compilation)
+
 
 
 #
