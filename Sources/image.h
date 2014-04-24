@@ -29,13 +29,13 @@ typedef struct {
 class Image {
 private:
     int lignes, colonnes; // hauteur, largeur
-    uint16_t **img; // Des pixels nuances de gris sur 16 bits
+    double **img; // Des pixels nuances de gris sur 16 bits
 public:
     Image();
     Image(int hauteur, int largeur);
     //Image(Image&);
-    Image(Image&,int decal_x, int decal_y, int longueur, int largeur);
-    Image(Image&, int facteur_bin);
+    //Image(Image&,int decal_x, int decal_y, int longueur, int largeur);
+    //Image(Image&, int facteur_bin);
     
     static Image& chargerTiff(string fichierEntree);
     int ecrireTiff(string fichierSortie);

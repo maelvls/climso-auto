@@ -9,17 +9,17 @@
 #include <iostream>
 #include "image.h"
 
-using namespace::std;
+using namespace std;
 
 int main(int argc, const char *argv[])
 {
     Image a;
 	try {
-		a = Image::chargerTiff("/Users/mael65/prog/climso-auto/test.tif");
+		a = Image::chargerTiff("test16bits.tif");
 	}
 	catch(exception const& e) { // On gère les différentes erreurs
 		cerr << "Erreur : " << e.what();
 	}
-	a.ecrireTiff("/Users/mael65/prog/climso-auto/test2.tif");
+	a.ecrireTiff("test-out.tif");
 	a.~Image();
 }

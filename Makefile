@@ -38,7 +38,7 @@ BIN=a.out
 # Librairies EXTERNES (exple -L/usr/local/lib) utilisées par le linker
 # Par défaut, c'est dans LD_LIBRARY_PATH (mais pas sur MacOSX je crois)
 EXTERN_INCLUDES=-I/usr/local/include -I/opt/local/include
-EXTERN_LIBS_DIR=-L/usr/local/lib -L/opt/local/lib
+EXTERN_LIBS_DIR=-L/usr/local/
 EXTERN_LIBS=-lm -ltiff
 
 #
@@ -47,7 +47,7 @@ EXTERN_LIBS=-lm -ltiff
 CFLAGS=		# Les flags de compilation des .c
 CXXFLAGS=	# Les flags de compilation des .cpp
 CPPFLAGS=-g		# Les flags de pré-processeur (cc -E...)
-CC=clang++		# Compilateur .c
+CC=clang		# Compilateur .c
 CXX=clang++		# Compilateur .cpp
 LDFLAGS=$(EXTERN_LIBS)
 RM=rm -rf $(OBJDIR)/* # */
@@ -70,11 +70,6 @@ MAIN_TEST_CAMERA=main_camera.c
 MAIN_TEST_POSITION=main_position.c
 MAIN_TEST_IMAGE=main_image.c
 
-#
-# Préparation du VPATH qui permettra à make de chercher les sources aux bons endroits
-# lors de la phase de build
-#
-VPATH := $(SRCDIR) $(SRCLIBDIR) # */ # Où trouver les SOURCES (libs, .c...)
 
 #
 # Fonctions
@@ -90,10 +85,22 @@ nospaces=$(subst $(space),,$(1))
 rwildcard=$(foreach d,$(wildcard $(1)*),$(call rwildcard,$d/,$(2)) $(filter $(subst *,%,$(2)),$d))
 # Supprime tous les termes de CHAINE contenant TERME quelque part
 # $(call filter_out_multiple,TERME,CHAINE)
+recursive_rep=$(sort $(dir $(call rwildcard,$(1),*)))
+
 filter_out = $(foreach v,$(2),$(if $(findstring $(1),$(v)),,$(v)))
 # Supprime tous les termes de CHAINE où existent le TERME1 ou TERME2...
 # $(call filter_out_multiple,TERME1 TERME2 (...),CHAINE)
 filter_out_multiple = $(foreach v,$(2), $(if $(call nospaces,$(foreach p,$(1),$(if $(findstring $(p),$(v)),n,))),,$(v)))
+
+#
+# Préparation du VPATH qui permettra à make de chercher les sources aux bons endroits
+# lors de la phase de build
+#
+SRCLIBDIR := $(call recursive_rep,$(SRCLIBDIR))
+SRCDIR := $(call recursive_rep,$(SRCDIR))
+VPATH := $(SRCDIR) $(SRCLIBDIR) # */ # Où trouver les SOURCES (libs, .c...)
+
+
 
 #
 # Construction de la liste des objets à build des les sources
@@ -152,6 +159,7 @@ essai:
 	@echo "EXTERN_INCLUDES : $(EXTERN_INCLUDES)"
 	@echo "EXTERN_LIBS_DIR : $(EXTERN_LIBS_DIR)"
 	@echo "EXTERN_LIBS : $(EXTERN_LIBS)"
+	@echo "SRCLIBDIR récursif : $(SRCLIBDIR)"
 
 # On peut utiliser VPATH pour indiquer les chemins des dépendances :
 # VPATH=$(SRCDIR):$(LIBDIR)...

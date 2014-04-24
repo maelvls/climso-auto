@@ -19,6 +19,7 @@ private:
 	string file;
 public:
     FormatException(int bitsPerSample,int samplePerPixel, string file) throw();
+    string toString() const throw();
 	virtual const char* what() const throw();
     virtual ~FormatException() throw();
 };

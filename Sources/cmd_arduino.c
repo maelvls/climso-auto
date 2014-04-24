@@ -28,7 +28,7 @@
     @param La duree en ms
     @return 0 si tout s'est bien passé, 1 si problème d'ouverture du /dev/tty...
 */
-int envoyerCommande(uint8_t direction, uint16_t duree, int fd) {
+int envoyerCommande(uint8_t direction, double duree, int fd) {
 	/*
 		On envoie d'abord un octet pour la commande (entre 3 et 13)
 		Puis on envoie deux octets pour la duree (entre 1 et 65500)
@@ -51,7 +51,7 @@ int envoyerCommande(uint8_t direction, uint16_t duree, int fd) {
 	//
 	// Durée : On envoie en big indian les deux parties du uint16_t
 	//
-	if(serialport_writebytes(fd,(uint8_t*)&duree,sizeof(uint16_t)) == -1) {
+	if(serialport_writebytes(fd,(uint8_t*)&duree,sizeof(double)) == -1) {
 		printf("Erreur lors de l'envoi de la direction\n");
 		return 4;
 	}

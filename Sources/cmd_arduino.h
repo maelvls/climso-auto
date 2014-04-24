@@ -27,7 +27,7 @@
 #define VERS_OUEST  7
 
 int allumerCommunication(const char* device);
-int envoyerCommande(uint8_t direction, uint16_t duree, int fd_device);
+int envoyerCommande(uint8_t direction, double duree, int fd_device);
 void eteindreCommunication(int fd_device);
 
 

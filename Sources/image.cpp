@@ -24,9 +24,9 @@ Image::Image() {
 Image::Image(int hauteur, int largeur) {
     lignes = hauteur;
     colonnes = largeur;
-    img = new uint16_t*[lignes];
+    img = new double*[lignes];
     for (int i=0; i < lignes; i++) {
-        img[i] = new uint16_t[colonnes];
+        img[i] = new double[colonnes];
     }
 }
 Image::~Image() {
@@ -59,7 +59,7 @@ Image& Image::chargerTiff(string fichierEntree) {
 	tdata_t buffer;
 	uint32_t ligne;
 	uint32_t config;
-	uint16_t samplePerPixel, bitsPerSample, fillOrder;
+	double samplePerPixel, bitsPerSample;
 	
 	TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &imagelength);
 	TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &imagewidth);
@@ -72,26 +72,26 @@ Image& Image::chargerTiff(string fichierEntree) {
 	
 
 	// Vérification qu'on est bien en 16 ou 8 bits et en nuances de gris
-	if((bitsPerSample != 16 && bitsPerSample != 8)
-			|| samplePerPixel != 1) {
+	if(!(bitsPerSample == 16 || bitsPerSample == 8))
 		throw FormatException(bitsPerSample,samplePerPixel,fichierEntree);
-	}
+	if(!(samplePerPixel == 1))
+		throw FormatException(bitsPerSample,samplePerPixel,fichierEntree);
 
 	// Préparation de la nouvelle image
 	Image *out = new Image();
 	out->lignes = imagelength;
 	out->colonnes = imagewidth;
-	out->img = new uint16_t*[imagelength];
+	out->img = new double*[imagelength];
 	
 	buffer = _TIFFmalloc(TIFFScanlineSize(tif));
 			
 	for (ligne = 0; ligne < imagelength; ligne++)
 	{
 		TIFFReadScanline(tif, buffer, ligne, 0);
-		out->img[ligne] = new uint16_t[imagewidth];
+		out->img[ligne] = new double[imagewidth];
 		for(int col=0; col < imagewidth; col++) { // Copie de la ligne buf dans img[]
 			if(bitsPerSample == 16) // XXX 16 -> 16bits va un peu baisser les intensités
-				out->img[ligne][col] = ((uint16_t*)buffer)[col];
+				out->img[ligne][col] = ((double*)buffer)[col];
 			else if (bitsPerSample == 8) // OK
 				out->img[ligne][col] = ((uint8_t*)buffer)[col];
 		}
@@ -179,12 +179,16 @@ void Image::copier(Image& src, int l_decal, int c_decal) {
 		}
 	}
 }
+/**
+ * Copie src dans l'image receveuse
+ * @param src
+ */
 void Image::copier(Image& src) {
 	copier(src,0,0);
 }
 
 void Image::init(int val) {
-	for (int l = O; l < lignes; ++l) {
+	for (int l = 0; l < lignes; ++l) {
 		for (int c = 0; c < colonnes; ++c) {
 			setPix(l,c,0);
 		}
@@ -195,88 +199,36 @@ void Image::init(int val) {
 	@note Ce code a été initialement écrit pour une convolution (LK_2008), ce qui explique certains noms de vcariables comme 'psf'.
 	Il est utilisé ici pour une corrélation, ce qui est équivalent à une convolution au signe des axes près.
 	convolution 'c' d'un objet 'o' par une reference 'r' :        c(a) = somme[ dx o(x) r(a-x) ]
-	@param p L'image de référence (psf...)
+	@param ref L'image de référence (psf...)
 	@param seuil Le seuil au dessous duquel on calcule pas la convolution
-
+			Seuil == ref.getPix(l,c) > seuil
 	@note On pourrait éventuellement calculer le seuil tel que 95% des points ne soient pas calculés
+	@
 */
 
-Image& Image::convolution(Image& p, double seuil) {
+Image& Image::convolution(Image& ref, double seuil) {
+	Image *convol = new Image(this->getLignes()+ref.getLignes(), this->getColonnes()+ref.getColonnes());
+	convol->init(0);
+	convol->copier(*this, ref.getLignes()/2, ref.getColonnes()/2);
 
-// FIXME : IL FAUT mettre les pixels à 64 bits ou 32 bits
-	int size_psf_v_s2 = size_psf_v /2;
-	int size_psf_h_s2 = size_psf_h /2;
-	int size_calc_h = size_psf_h + size_src_h;	// calculera la conv dans un tableau plus grand que l'image
-	int size_calc_v = size_psf_v + size_src_v;
-
-	Image out = new Image(this->getLignes()+p.getLignes(), this->getColonnes()+p.getColonnes());
-	out.init(0);
-	out.copier(*this, p.getLignes()/2, p.getColonnes()/2);
-
-	// tab de calcul de grande taille englobant l'image source et la PSF a cote.
-	double**objet_src = (double**) alloc_mat_2D (size_calc_h, size_calc_v, sizeof(double));
-	raz_mat_2D (objet_src, size_calc_h, size_calc_v); // mise a zero initiale du tableau objet_src
-	{
-		// copier l'image source initiale centree dans le tab de calcul, il y aura du zero_padding autour
-		for (int va = 0 ; va <size_src_v ; va++)
-		for (int ha = 0 ; ha <size_src_h ; ha++)
-			objet_src [va + size_psf_v_s2][ha + size_psf_h_s2] = objet_src_initial [va][ha];
-	}
-
-
-
-	// matrice de grande taille pour héberger la convol, englobant l'image source et la PSF a cote. On n'en gardera pas les bords
-	double**la_convol = (double**) alloc_mat_2D (size_calc_h, size_calc_v, sizeof(double));
-	raz_mat_2D (la_convol, size_calc_h, size_calc_v);
-
-	// faire un masque Booléen qui servira pour limiter le calcul aux seuls points dans 'r' qui sont de valeur > seuil
-	bool **mask = (bool**) alloc_mat_2D (size_psf_h, size_psf_v, sizeof(bool));
-	{
-        int nb_pts_non_nuls = 0;    // nombre de pixels > seuil
-		double integ_psf = 0;       // sera la somme de toutes les valeurs dans le tableau
-		double integ_sup_seuil = 0; // sera la somme des seules valeurs supérieures au seuil
-		for (int vx = 0 ; vx <size_psf_v ; vx++)
-		for (int hx = 0 ; hx <size_psf_h ; hx++)
-		{
-			double val_psf = ref[vx][hx];
-            if (val_psf<0) val_psf = -val_psf;   // équivalent à : val_psf = |val_psf|
-			integ_psf += val_psf;   // pour connaitre la fraction qui sera négligée dans le calcul futur
-			if (val_psf > seuil)    // en réalité cela teste |val_psf| > seuil ; les pixels négatifs de 'r' peuvent aussi compter
-			{
-				mask [vx][hx] = true;	// 'true' indique qu'il faudra sommer 'o'+'c' pour ce pixel de 'r'
-				nb_pts_non_nuls++;
-				integ_sup_seuil += val_psf;
-			}
-			else mask [vx][hx] = false;	// 'false' indique qu'il ne faudra pas calculer pour ce pixel de 'r'
-		}
-		printf ("seuil =  %4.2e ; nb. pixels > seuil = %4d total pixels= %d \n fraction de l'image négligée %4.2e ; nb de boucles = %4.2e \n",
-				seuil, nb_pts_non_nuls, size_psf_h * size_psf_v,
-				(integ_psf - integ_sup_seuil) / integ_psf,
-				(float)size_src_h * (float)size_src_v * nb_pts_non_nuls);
-	}
-
-	{
-		// calcul de la convolution
-		double t_start = (double)(clock());
-		for (int vx = 0 ; vx <size_psf_v ; vx++)
-		for (int hx = 0 ; hx <size_psf_h ; hx++)
-		{
-			if (mask [vx][hx])
-			{
-				double pixel_psf = ref [vx][hx];
-				for (int va = size_psf_v_s2 ; va <size_calc_v - size_psf_v_s2 -1; va++)	// 'va' parcourt ims srce et conv en vertical
-				{
-					double* ptr_src_v = objet_src [va - vx + size_psf_v_s2] - hx + size_psf_h_s2;
-					double* ptr_conv_v = la_convol [va];
-					for (int ha = size_psf_h_s2 ; ha <size_calc_h - size_psf_h_s2 -1; ha++)	// ha parcourt ims srce et conv en horizontal
-						ptr_conv_v[ha] += pixel_psf * ptr_src_v[ha];
-// la ligne ci-dessus fait pareil mais plus vite que: la_convol [va][ha] += pixel_psf * objet_src [va -vx +size_psf_v_s2][ha -hx +size_psf_h_s2];
+	//double t_start = (double)(clock());
+	// XXX Pourquoi on ne calcule que sur la reference ??? Ah si...
+	for(int l = 0; l < ref.lignes; l++) {
+		for(int c = 0; c < ref.colonnes; c++) {
+			if(ref.getPix(l,c) > seuil) {
+				for (int l_intgr = ref.lignes/2 ; l_intgr < convol->lignes-ref.lignes/2-1; l_intgr++) {
+					for (int c_intgr = ref.colonnes/2 ; c_intgr < convol->colonnes - ref.colonnes/2-1; c_intgr++) {
+						convol->setPix(l,c,ref.getPix(l,c)
+							* this->getPix(l_intgr - l + ref.lignes/2, c_intgr - c + ref.colonnes/2));
+					}
 				}
 			}
 		}
-		printf ("temps calcul = %4.2f s \n",  (double)(clock() - t_start) /CLOCKS_PER_SEC);
 	}
-
+	//printf ("temps calcul = %4.2f s \n",  (double)(clock() - t_start) /CLOCKS_PER_SEC);
+	return(*convol);
+}
+/*
 	{
 		// copier la partie calculée de la convolution vers le tableau résultat
 		for (int va = 0 ; va <size_src_v ; va++)
@@ -284,16 +236,4 @@ Image& Image::convolution(Image& p, double seuil) {
 			convol_finale [va][ha] = la_convol [va + size_psf_v_s2][ha + size_psf_h_s2];
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
