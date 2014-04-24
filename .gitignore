@@ -23,3 +23,5 @@
 *.hex
 # Project files
 *.xcodeproj
+
+*.tif
