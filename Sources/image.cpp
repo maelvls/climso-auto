@@ -15,6 +15,9 @@
 #define _DEBUG_
 
 #include "image.h"
+#include <cstring> // Pour memcpy
+#include <cstdint> // Pour uint32_t
+#include <stdint.h>
 
 Image::Image() {
     lignes = 0;
@@ -30,10 +33,11 @@ Image::Image(int hauteur, int largeur) {
     }
 }
 Image::~Image() {
-    for (int i = 0; i < lignes; i++) {
-        free(img[i]);
-    }
-    free(img); // XXX: utiliser delete [] img; ?
+    //for (int i = 0; i < lignes; i++) {
+    //    free(img[i]);
+    //}
+    //free(img); 
+    // XXX: utiliser delete [] img; ?
 
 }
 

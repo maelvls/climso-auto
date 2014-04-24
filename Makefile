@@ -30,7 +30,7 @@ SRCDIR=Sources
 # Dossier des librairies (.c, .cpp, .h)
 SRCLIBDIR=Libraries
 
-FILTER=main camera_sbig_lib
+FILTER=main camera_sbig_lib image
 
 # Dossier des objets .o
 OBJDIR=Builds
@@ -48,11 +48,11 @@ EXTERN_LIBS=-lm -ltiff
 #
 # Les variables des règles implicites et explicites
 #
-CFLAGS=-std=c99 # Les flags de compilation des .c
+CFLAGS= # Les flags de compilation des .c
 CXXFLAGS= # Les flags de compilation des .cpp
 CPPFLAGS=-g # Les flags de pré-processeur (cc -E...)
-CC=gcc # Compilateur .c
-CXX=g++ # Compilateur .cpp
+CC=clang # Compilateur .c
+CXX=clang++ # Compilateur .cpp
 LDFLAGS=$(EXTERN_LIBS)
 RM=rm -rf $(OBJDIR)/*.o $(BINDIR)/$(BIN) # */
 
@@ -62,7 +62,6 @@ RM=rm -rf $(OBJDIR)/*.o $(BINDIR)/$(BIN) # */
 # "foo.o: foo.c", alors make fait appel à la règle implicite
 #			foo.o: foo.c
 #				$(CC) -c (la compilation)
-
 
 
 #

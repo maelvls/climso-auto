@@ -12,7 +12,7 @@
 int main(int argc, const char *argv[])
 {
 
-	int fd_arduino = allumerCommunication(UNIX_DEVICE);
+	int fd_arduino = allumerCommunication("/dev/ttyACM0");
 	if(fd_arduino == 0) {
 		printf("Impossible d'ouvrir le device\n");
 	}

@@ -17,6 +17,7 @@
 #include <termios.h>  // POSIX terminal control definitions 
 #include <string.h>   // String function definitions 
 #include <sys/ioctl.h>
+#include <pthread.h>  // CRTSCTS undifined
 
 // uncomment this to debug reads
 //#define SERIALPORTDEBUG 

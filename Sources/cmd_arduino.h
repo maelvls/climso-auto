@@ -19,7 +19,7 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#define UNIX_DEVICE "/dev/tty.usbmodemfa131"
+#define MAC_DEVICE "/dev/tty.usbmodemfa131"
 
 #define VERS_NORD   4
 #define VERS_EST    5
