@@ -47,8 +47,8 @@ EXTERN_LIBS=-lm -ltiff
 CFLAGS=		# Les flags de compilation des .c
 CXXFLAGS=	# Les flags de compilation des .cpp
 CPPFLAGS=-g		# Les flags de pré-processeur (cc -E...)
-CC=clang		# Compilateur .c
-CXX=clang++		# Compilateur .cpp
+CC=gcc		# Compilateur .c
+CXX=g++		# Compilateur .cpp
 LDFLAGS=$(EXTERN_LIBS)
 RM=rm -rf $(OBJDIR)/* # */
 
