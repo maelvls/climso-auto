@@ -15,7 +15,7 @@
 		1C077098190188BA0090130D /* diametre_soleil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5821901697300680226 /* diametre_soleil.c */; };
 		1C077099190188BA0090130D /* fcts_LK3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5841901697300680226 /* fcts_LK3.c */; };
 		1C07709A190188BA0090130D /* interpol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5881901697300680226 /* interpol.c */; };
-		1C2797C91907A99A00BDB940 /* main_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC1A9B1905532A0016A024 /* main_image.cpp */; };
+		1C359AAE190A491200821679 /* main_arduino.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C07709E19018DEC0090130D /* main_arduino.c */; };
 		1CC0969F19065FA900E53BBA /* arduino-serial-lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969119065F9B00E53BBA /* arduino-serial-lib.c */; };
 		1CC096A919068D2E00E53BBA /* exceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC096A61906832100E53BBA /* exceptions.cpp */; };
 /* End PBXBuildFile section */
@@ -34,8 +34,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1C077073190185030090130D /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
-		1C077074190185030090130D /* Makefile 2 */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; path = "Makefile 2"; sourceTree = "<group>"; };
 		1C077075190188140090130D /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; usesTabs = 1; };
 		1C077076190188140090130D /* image.h */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.h; fileEncoding = 4; path = image.h; sourceTree = "<group>"; usesTabs = 1; };
 		1C07709E19018DEC0090130D /* main_arduino.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_arduino.c; sourceTree = "<group>"; usesTabs = 1; };
@@ -88,19 +86,9 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		1C077072190185030090130D /* Makefiles */ = {
-			isa = PBXGroup;
-			children = (
-				1C077073190185030090130D /* Makefile */,
-				1C077074190185030090130D /* Makefile 2 */,
-			);
-			path = Makefiles;
-			sourceTree = "<group>";
-		};
 		1C2B15C018F81D760038A475 = {
 			isa = PBXGroup;
 			children = (
-				1C077072190185030090130D /* Makefiles */,
 				1CBBF5211901438D00680226 /* Makefile */,
 				1CBBF5221901438D00680226 /* README.md */,
 				1CBBF5791901697300680226 /* Sources */,
@@ -348,12 +336,12 @@
 				1C077096190188BA0090130D /* convol.c in Sources */,
 				1C077093190188BA0090130D /* camera.c in Sources */,
 				1C077095190188BA0090130D /* image.cpp in Sources */,
-				1C2797C91907A99A00BDB940 /* main_image.cpp in Sources */,
 				1C077098190188BA0090130D /* diametre_soleil.c in Sources */,
 				1C077099190188BA0090130D /* fcts_LK3.c in Sources */,
 				1C07709A190188BA0090130D /* interpol.c in Sources */,
 				1C077097190188BA0090130D /* crea_tiff_3.c in Sources */,
 				1C077094190188BA0090130D /* cmd_arduino.c in Sources */,
+				1C359AAE190A491200821679 /* main_arduino.c in Sources */,
 				1CC096A919068D2E00E53BBA /* exceptions.cpp in Sources */,
 				1CC0969F19065FA900E53BBA /* arduino-serial-lib.c in Sources */,
 			);
