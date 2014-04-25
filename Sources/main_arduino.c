@@ -9,15 +9,17 @@
 #include <stdio.h>
 #include "cmd_arduino.h"
 
+
 int main(int argc, const char *argv[])
 {
+	char choix[20], dir_choix[20];
+	int direction, duree;
 
-	int fd_arduino = allumerCommunication("/dev/ttyACM0");
+	int fd_arduino = allumerCommunication(MAC_DEVICE);
 	if(fd_arduino == 0) {
 		printf("Impossible d'ouvrir le device\n");
+		choix[0]='q';
 	}
-	char choix[20], dir_choix[20];
-	int direction=VERS_NORD, duree, err_choix;
 	while (choix[0] != 'q') {
 		printf("Que voulez-vous faire ?\n");
 		printf("e : envoyer une commande\n");
@@ -26,24 +28,16 @@ int main(int argc, const char *argv[])
 		switch (choix[0]) {
 			case 'e':
 			{
-				err_choix = 0;
 				printf("Envoyons une commande\n");
-				printf("D'abord, quelle direction ? (n,s,o,e)\n");
-				scanf("%s",dir_choix);
-				switch (dir_choix[0]) {
-					case 'n': direction = VERS_NORD; break;
-					case 's': direction = VERS_SUD; break;
-					case 'o': direction = VERS_OUEST; break;
-					case 'e': direction = VERS_EST; break;
-					default: err_choix=1; break;
-				}
-				if(err_choix) {
-					printf("Erreur de direction\n");
+				printf("Sur quel pin ? (de %d à %d)\n",PIN_MIN,PIN_MAX);
+				scanf("%d",&direction);
+				if(direction < PIN_MIN || direction > PIN_MAX) {
+					printf("Erreur de choix de pin\n");
 					break;
 				}
-				printf("Maintenant, choisissez la duree entre 1 et 65500 ms :\n");
+				printf("Tappez la duree entre %d et %d ms :\n",DUREE_MIN,DUREE_MAX);
 				scanf("%d",&duree);
-				if(duree < 1 || duree > 65500) {
+				if(duree < DUREE_MIN || duree > DUREE_MAX) {
 					printf("Erreur de duree\n");
 					break;
 				}
