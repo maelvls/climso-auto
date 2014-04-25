@@ -21,8 +21,9 @@
 *.i*86
 *.x86_64
 *.hex
-# Project files
-*.xcodeproj
+
 
 *.tif
 /Debug
+/Builds
+/.DS_Store
