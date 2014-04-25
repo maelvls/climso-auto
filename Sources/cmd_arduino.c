@@ -20,29 +20,34 @@
 
 
 /**
-    Envoie les informations à travers le canal série
-    
+    Envoi d'informations à travers le canal série
     @param direction La direction 
     @param La duree en ms
-    @return 0 si tout s'est bien passé, 1 si problème d'ouverture du /dev/tty...
+    @return 0 si tout s'est bien passé, -1 si problème d'écriture sur le canal
 */
 int envoyerCommande(int direction, int duree, int fd) {
 	/*
-		On envoie d'abord un octet pour la commande (entre 3 et 13)
-		Puis on envoie deux octets pour la duree (entre 1 et 65500)
+		On concatène le caractère de start, le pin de direction et la duree
 	 */
 	char commande [30];
 	sprintf(commande,"%c %d %d",START_BYTE,direction,duree);
-	printf("%s",commande);
-	serialport_write(fd,commande);
-	//serialport_read_until()
-    return 0;
+    return (serialport_write(fd,commande)  == -1)?-1:0;
 }
 
 
+/**
+ * Initialisation de la communication avec arduino à la vitesse SPEED_BAUDS (9600 bauds)
+ * en 8N1 (8 bits de données, pas de parité, un seul bit stop)
+ * @param device Le nom du device (/dev/ttyUSB ou quelque chose comme ça)
+ * @return -1 si erreur
+ */
 int allumerCommunication(const char* device) {
 	return serialport_init(device, SPEED_BAUD);
 }
+/**
+ * Couper la communication et libérer le canal
+ * @param fd_device
+ */
 void eteindreCommunication(int fd_device) {
 	serialport_close(fd_device);
 }

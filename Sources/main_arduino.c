@@ -16,7 +16,7 @@ int main(int argc, const char *argv[])
 	int direction, duree;
 
 	int fd_arduino = allumerCommunication(MAC_DEVICE);
-	if(fd_arduino == 0) {
+	if(fd_arduino == -1) {
 		printf("Impossible d'ouvrir le device\n");
 		choix[0]='q';
 	}
@@ -41,7 +41,7 @@ int main(int argc, const char *argv[])
 					printf("Erreur de duree\n");
 					break;
 				}
-				printf("Envoi de la direction '%s' pendant %d ms : \n",dir_choix,duree);
+				printf("Envoi d'une impulsion sur le pin %d pendant %d ms\n",direction,duree);
 				int retour = envoyerCommande(direction, duree,fd_arduino);
 				if(retour != 0) {
 					printf("Une erreur de communication s'est produite (numero %d)\n",retour);
