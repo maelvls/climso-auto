@@ -30,6 +30,7 @@ private:
 public:
 	OpeningException(string file) throw();
 	virtual const char* what() const throw();
+	string toString() const throw();
 	virtual ~OpeningException() throw();
 };
 

@@ -9,10 +9,17 @@
 
 #include "exceptions.h"
 
+/**
+ * Exception de format (nombre de samples par pixel ou nombre de bits par sample)
+ * @param bitsPerSample
+ * @param samplePerPixel
+ * @param file
+ */
 FormatException::FormatException(int bitsPerSample,int samplePerPixel, string file) throw() :bitsPerSample(bitsPerSample),samplePerPixel(samplePerPixel),file(file)
 {}
 	
 const char* FormatException::what() const throw() {
+	return "L'image n'a pas le bon nombre de samples par pixel ou bits par samples\n";
 }
 string FormatException::toString() const throw() {
 	ostringstream stream;
@@ -28,17 +35,21 @@ FormatException::~FormatException() throw() {
 }
 
 
-
+/**
+ * Exception d'ouverture du fichier
+ * @param file
+ */
 OpeningException::OpeningException(string file) throw() :file(file) {
 }
 
-const char* OpeningException::what() const throw()
-{
-	//TODO: essayer de donner une vrai exception
-	//ostringstream stream;
-	//stream << "L'image" << file << " n'a pas pu etre lue" << endl;
-	//return stream.str().c_str() ;
+const char* OpeningException::what() const throw() {
 	return "L'image n'a pas pu etre lue\n";
+}
+string OpeningException::toString() const throw()
+{
+	ostringstream stream;
+	stream << "L'image" << file << " n'a pas pu etre lue" << endl;
+	return string(stream.str());
 }
 
 OpeningException::~OpeningException() throw() {
