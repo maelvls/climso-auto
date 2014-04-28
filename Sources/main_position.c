@@ -41,13 +41,17 @@ Ce programme
 #include "crea_tiff_3.h"// lecture écriture de fichiers images tiff
 #include "fcts_LK3.h"   // untilitaires sur images 2D
 #include "interpol.h"
+#include "diametre_soleil.h"
 
 // --------- CONSTANTES ---------	
 const double PI = 3.1415926535;
 const double arc_seconds = 180 * 3600 / PI;	// nombre de secondes d'arc dans un radian
 const double seuil = 0.85; // Pour accélerer le calcul de la convolution on négligera les pixels de valeur < seuil. Ici: seuil relatif par rapport au max.
 
-const double r_soleil = 100;    // rayon en pixels du disque uniforme de référence (à ajuster au vrai rayon de l'image du Soleil)
+// const double r_soleil = 100;    // rayon en pixels du disque uniforme de référence (à ajuster au vrai rayon de l'image du Soleil)
+
+const int facteur_bining = 8; // On va faire du binning 8*8 sur la référence et sur l'image
+
 const double marge_disc = 2.5;  // nb de pixels de flou au bord du disque uniforme de référence. Ce flou donne une tolérance sur le rayon du Soleil. 
 const int marge_pic = 20;           // nb de pixels à prendre en compte autour du pic dans la corrélation, pour interpoler sa position. 
 const double pas_interp = 1/8.0;    // le pas d'interpolation dans un pixel (précision de la position du pic).
@@ -58,6 +62,18 @@ const char *POINT_SLASH = "/Users/mael65/prog/images-de-correlation/"; // rempla
 
 int main (int argc, char * const argv[])
 {
+	// Définition de la date UTC (GMT) de l'image objet
+	struct tm date_tm; // Structure intermédiaire pour passer au format time_t
+	date_tm.tm_year = 2014 - 1900; // Nombre d'annees depuis 1900
+	date_tm.tm_mon = 4 - 1; // 0 pour Janvier et pas 1 car les indices commencent a 0 chez les Unixiens
+	date_tm.tm_mday = 21; // 1-31 pour les jours
+	date_tm.tm_hour = 12; // 0-23
+	date_tm.tm_min = 0; // 0-59
+	date_tm.tm_sec = 0; // 0-59
+
+	time_t date_obj = mktime(&date_tm); // La date de l'image objet
+
+	
       // lecture du fichier contenant l'image du Soleil dont on doit trouver la position du centre
     char nom_Fich_in[512]; // danger : pas de sécurité si les noms de fichiers (path compris) dépassent 511 caractères
     char nom_Fich_out[512];
@@ -71,6 +87,7 @@ int main (int argc, char * const argv[])
     // alloc mémoire puis lecture vers RAM d'un tableau 2D pour l'image du Soleil 
     double **objet = (double **)alloc_mat_2D (size_obj_h, size_obj_v, sizeof(double));	
     read_tiff_3 (objet, size_obj_h, size_obj_v, nom_Fich_in);
+
 
     // passage en binning 2*2. 
     // plus tard ces binnings seront à supprimer car on lira directement des images binées depuis la caméra
@@ -117,8 +134,10 @@ int main (int argc, char * const argv[])
                  32000.0, 0.0 ,65535,0,		// valeurs max et min en entree, valeurs max et min en sortie
                  lapl_obj, nom_Fich_out, 16);       // tableau dest, nom de fichier, nb de bits par pixel (8 ou 16)
     /*-----------------------------------------*/
-    
+
       // printf ("calcul de l'image de référence, ");
+    int r_soleil = diametreSoleilPixels(date_obj) / 2 / facteur_bining; // Calcul du rayon à ce jour
+    printf("Rayon de la reference binnee : %d (diametre original : %d)\n", r_soleil,diametreSoleilPixels(date_obj));
     int size_reference_h = 2*(r_soleil + 2*marge_disc);  // on prend un cadre pas trop grand, ajusté au disque pour gagner en temps de calcul
     int size_reference_v = 2*(r_soleil + 2*marge_disc);
     double **reference = (double**) alloc_mat_2D (size_reference_h ,size_reference_v, sizeof(double));	// alloc memoire 2D pour la reference
@@ -132,6 +151,7 @@ int main (int argc, char * const argv[])
                  reference, nom_Fich_out, 16);      // tableau dest, nom de fichier, nb de bits par pixel (8 ou 16)
     /*-----------------------------------------*/
     
+
     printf ("calcul du Laplacien de la référence \r\n ");
     double **lapl_ref = (double **)alloc_mat_2D (size_reference_h, size_reference_v, sizeof(double));	// alloc mem 2D pour laplacien de la référence 
 /**/   // calc_laplacien (reference, lapl_ref, size_reference_h, size_reference_v);
@@ -208,5 +228,17 @@ int main (int argc, char * const argv[])
     free_mat_2D ( (void**)lapl_ref);
     free_mat_2D ( (void**)correl);
     
+
+
+    // Calcul du décalage entre la position trouvée et le centre
+    // Le centre est celui de l'image objet
+    // centre_h = size_obj_h
+    // centre_v = size_obj_v
+    double decalage_h = x_du_max_interp - size_obj_h/2;
+    double decalage_v = y_du_max_interp - size_obj_v/2;
+
+    printf("Vecteur décalage en pixels : (h=%f, v=%f)\n",decalage_h,decalage_v);
+
+
     return 0;
 }

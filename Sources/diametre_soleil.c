@@ -11,17 +11,33 @@
 
 #include <stdio.h>
 #include <math.h>
-#include <time.h>
 
 #include "diametre_soleil.h"
 
-//-------------------------------------------------------------------
-//          Donne le diametre du soleil en seconde d'arc
-//	Entrée: La date time_t (cf manuel time.h ou ctime ou man 3 time)
-//  Retour: l'angle en seconde d'arc
-//-------------------------------------------------------------------
-// @param daz
-double diametreSoleilRadian(time_t t) {
+// Définition des propriétés de l'image de référence
+#define IMAGE_REFERENCE_DIAMETRE 	1616 // En pixels
+#define IMAGE_REFERENCE_ANNEE		2014 // En UTC (GMT)
+#define IMAGE_REFERENCE_MOIS		4
+#define IMAGE_REFERENCE_JOUR		21
+#define IMAGE_REFERENCE_HEURE		12
+
+/*
+#define IMAGE_REFERENCE_DIAMETRE 	1638 // En pixels
+#define IMAGE_REFERENCE_ANNEE		2014 // En UTC (GMT)
+#define IMAGE_REFERENCE_MOIS		7
+#define IMAGE_REFERENCE_JOUR		14
+#define IMAGE_REFERENCE_HEURE		12
+*/
+
+
+
+
+/**
+ * Donne le diametre du soleil en seconde d'arc
+ * @param t La date time_t (cf manuel time.h ou ctime ou man 3 time)
+ * @return l'angle en seconde d'arc
+ */
+double diametreSoleilSecArc(time_t t) {
     const double pi = 3.141592653589793238462643383279502884197; // et plus si ca vous amuse
     const double radsec = 3600*180/pi; // nombre de secodes d'arc dans un radian
     
@@ -43,7 +59,7 @@ double diametreSoleilRadian(time_t t) {
     double seconds = difftime(t, t_0_time); // nb de secondes ecoule entre maintenant et 't_0'
     double nb_jours = seconds/3600/24;        // nb de jours    ecoule entre maintenant et 't_0', pas forcement entier
     
-    printf("nb jours depuis le perihelie2014=%.4f \n", nb_jours);
+    //printf("nb jours depuis le perihelie2014=%.4f \n", nb_jours);
     
     double M = 2*pi* nb_jours / anneeDuree; // Anomalie moyenne (orbite circulaire).
     double U1 = M+e*sin(M); // Anomalie excentrique U1
@@ -52,12 +68,13 @@ double diametreSoleilRadian(time_t t) {
     /**/    double nu = 2*atan(tan(U2/2)*sqrt((1+e)/(1-e))); // Anomalie vraie
     
     double distanceTerreSoleil = a*(1-e*e) / (1+e*cos(nu));
-    printf("M=%.10f\n"
+    
+    /*printf("M=%.10f\n"
            "U1=%.10f\n"
            "U2=%.10f\n"
            "nu=%.10f\n"
            "Angle en radians=%.10f\n" , M, U1, U2, nu,diametreSoleil/distanceTerreSoleil);
-    
+    */
     double angle_apparent = diametreSoleil / distanceTerreSoleil * radsec; // en radians, approx petits angles
     // Sachant que alpha << 1 => alpha ~ tan(alpha).
     
@@ -67,23 +84,32 @@ double diametreSoleilRadian(time_t t) {
     return angle_apparent;
 }
 
-//-------------------------------------------------------------------
-//          Calcul du diamètre en pixels du soleil grâce à la fonction
-//              diametreSoleilRadian, une taille et un angle de référence
-//              que nous avons calculée à partir d'une image existante
-//	Entrée: aucune
-//  Retour: la taille du diamètre en pixels
-//-------------------------------------------------------------------
-int diametreSoleilPixels() {
-    const int diametreReference = 1638; // d'après une image I
+/**
+ * Calcul du diamètre en pixels du Soleil à la date t grâce à la fonction
+ * 	diametreSoleilRadian, une taille et un angle de référence
+ * 	que nous avons calculée à partir d'une image existante
+ * @param t La date
+ * @return le diamètre du Soleil en pixels
+ */
+int diametreSoleilPixels(time_t t) {
+    const int diametreReference = IMAGE_REFERENCE_DIAMETRE; // d'après une image I
     struct tm tmRef;
-    tmRef.tm_year=2014-1900; // années depuis 1900
-    tmRef.tm_mon=7-1; // 0-11
-    tmRef.tm_mday=14; // 1-31
-    tmRef.tm_hour=12; // 0-23
+    tmRef.tm_year=IMAGE_REFERENCE_ANNEE - 1900; // années depuis 1900
+    tmRef.tm_mon=IMAGE_REFERENCE_MOIS - 1; // 0-11
+    tmRef.tm_mday=IMAGE_REFERENCE_JOUR; // 1-31
+    tmRef.tm_hour=IMAGE_REFERENCE_HEURE; // 0-23
+    tmRef.tm_min = 0; // 0-59
+    tmRef.tm_sec = 0; // 0-59
     time_t tRef = mktime(&tmRef);// La date (en sec) de prise de vue de l'image I (le 14 juillet 2014 à 12h30m00sec UTC (UTC=GMT))
-    return diametreReference * diametreSoleilRadian(time(NULL))/diametreSoleilRadian(tRef);
+    return diametreReference * diametreSoleilSecArc(t)/diametreSoleilSecArc(tRef);
 }
+
+
+void calculDecalage(int l_x, int c_x, int l_y, int c_y, int* l_res, int* c_res) {
+
+}
+
+
 
 /*
 int main(int argc, const char *argv[])

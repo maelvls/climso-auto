@@ -9,12 +9,10 @@
 #ifndef climso_auto_fcts_MV_h
 #define climso_auto_fcts_MV_h
 
-typedef struct _date {
-    int jour;
-    int mois;
-    int annee;
-} Date;
+#include <time.h>
 
-int diffDates(Date fin, Date deb);
+
+double diametreSoleilSecArc(time_t t);
+int diametreSoleilPixels(time_t t);
 
 #endif
