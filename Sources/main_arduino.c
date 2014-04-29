@@ -14,8 +14,7 @@ int main(int argc, const char *argv[])
 {
 	char choix[20], dir_choix[20];
 	int direction, duree;
-
-	int fd_arduino = allumerCommunication(MAC_DEVICE);
+	int fd_arduino = arduinoInitialiserCom("/dev/tty.usbmodemfa131");
 	if(fd_arduino == -1) {
 		printf("Impossible d'ouvrir le device\n");
 		choix[0]='q';
@@ -29,20 +28,20 @@ int main(int argc, const char *argv[])
 			case 'e':
 			{
 				printf("Envoyons une commande\n");
-				printf("Sur quel pin ? (de %d à %d)\n",PIN_MIN,PIN_MAX);
+				printf("Sur quel pin ?");
 				scanf("%d",&direction);
-				if(direction < PIN_MIN || direction > PIN_MAX) {
+				if(direction < 0 || direction > 13) {
 					printf("Erreur de choix de pin\n");
 					break;
 				}
-				printf("Tappez la duree entre %d et %d ms :\n",DUREE_MIN,DUREE_MAX);
+				printf("Tappez la duree en ms :\n");
 				scanf("%d",&duree);
-				if(duree < DUREE_MIN || duree > DUREE_MAX) {
+				if(duree < 1 || duree > 1000000000) {
 					printf("Erreur de duree\n");
 					break;
 				}
 				printf("Envoi d'une impulsion sur le pin %d pendant %d ms\n",direction,duree);
-				int retour = envoyerCommande(direction, duree,fd_arduino);
+				int retour = arduinoEnvoyerCmd(direction, duree,fd_arduino);
 				if(retour != 0) {
 					printf("Une erreur de communication s'est produite (numero %d)\n",retour);
 				}
@@ -52,6 +51,6 @@ int main(int argc, const char *argv[])
 				break;
 		}
 	}
-	eteindreCommunication(fd_arduino);
+	arduinoEteindreCom(fd_arduino);
 	return 0;
 }

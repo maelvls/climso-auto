@@ -16,29 +16,9 @@
 #ifndef __climso_auto__cmd_arduino__
 #define __climso_auto__cmd_arduino__
 
-#include <stdio.h>
-#include <stdint.h>
 
-#define START_BYTE	'a'
-#define SPEED_BAUD	9600
-
-#define MAC_DEVICE "/dev/tty.usbmodemfa131"
-
-#define VERS_NORD   4
-#define VERS_EST    5
-#define VERS_SUD    6
-#define VERS_OUEST  7
-
-#define PIN_MIN		0
-#define PIN_MAX		13
-
-#define DUREE_MIN	1
-#define DUREE_MAX	100000
-
-int allumerCommunication(const char* device);
-int envoyerCommande(int direction, int duree, int fd_device);
-void eteindreCommunication(int fd_device);
-
-
+int arduinoInitialiserCom(const char* device);
+int arduinoEnvoyerCmd(int direction, int duree, int fd_device);
+void arduinoEteindreCom(int fd_device);
 
 #endif /* defined(__climso_auto__cmd_arduino__) */

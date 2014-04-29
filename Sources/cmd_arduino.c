@@ -3,8 +3,10 @@
 //  climso-auto
 //
 //  Created by Maël Valais on 18/04/2014.
-//  Copyright (c) 2014 Maël Valais. All rights reserved.
+//  2014, Maël Valais
 //
+//  D'après arduino-serial-lib -- simple library for reading/writing serial ports
+// 	2006-2013, Tod E. Kurt, http://todbot.com/blog/
 //
 //  Les commandes de ce fichier permettent d'envoyer à l'arduino
 //  les commandes.
@@ -15,8 +17,16 @@
 
 
 #include "cmd_arduino.h"
-#include "arduino-serial-lib.h"
+#include <stdio.h>    	// (Lib C) fonctions C standards pour les input/output (fprintf,...)
+#include <string.h>		// (Lib C) Fonctions sur les chaines (strlen...)
+#include <errno.h>    	// Définition des numéros d'erreur (perror...)
 
+#include <termios.h>  	// (POSIX) fonctions UNIX de contrôle du terminal (tcsetattr...)
+#include <fcntl.h>		// (POSIX) fonctions UNIX d'ouverture de fichiers (open...)
+#include <unistd.h>		// (POSIX) fonctions UNIX d'opération sur les fichiers (write...)
+
+
+#define SPEED_BAUD	B9600
 
 
 /**
@@ -24,14 +34,15 @@
     @param direction La direction 
     @param La duree en ms
     @return 0 si tout s'est bien passé, -1 si problème d'écriture sur le canal
+
+    Principe : On concatène le numéro du pin et la duree et on envoie
 */
-int envoyerCommande(int direction, int duree, int fd) {
-	/*
-		On concatène le caractère de start, le pin de direction et la duree
-	 */
+int arduinoEnvoyerCmd(int direction, int duree, int fd) {
 	char commande [30];
-	sprintf(commande,"%c %d %d",START_BYTE,direction,duree);
-    return (serialport_write(fd,commande)  == -1)?-1:0;
+	sprintf(commande,"%d,%d",direction,duree);
+	printf("Envoi de la commande '%s'\n",commande);
+	size_t writen = write(fd,commande,strlen(commande)+1);
+	return (writen == strlen(commande)+1)?0:-1;
 }
 
 
@@ -40,14 +51,54 @@ int envoyerCommande(int direction, int duree, int fd) {
  * en 8N1 (8 bits de données, pas de parité, un seul bit stop)
  * @param device Le nom du device (/dev/ttyUSB ou quelque chose comme ça)
  * @return -1 si erreur
+ *
+ * @author 2006-2013, Tod E. Kurt, http://todbot.com/blog/ (arduino-serial-lib)
+ * @author 2014 Mael Valais pour des modifications
  */
-int allumerCommunication(const char* device) {
-	return serialport_init(device, SPEED_BAUD);
+int arduinoInitialiserCom(const char* device_file_name) {
+	struct termios toptions;
+	int fd;
+	fd = open(device_file_name, O_RDWR | O_NONBLOCK ); // On ouvre le /dev/...
+	if (fd == -1)  {
+		perror("arduinoInitialiserCom: Impossible d'ouvrir le fichier /dev/....");
+		return -1;
+	}
+	if (tcgetattr(fd, &toptions) < 0) { // On récupère la config terminal du fichier
+		perror("arduinoInitialiserCom: Impossible de récupérer les attributs termios pour ce /dev/...");
+		return -1;
+	}
+	cfsetispeed(&toptions, SPEED_BAUD); // On met le transfert à 9600 bauds
+	cfsetospeed(&toptions, SPEED_BAUD);
+
+	// Mise en place du protocole série en 8N1 (8 bits par caractère, pas de parité, un bit stop)
+	toptions.c_cflag &= ~PARENB; // On désactive le bit de parité (~ pour complément à un)
+	toptions.c_cflag &= ~CSTOPB; // On désactive le second bit de stop
+	toptions.c_cflag &= ~CSIZE; // On désactive le réglage de taille de caractère
+	toptions.c_cflag |= CS8; // On réactive la taille de caractère à 8 bits
+	toptions.c_cflag &= ~CRTSCTS; // On désactive le contrôle de flux
+
+	toptions.c_cflag |= CREAD | CLOCAL;  // turn on READ & ignore ctrl lines
+	toptions.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
+
+	toptions.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
+	toptions.c_oflag &= ~OPOST; // make raw
+
+	toptions.c_cc[VMIN]  = 0; // see http://unixwiz.net/techtips/termios-vmin-vtime.html
+	toptions.c_cc[VTIME] = 0;
+	//toptions.c_cc[VTIME] = 20;
+
+	tcsetattr(fd, TCSANOW, &toptions); // On applique la configuration terminal sur le fichier
+	if(tcsetattr(fd, TCSAFLUSH, &toptions) < 0) {
+		perror("arduinoInitialiserCom: Impossible de configurer les paramètre terminal du fichier /dev/...");
+		return -1;
+	}
+	return fd;
 }
+
 /**
  * Couper la communication et libérer le canal
  * @param fd_device
  */
-void eteindreCommunication(int fd_device) {
-	serialport_close(fd_device);
+void arduinoEteindreCom(int fd_device) {
+	close(fd_device);
 }
