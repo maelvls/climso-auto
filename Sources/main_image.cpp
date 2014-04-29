@@ -13,13 +13,20 @@ using namespace std;
 
 int main(int argc, const char *argv[])
 {
-    Image a;
+    Image a,b;
 	try {
-		a = Image::chargerTiff("test16bits.tif");
+		a = Image::chargerTiff("lapl_obj.tif");
+		b = Image::chargerTiff("lapl_ref.tif");
 	}
-	catch(exception const& e) { // On gère les différentes erreurs
+	catch(exception& e) { // On gère les différentes erreurs
 		cerr << "Erreur : " << e.what();
+	} catch(OpeningException& e) {
+		cerr << "Erreur : " << e.toString();
 	}
-	a.ecrireTiff("test-out.tif");
-	a.~Image();
+
+	//a.ecrireTiff("test-out.tif");
+	Image c = a.convolution(b,0.85);
+	c.ecrireTiff("lapl_test.tif");
+
+	c.~Image();
 }

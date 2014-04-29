@@ -19,8 +19,8 @@ private:
 	string file;
 public:
     FormatException(int bitsPerSample,int samplePerPixel, string file) throw();
-    string toString() const throw();
 	virtual const char* what() const throw();
+    string& toString() const throw();
     virtual ~FormatException() throw();
 };
 
@@ -30,7 +30,7 @@ private:
 public:
 	OpeningException(string file) throw();
 	virtual const char* what() const throw();
-	string toString() const throw();
+	string& toString() const throw();
 	virtual ~OpeningException() throw();
 };
 

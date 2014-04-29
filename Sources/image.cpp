@@ -63,7 +63,7 @@ Image& Image::chargerTiff(string fichierEntree) {
 	tdata_t buffer;
 	uint32_t ligne;
 	uint32_t config;
-	double samplePerPixel, bitsPerSample;
+	uint16_t samplePerPixel, bitsPerSample;
 	
 	TIFFGetField(tif, TIFFTAG_IMAGELENGTH, &imagelength);
 	TIFFGetField(tif, TIFFTAG_IMAGEWIDTH, &imagewidth);
@@ -74,12 +74,11 @@ Image& Image::chargerTiff(string fichierEntree) {
 	TIFFGetField(tif, TIFFTAG_SAMPLESPERPIXEL, &samplePerPixel);
 	//TIFFGetField(tif, TIFFTAG_FILLORDER, fillOrder); // Ordre des bits dans l'octet
 	
-
 	// Vérification qu'on est bien en 16 ou 8 bits et en nuances de gris
 	if(!(bitsPerSample == 16 || bitsPerSample == 8))
 		throw FormatException(bitsPerSample,samplePerPixel,fichierEntree);
-	if(!(samplePerPixel == 1))
-		throw FormatException(bitsPerSample,samplePerPixel,fichierEntree);
+	//if(!(samplePerPixel == 1)) // FIXME à réactiver ?
+		//throw FormatException(bitsPerSample,samplePerPixel,fichierEntree);
 
 	// Préparation de la nouvelle image
 	Image *out = new Image();
@@ -122,7 +121,7 @@ int Image::ecrireTiff(string fichierSortie) {
 	//TIFFSetField(out, TIFFTAG_STRIPBYTECOUNTS);
 	//TIFFSetField(out, TIFFTAG_MINSAMPLEVALUE,0);
 	//TIFFSetField(out, TIFFTAG_MAXSAMPLEVALUE,255);
-	//TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT); // Orig de l'image
+	TIFFSetField(out, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT); // Orig de l'image
 	//   Some other essential fields to set that you do not have to understand for now.
 	TIFFSetField(out, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
 	TIFFSetField(out, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK); // Min Is Black
@@ -209,7 +208,6 @@ void Image::init(int val) {
 	@note On pourrait éventuellement calculer le seuil tel que 95% des points ne soient pas calculés
 	@
 */
-
 Image& Image::convolution(Image& ref, double seuil) {
 	Image *convol = new Image(this->getLignes()+ref.getLignes(), this->getColonnes()+ref.getColonnes());
 	convol->init(0);
