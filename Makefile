@@ -30,7 +30,7 @@ SRCDIR=Sources
 # Dossier des librairies (.c, .cpp, .h)
 SRCLIBDIR=Libraries
 
-FILTER=main camera_sbig_lib image
+FILTER=main camera_sbig_lib
 
 # Dossier des objets .o
 OBJDIR=Builds
@@ -41,8 +41,8 @@ BIN=a.out
 
 # Librairies EXTERNES (exple -L/usr/local/lib) utilisées par le linker
 # Par défaut, c'est dans LD_LIBRARY_PATH (mais pas sur MacOSX je crois)
-EXTERN_INCLUDES=-I/usr/local/include -I/opt/local/include
-EXTERN_LIBS_DIR=-L/usr/local/lib
+EXTERN_INCLUDES= -I/usr/local/include #-I/opt/local/include
+EXTERN_LIBS_DIR= -L/usr/local/lib
 EXTERN_LIBS=-lm -ltiff
 
 #
