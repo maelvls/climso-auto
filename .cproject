@@ -61,7 +61,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="Sources/main_arduino.c|Sources/main_image.cpp|Libraries/camera_sbig_lib|Sources/main_global.c|Sources/main_camera.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="Sources/main_arduino.c|Libraries/camera_sbig_lib|Sources/main_global.c|Sources/main_camera.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

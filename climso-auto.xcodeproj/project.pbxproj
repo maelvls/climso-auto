@@ -7,17 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1C077093190188BA0090130D /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF57A1901697300680226 /* camera.c */; };
-		1C077094190188BA0090130D /* cmd_arduino.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF57C1901697300680226 /* cmd_arduino.c */; };
-		1C077095190188BA0090130D /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C077075190188140090130D /* image.cpp */; };
 		1C077096190188BA0090130D /* convol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF57E1901697300680226 /* convol.c */; };
 		1C077097190188BA0090130D /* crea_tiff_3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5801901697300680226 /* crea_tiff_3.c */; };
 		1C077098190188BA0090130D /* diametre_soleil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5821901697300680226 /* diametre_soleil.c */; };
 		1C077099190188BA0090130D /* fcts_LK3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5841901697300680226 /* fcts_LK3.c */; };
 		1C07709A190188BA0090130D /* interpol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5881901697300680226 /* interpol.c */; };
-		1C359AAE190A491200821679 /* main_arduino.c in Sources */ = {isa = PBXBuildFile; fileRef = 1C07709E19018DEC0090130D /* main_arduino.c */; };
+		1C3F0B82190EB0CA002E6ADA /* main_position.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF58A1901697300680226 /* main_position.c */; };
+		1C3F0B84190FCF72002E6ADA /* cmd_arduino.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF57C1901697300680226 /* cmd_arduino.c */; };
 		1CC0969F19065FA900E53BBA /* arduino-serial-lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969119065F9B00E53BBA /* arduino-serial-lib.c */; };
-		1CC096A919068D2E00E53BBA /* exceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC096A61906832100E53BBA /* exceptions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -333,16 +330,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C3F0B84190FCF72002E6ADA /* cmd_arduino.c in Sources */,
 				1C077096190188BA0090130D /* convol.c in Sources */,
-				1C077093190188BA0090130D /* camera.c in Sources */,
-				1C077095190188BA0090130D /* image.cpp in Sources */,
+				1C3F0B82190EB0CA002E6ADA /* main_position.c in Sources */,
 				1C077098190188BA0090130D /* diametre_soleil.c in Sources */,
 				1C077099190188BA0090130D /* fcts_LK3.c in Sources */,
 				1C07709A190188BA0090130D /* interpol.c in Sources */,
 				1C077097190188BA0090130D /* crea_tiff_3.c in Sources */,
-				1C077094190188BA0090130D /* cmd_arduino.c in Sources */,
-				1C359AAE190A491200821679 /* main_arduino.c in Sources */,
-				1CC096A919068D2E00E53BBA /* exceptions.cpp in Sources */,
 				1CC0969F19065FA900E53BBA /* arduino-serial-lib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -496,10 +490,7 @@
 					"./**",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				LIBRARY_SEARCH_PATHS = (
-					/opt/local/lib,
-					/usr/local/lib,
-				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_LDFLAGS = "-ltiff";
@@ -543,10 +534,7 @@
 					"./**",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 				);
-				LIBRARY_SEARCH_PATHS = (
-					/opt/local/lib,
-					/usr/local/lib,
-				);
+				LIBRARY_SEARCH_PATHS = /usr/local/lib;
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				OTHER_LDFLAGS = "-ltiff";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = YES;
