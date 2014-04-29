@@ -42,26 +42,34 @@ Ce programme
 #include "fcts_LK3.h"   // untilitaires sur images 2D
 #include "interpol.h"
 #include "diametre_soleil.h"
+#include "cmd_arduino.h"
 
-// --------- CONSTANTES ---------	
-const double PI = 3.1415926535;
-const double arc_seconds = 180 * 3600 / PI;	// nombre de secondes d'arc dans un radian
-const double seuil = 0.85; // Pour accélerer le calcul de la convolution on négligera les pixels de valeur < seuil. Ici: seuil relatif par rapport au max.
-
-// const double r_soleil = 100;    // rayon en pixels du disque uniforme de référence (à ajuster au vrai rayon de l'image du Soleil)
-
-const int facteur_bining = 8; // On va faire du binning 8*8 sur la référence et sur l'image
-
-const double marge_disc = 2.5;  // nb de pixels de flou au bord du disque uniforme de référence. Ce flou donne une tolérance sur le rayon du Soleil. 
-const int marge_pic = 20;           // nb de pixels à prendre en compte autour du pic dans la corrélation, pour interpoler sa position. 
-const double pas_interp = 1/8.0;    // le pas d'interpolation dans un pixel (précision de la position du pic).
-const double marge_interp = marge_pic/pas_interp; //nb total de pts qu'il y aura dans le tableau interpolé contenant le pic et sa marge
-
-const char *POINT_SLASH = "/Users/mael65/prog/images-de-correlation/"; // remplacer par un moyen de trouver le directory local
-// ------------------------------
+#define IMPULSION_PIXEL_H	250 //ms
+#define IMPULSION_PIXEL_V	250 //ms
 
 int main (int argc, char * const argv[])
 {
+
+	// --------- CONSTANTES --------- mises dans le main car si on les met en globales le compilo refuse l'arythmétique
+	const double PI = 3.1415926535;
+	const double arc_seconds = 180.0 * 3600.0 / PI;	// nombre de secondes d'arc dans un radian
+
+	const double seuil = 0.85; // Pour accélerer le calcul de la convolution on négligera les pixels de valeur < seuil. Ici: seuil relatif par rapport au max.
+
+	// const double r_soleil = 100;    // rayon en pixels du disque uniforme de référence (à ajuster au vrai rayon de l'image du Soleil)
+
+	const int facteur_bining = 8; // On va faire du binning 8*8 sur la référence et sur l'image
+
+	const double marge_disc = 2.5;  // nb de pixels de flou au bord du disque uniforme de référence. Ce flou donne une tolérance sur le rayon du Soleil.
+	const int marge_pic = 20;           // nb de pixels à prendre en compte autour du pic dans la corrélation, pour interpoler sa position.
+	const double pas_interp = 1/8.0;    // le pas d'interpolation dans un pixel (précision de la position du pic).
+	const int marge_interp = marge_pic/pas_interp; //nb total de pts qu'il y aura dans le tableau interpolé contenant le pic et sa marge
+
+	const char *POINT_SLASH = "/Users/mael65/prog/images-de-correlation/"; // remplacer par un moyen de trouver le directory local
+	// -----------------------------
+
+	printf ("lancement de main_position \n");
+
 	// Définition de la date UTC (GMT) de l'image objet
 	struct tm date_tm; // Structure intermédiaire pour passer au format time_t
 	date_tm.tm_year = 2014 - 1900; // Nombre d'annees depuis 1900
@@ -71,14 +79,20 @@ int main (int argc, char * const argv[])
 	date_tm.tm_min = 0; // 0-59
 	date_tm.tm_sec = 0; // 0-59
 
-	time_t date_obj = mktime(&date_tm); // La date de l'image objet
+	time_t date_obj = mktime(&date_tm); // date à laquelle a été prise l'image du Soleil "objet"
 
 	
-      // lecture du fichier contenant l'image du Soleil dont on doit trouver la position du centre
+	// lecture du fichier contenant l'image du Soleil dont on doit trouver la position du centre
     char nom_Fich_in[512]; // danger : pas de sécurité si les noms de fichiers (path compris) dépassent 511 caractères
     char nom_Fich_out[512];
     sprintf (nom_Fich_in, "%s%s", POINT_SLASH, "Soleil_3352x2532.tif"); // nom du fichier contenant l'image du Soleil
-    
+
+	// si nécessaire : ces 3 lignes permettent de connaitre dans quel dir s'execute le programme
+	char current_working_dir[1024];
+	getcwd (current_working_dir, sizeof(current_working_dir));
+	printf ("current working directory : %s\n\n", current_working_dir);
+
+	// lecture d'un fichier image tiff
     int *caracs = (int*) malloc (3*sizeof(int));	// alloc mémoire pour tableaux de paramètres en lecture des fichiers images tiff
     return_dim_tiff (caracs, nom_Fich_in);          // lecture paramètres de l'image tiff
     int size_obj_h = caracs[0];		// nb de pixels par ligne 
@@ -138,10 +152,12 @@ int main (int argc, char * const argv[])
       // printf ("calcul de l'image de référence, ");
     int r_soleil = diametreSoleilPixels(date_obj) / 2 / facteur_bining; // Calcul du rayon à ce jour
     printf("Rayon de la reference binnee : %d (diametre original : %d)\n", r_soleil,diametreSoleilPixels(date_obj));
-    int size_reference_h = 2*(r_soleil + 2*marge_disc);  // on prend un cadre pas trop grand, ajusté au disque pour gagner en temps de calcul
-    int size_reference_v = 2*(r_soleil + 2*marge_disc);
+    int size_reference_h = (int)(2*(r_soleil + 2*marge_disc));  // on prend un cadre pas trop grand, ajusté au disque pour gagner en temps de calcul
+    int size_reference_v = (int)(2*(r_soleil + 2*marge_disc));
     double **reference = (double**) alloc_mat_2D (size_reference_h ,size_reference_v, sizeof(double));	// alloc memoire 2D pour la reference
-    draw_doughnut (reference, size_reference_h, size_reference_v, size_reference_h/2, size_reference_v/2, 0, 0, r_soleil, marge_disc);
+    draw_doughnut (reference, size_reference_h, size_reference_v,
+				   size_reference_h/2, size_reference_v/2,
+				   0, 0, r_soleil-marge_disc/2, marge_disc);
     
     /*-------affichage pour controle ----------*/
     sprintf (nom_Fich_out, "%s%s", POINT_SLASH, "reference_C.tif"); 
@@ -240,5 +256,16 @@ int main (int argc, char * const argv[])
     printf("Vecteur décalage en pixels : (h=%f, v=%f)\n",decalage_h,decalage_v);
 
 
+    int num_fd_arduino = arduinoInitialiserCom("/dev/tty.usbmodemfa131");
+
+    if(decalage_h < 0) // vers Ouest
+    	arduinoEnvoyerCmd(1,IMPULSION_PIXEL_H*decalage_h*(-1),num_fd_arduino);
+    else // vers Est
+    	arduinoEnvoyerCmd(2,IMPULSION_PIXEL_H*decalage_h,num_fd_arduino);
+    if(decalage_v < 0) // vers Sud
+    	arduinoEnvoyerCmd(3,IMPULSION_PIXEL_V*decalage_v*(-1),num_fd_arduino);
+    else // vers Nord
+    	arduinoEnvoyerCmd(4,IMPULSION_PIXEL_V*decalage_v,num_fd_arduino);
+    arduinoEteindreCom(num_fd_arduino);
     return 0;
 }

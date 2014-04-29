@@ -14,7 +14,9 @@
 
 #include "diametre_soleil.h"
 
-// Définition des propriétés de l'image de référence
+/// Définition des propriétés de l'image de référence
+
+// Nouvelle référence pour débug :
 #define IMAGE_REFERENCE_DIAMETRE 	1616 // En pixels
 #define IMAGE_REFERENCE_ANNEE		2014 // En UTC (GMT)
 #define IMAGE_REFERENCE_MOIS		4
@@ -22,14 +24,13 @@
 #define IMAGE_REFERENCE_HEURE		12
 
 /*
+// Image de référence calculée par LKoechlin
 #define IMAGE_REFERENCE_DIAMETRE 	1638 // En pixels
 #define IMAGE_REFERENCE_ANNEE		2014 // En UTC (GMT)
 #define IMAGE_REFERENCE_MOIS		7
 #define IMAGE_REFERENCE_JOUR		14
 #define IMAGE_REFERENCE_HEURE		12
 */
-
-
 
 
 /**
@@ -103,12 +104,6 @@ int diametreSoleilPixels(time_t t) {
     time_t tRef = mktime(&tmRef);// La date (en sec) de prise de vue de l'image I (le 14 juillet 2014 à 12h30m00sec UTC (UTC=GMT))
     return diametreReference * diametreSoleilSecArc(t)/diametreSoleilSecArc(tRef);
 }
-
-
-void calculDecalage(int l_x, int c_x, int l_y, int c_y, int* l_res, int* c_res) {
-
-}
-
 
 
 /*
