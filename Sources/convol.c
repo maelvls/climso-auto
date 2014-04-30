@@ -38,7 +38,7 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 		for (int ha = 0 ; ha <size_src_h ; ha++) 
 			objet_src [va + size_psf_v_s2][ha + size_psf_h_s2] = objet_src_initial [va][ha];
 	}
-	// matrice de grande taille pour héberger la convol, englobant l'image source et la PSF a cote. On n'en gardera pas les bords
+	// matrice de grande taille pour héberger la convol, englobant l'image source et la PSF a cote. On n'en gardera pas les bords (correspondant à la PSF?)
 	double**la_convol = (double**) alloc_mat_2D (size_calc_h, size_calc_v, sizeof(double));
 	raz_mat_2D (la_convol, size_calc_h, size_calc_v);
 	
@@ -83,7 +83,7 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 					double* ptr_conv_v = la_convol [va];
 					for (int ha = size_psf_h_s2 ; ha <size_calc_h - size_psf_h_s2 -1; ha++)	// ha parcourt ims srce et conv en horizontal
 						ptr_conv_v[ha] += pixel_psf * ptr_src_v[ha];
-// la ligne ci-dessus fait pareil mais plus vite que: la_convol [va][ha] += pixel_psf * objet_src [va -vx +size_psf_v_s2][ha -hx +size_psf_h_s2];
+// la ligne ci-dessus fait pareil mais plus vite que: la_convol [va][ha] += psf [vx][hx] * objet_src [va -vx +size_psf_v_s2][ha -hx +size_psf_h_s2];
 				}
 			}
 		}

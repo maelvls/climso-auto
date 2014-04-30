@@ -15,18 +15,18 @@ int main(int argc, const char *argv[])
 {
     Image a,b;
 	try {
-		a = Image::chargerTiff("lapl_obj.tif");
-		b = Image::chargerTiff("lapl_ref.tif");
+		a = Image::chargerTiff("/Users/mael65/prog/images-de-correlation/lapl_obj.tif");
+		b = Image::chargerTiff("/Users/mael65/prog/images-de-correlation/lapl_ref.tif");
 	}
 	catch(exception& e) { // On gère les différentes erreurs
 		cerr << "Erreur : " << e.what();
-	} catch(OpeningException& e) {
-		cerr << "Erreur : " << e.toString();
 	}
+	
+	a.ecrireTiff("/Users/mael65/prog/images-de-correlation/lapl_obj_test.tif");
+	b.ecrireTiff("/Users/mael65/prog/images-de-correlation/lapl_ref_test.tif");
 
-	//a.ecrireTiff("test-out.tif");
 	Image c = a.convolution(b,0.85);
-	c.ecrireTiff("lapl_test.tif");
 
-	c.~Image();
+	c.ecrireTiff("/Users/mael65/prog/images-de-correlation/lapl_test.tif");
+	
 }

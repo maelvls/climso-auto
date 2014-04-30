@@ -11,10 +11,15 @@
 
 #include <stdio.h>
 #include <math.h>
-
 #include "diametre_soleil.h"
 
+//#define _DEBUG_
+
+
 /// Définition des propriétés de l'image de référence
+
+
+#ifdef _DEBUG_
 
 // Nouvelle référence pour débug :
 #define IMAGE_REFERENCE_DIAMETRE 	1616 // En pixels
@@ -23,15 +28,18 @@
 #define IMAGE_REFERENCE_JOUR		21
 #define IMAGE_REFERENCE_HEURE		12
 
-/*
+#endif
+
+#ifndef _DEBUG_
+
 // Image de référence calculée par LKoechlin
 #define IMAGE_REFERENCE_DIAMETRE 	1638 // En pixels
 #define IMAGE_REFERENCE_ANNEE		2014 // En UTC (GMT)
 #define IMAGE_REFERENCE_MOIS		7
 #define IMAGE_REFERENCE_JOUR		14
 #define IMAGE_REFERENCE_HEURE		12
-*/
 
+#endif
 
 /**
  * Donne le diametre du soleil en seconde d'arc
@@ -59,8 +67,10 @@ double diametreSoleilSecArc(time_t t) {
     
     double seconds = difftime(t, t_0_time); // nb de secondes ecoule entre maintenant et 't_0'
     double nb_jours = seconds/3600/24;        // nb de jours    ecoule entre maintenant et 't_0', pas forcement entier
-    
-    //printf("nb jours depuis le perihelie2014=%.4f \n", nb_jours);
+
+#ifdef _DEBUG_
+    printf("Nb jours depuis le perihelie2014=%.4f \n", nb_jours);
+#endif
     
     double M = 2*pi* nb_jours / anneeDuree; // Anomalie moyenne (orbite circulaire).
     double U1 = M+e*sin(M); // Anomalie excentrique U1
@@ -69,19 +79,23 @@ double diametreSoleilSecArc(time_t t) {
     /**/    double nu = 2*atan(tan(U2/2)*sqrt((1+e)/(1-e))); // Anomalie vraie
     
     double distanceTerreSoleil = a*(1-e*e) / (1+e*cos(nu));
-    
-    /*printf("M=%.10f\n"
+
+#ifdef _DEBUG_
+    printf("M=%.10f\n"
            "U1=%.10f\n"
            "U2=%.10f\n"
            "nu=%.10f\n"
            "Angle en radians=%.10f\n" , M, U1, U2, nu,diametreSoleil/distanceTerreSoleil);
-    */
+
+#endif
     double angle_apparent = diametreSoleil / distanceTerreSoleil * radsec; // en radians, approx petits angles
     // Sachant que alpha << 1 => alpha ~ tan(alpha).
     
-    printf("distance Soleil_Terre aujourd'hui =%.10f, angle en secondes d'arc=%.10f\n",
+#ifdef _DEBUG_
+    printf("Distance Soleil_Terre aujourd'hui =%.10f, angle en secondes d'arc=%.10f\n",
            distanceTerreSoleil, angle_apparent);
-    
+#endif
+
     return angle_apparent;
 }
 

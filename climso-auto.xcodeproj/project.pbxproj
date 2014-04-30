@@ -12,9 +12,10 @@
 		1C077098190188BA0090130D /* diametre_soleil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5821901697300680226 /* diametre_soleil.c */; };
 		1C077099190188BA0090130D /* fcts_LK3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5841901697300680226 /* fcts_LK3.c */; };
 		1C07709A190188BA0090130D /* interpol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5881901697300680226 /* interpol.c */; };
-		1C3F0B82190EB0CA002E6ADA /* main_position.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF58A1901697300680226 /* main_position.c */; };
 		1C3F0B84190FCF72002E6ADA /* cmd_arduino.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF57C1901697300680226 /* cmd_arduino.c */; };
-		1CC0969F19065FA900E53BBA /* arduino-serial-lib.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969119065F9B00E53BBA /* arduino-serial-lib.c */; };
+		1C3F0B85190FDB5F002E6ADA /* main_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CEC1A9B1905532A0016A024 /* main_image.cpp */; };
+		1C3F0B86190FDCD3002E6ADA /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1C077075190188140090130D /* image.cpp */; };
+		1C3F0B87190FDCE6002E6ADA /* exceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC096A61906832100E53BBA /* exceptions.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -54,8 +55,6 @@
 		1CBBF5881901697300680226 /* interpol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpol.c; sourceTree = "<group>"; usesTabs = 1; };
 		1CBBF5891901697300680226 /* interpol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interpol.h; sourceTree = "<group>"; usesTabs = 1; };
 		1CBBF58A1901697300680226 /* main_position.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_position.c; sourceTree = "<group>"; usesTabs = 1; };
-		1CC0969119065F9B00E53BBA /* arduino-serial-lib.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = "arduino-serial-lib.c"; sourceTree = "<group>"; };
-		1CC0969219065F9B00E53BBA /* arduino-serial-lib.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "arduino-serial-lib.h"; sourceTree = "<group>"; };
 		1CC0969419065F9B00E53BBA /* csbigcam.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = csbigcam.cpp; sourceTree = "<group>"; };
 		1CC0969519065F9B00E53BBA /* csbigcam.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = csbigcam.h; sourceTree = "<group>"; };
 		1CC0969619065F9B00E53BBA /* csbigimg.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = csbigimg.cpp; sourceTree = "<group>"; };
@@ -156,19 +155,9 @@
 		1CC0968F19065F9B00E53BBA /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				1CC0969019065F9B00E53BBA /* arduino_serial_lib */,
 				1CC0969319065F9B00E53BBA /* camera_sbig_lib */,
 			);
 			path = Libraries;
-			sourceTree = "<group>";
-		};
-		1CC0969019065F9B00E53BBA /* arduino_serial_lib */ = {
-			isa = PBXGroup;
-			children = (
-				1CC0969119065F9B00E53BBA /* arduino-serial-lib.c */,
-				1CC0969219065F9B00E53BBA /* arduino-serial-lib.h */,
-			);
-			path = arduino_serial_lib;
 			sourceTree = "<group>";
 		};
 		1CC0969319065F9B00E53BBA /* camera_sbig_lib */ = {
@@ -332,12 +321,13 @@
 			files = (
 				1C3F0B84190FCF72002E6ADA /* cmd_arduino.c in Sources */,
 				1C077096190188BA0090130D /* convol.c in Sources */,
-				1C3F0B82190EB0CA002E6ADA /* main_position.c in Sources */,
 				1C077098190188BA0090130D /* diametre_soleil.c in Sources */,
 				1C077099190188BA0090130D /* fcts_LK3.c in Sources */,
 				1C07709A190188BA0090130D /* interpol.c in Sources */,
+				1C3F0B86190FDCD3002E6ADA /* image.cpp in Sources */,
+				1C3F0B87190FDCE6002E6ADA /* exceptions.cpp in Sources */,
+				1C3F0B85190FDB5F002E6ADA /* main_image.cpp in Sources */,
 				1C077097190188BA0090130D /* crea_tiff_3.c in Sources */,
-				1CC0969F19065FA900E53BBA /* arduino-serial-lib.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,7 +12,7 @@
 //
 //
 
-#define _DEBUG_
+//#define _DEBUG_
 
 #include "image.h"
 #include <cstring> // Pour memcpy
@@ -94,7 +94,7 @@ Image& Image::chargerTiff(string fichierEntree) {
 		out->img[ligne] = new double[imagewidth];
 		for(int col=0; col < imagewidth; col++) { // Copie de la ligne buf dans img[]
 			if(bitsPerSample == 16) // XXX 16 -> 16bits va un peu baisser les intensités
-				out->img[ligne][col] = ((double*)buffer)[col];
+				out->img[ligne][col] = ((double*)buffer)[col]; // pourquoi avec double ça marche ??
 			else if (bitsPerSample == 8) // OK
 				out->img[ligne][col] = ((uint8_t*)buffer)[col];
 		}
@@ -144,11 +144,11 @@ int Image::ecrireTiff(string fichierSortie) {
 	{
 		memcpy(buf, img[l], linebytes);
 
-		#ifdef _DEBUG_ //-- AFFICHAGE POUR DEBUG
+#ifdef _DEBUG_ //-- AFFICHAGE POUR DEBUG
 		for(int i=0; i<3; i++)
 			cout << *((uint16*)buf+i) << " ";
 		cout << endl;
-		#endif // ------FIN AFFICHAGE POUR DEBUG
+#endif // ------FIN AFFICHAGE POUR DEBUG
 
 
 		if (TIFFWriteScanline(out, buf, l, 0) < 0)
@@ -209,19 +209,53 @@ void Image::init(int val) {
 	@
 */
 Image& Image::convolution(Image& ref, double seuil) {
-	Image *convol = new Image(this->getLignes()+ref.getLignes(), this->getColonnes()+ref.getColonnes());
+	Image& obj = *this; // Lien symbolique
+	Image *convol = new Image(obj.getLignes()+2*ref.getLignes(), obj.getColonnes()+2*ref.getColonnes());
 	convol->init(0);
-	convol->copier(*this, ref.getLignes()/2, ref.getColonnes()/2);
 
+	/*	Soit ref(0) ou obj(0) le point (0,0)
+	 * 	Soit this = obj
+	 * 	Pour tous les décalages possibles de ref(0,0) par rapport à obj(0,0)
+	 * 		Pour tous les points communs entre ref et obj (selon le décalage)
+	 *			pt = pt + ptThis*ptRef
+	 *
+	 *	Notes :
+	 *		l_decal/c_decal est le décalage entre ref(0,0) et obj(0,0)
+	 *			l_decal varie entre -nblignes(ref) et nblignes(obj)
+	 *			c_decal varie entre -nbcolonnes(ref) et nbcolonnes(obj)
+	 *		Pour passer d'un point de obj au point correspondant sur ref (via le décalage):
+	 *			l_ref = l_obj - l_decal
+	 *			c_ref = c_obj - c_decal
+	 *		Pour passer du décalage et la pos. sur obj au point correspondant sur convol :
+	 *			l_convol = l_decal + laLigneCorrespondateSurRef() (ce qu'on a trouvé au dessus)
+	 *			c_convol = c_decal + laColonneCorrespondanteSurRef()
+	 */
+
+	for(int l_decal = -ref.lignes; l_decal < obj.lignes; l_decal++)
+	for(int c_decal= -ref.colonnes; c_decal < obj.colonnes; c_decal++) {
+		// Calcul des coord de l'intersection entre obj et ref (vis à vis de obj)
+		int l_deb = max(0,l_decal), c_deb = max(0,c_decal);
+		int l_fin = min(obj.lignes, l_decal + ref.lignes), c_fin = min(obj.colonnes, c_decal+ref.colonnes);
+		int integr = 0;
+		for(int l = l_deb; l < l_fin; l++) // les l communs
+		for(int c = c_deb; c < c_fin; c++) { // les c communs
+			integr += obj.getPix(l,c) * ref.getPix(l-l_decal,c-c_decal);
+		}
+		convol->setPix(l_decal+ref.lignes, c_decal+ref.colonnes, integr);
+	}
+	
+	return (*convol);
+	
+	
 	//double t_start = (double)(clock());
 	// XXX Pourquoi on ne calcule que sur la reference ??? Ah si...
 	for(int l = 0; l < ref.lignes; l++) {
 		for(int c = 0; c < ref.colonnes; c++) {
 			if(ref.getPix(l,c) > seuil) {
-				for (int l_intgr = ref.lignes/2 ; l_intgr < convol->lignes-ref.lignes/2-1; l_intgr++) {
+				for (int l_intgr = ref.lignes/2; l_intgr < convol->lignes-ref.lignes/2-1; l_intgr++) {
 					for (int c_intgr = ref.colonnes/2 ; c_intgr < convol->colonnes - ref.colonnes/2-1; c_intgr++) {
-						convol->setPix(l,c,ref.getPix(l,c)
-							* this->getPix(l_intgr - l + ref.lignes/2, c_intgr - c + ref.colonnes/2));
+						//if()
+						convol->setPix(l_intgr,c_intgr,convol->getPix(l_intgr,c_intgr) + ref.getPix(l,c) * this->getPix(l_intgr - l + ref.lignes/2, c_intgr - c + ref.colonnes/2));
 					}
 				}
 			}
