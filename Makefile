@@ -136,7 +136,7 @@ $(OBJDIR)/%.o: %.cpp $(OBJDIR)
 	$(CXX) $(USER_INCLUDES) $(EXTERN_INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -o $@ -c $<
 
 
-arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
+arduino: $(OBJDIR)/$(MAIN_TEST_ARDUINO:.c=.o) $(addprefix $(OBJDIR),cmd_arduino.o
 	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 camera: $(OBJDIR)/$(MAIN_TEST_CAMERA:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)

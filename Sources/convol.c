@@ -83,7 +83,8 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 					double* ptr_conv_v = la_convol [va];
 					for (int ha = size_psf_h_s2 ; ha <size_calc_h - size_psf_h_s2 -1; ha++)	// ha parcourt ims srce et conv en horizontal
 						ptr_conv_v[ha] += pixel_psf * ptr_src_v[ha];
-// la ligne ci-dessus fait pareil mais plus vite que: la_convol [va][ha] += psf [vx][hx] * objet_src [va -vx +size_psf_v_s2][ha -hx +size_psf_h_s2];
+// la ligne ci-dessus fait pareil mais plus vite que:
+//						la_convol [va][ha] += psf [vx][hx] * objet_src [va -vx +size_psf_v_s2][ha -hx +size_psf_h_s2];
 				}
 			}
 		}
