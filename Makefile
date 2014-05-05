@@ -72,7 +72,6 @@ MAIN_TEST_ALL=main_global.c
 MAIN_TEST_ARDUINO=main_arduino.c
 MAIN_TEST_CAMERA=main_camera.c
 MAIN_TEST_POSITION=main_position.c
-MAIN_TEST_IMAGE=main_image.c
 
 
 #
@@ -143,9 +142,6 @@ camera: $(OBJDIR)/$(MAIN_TEST_CAMERA:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
 	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 position: $(OBJDIR)/$(MAIN_TEST_POSITION:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
-	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
-
-image: $(OBJDIR)/$(MAIN_TEST_IMAGE:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB)
 	$(CXX) $(EXTERN_LIBS_DIR) $(LDFLAGS) $^ -o $(BINDIR)/$(BIN)
 
 all: $(OBJDIR)/$(MAIN_TEST_ALL:.c=.o) $(LIST_OBJ) $(LIST_OBJ_LIB) $(BINDIR)

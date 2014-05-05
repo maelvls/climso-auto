@@ -10,7 +10,7 @@
 		1C16E2251917C85D0062E456 /* csbigcam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969419065F9B00E53BBA /* csbigcam.cpp */; };
 		1C16E2261917C85D0062E456 /* csbigimg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969619065F9B00E53BBA /* csbigimg.cpp */; };
 		1C16E2271917C85D0062E456 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969B19065F9B00E53BBA /* main.cpp */; };
-		1C16E2281917C85D0062E456 /* sbig2fits.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC0969D19065F9B00E53BBA /* sbig2fits.cpp */; };
+		1C16E22A1917CA8D0062E456 /* SBIGUDrv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */; };
 		1C3EC4291912BA1C000A58F3 /* convol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF57E1901697300680226 /* convol.c */; };
 		1C3EC42A1912BA1C000A58F3 /* crea_tiff_3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5801901697300680226 /* crea_tiff_3.c */; };
 		1C3EC42B1912BA1C000A58F3 /* diametre_soleil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CBBF5821901697300680226 /* diametre_soleil.c */; };
@@ -35,6 +35,7 @@
 /* Begin PBXFileReference section */
 		1C07709E19018DEC0090130D /* main_arduino.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_arduino.c; sourceTree = "<group>"; usesTabs = 1; };
 		1C0770B2190191080090130D /* main_global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_global.c; sourceTree = "<group>"; usesTabs = 1; };
+		1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SBIGUDrv.framework; path = ../../../../Library/Frameworks/SBIGUDrv.framework; sourceTree = "<group>"; };
 		1C2B15C918F81D760038A475 /* climso-auto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "climso-auto"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1C55A36819042EB40075BEE4 /* main_camera.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_camera.c; sourceTree = "<group>"; usesTabs = 1; };
 		1CBBF5211901438D00680226 /* Makefile */ = {isa = PBXFileReference; explicitFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
@@ -73,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1C16E22A1917CA8D0062E456 /* SBIGUDrv.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -82,6 +84,7 @@
 		1C2B15C018F81D760038A475 = {
 			isa = PBXGroup;
 			children = (
+				1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */,
 				1CBBF5211901438D00680226 /* Makefile */,
 				1CBBF5221901438D00680226 /* README.md */,
 				1CBBF5791901697300680226 /* Sources */,
@@ -316,7 +319,6 @@
 				1C3F0B84190FCF72002E6ADA /* cmd_arduino.c in Sources */,
 				1C16E2271917C85D0062E456 /* main.cpp in Sources */,
 				1C16E2261917C85D0062E456 /* csbigimg.cpp in Sources */,
-				1C16E2281917C85D0062E456 /* sbig2fits.cpp in Sources */,
 				1C3EC42B1912BA1C000A58F3 /* diametre_soleil.c in Sources */,
 				1C3EC42C1912BA1C000A58F3 /* fcts_LK3.c in Sources */,
 				1C3EC42D1912BA1C000A58F3 /* interpol.c in Sources */,
@@ -454,6 +456,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -505,6 +508,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
+				FRAMEWORK_SEARCH_PATHS = /Library/Frameworks/;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -532,6 +536,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -558,6 +566,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
