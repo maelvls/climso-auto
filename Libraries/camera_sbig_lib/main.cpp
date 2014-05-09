@@ -35,8 +35,8 @@ using namespace std;
 #include "csbigcam.h"
 #include "csbigimg.h"
 
-#define CAM1_ETHERNET	1						/* set to 1 to have first camera be Ethernet based so can run with EthSim */
-#define CAM2_USB2			1						/* set to 1 to put 2nd camera on USB2 */
+#define CAM1_ETHERNET		0						/* set to 1 to have first camera be Ethernet based so can run with EthSim */
+#define CAM2_USB2			0						/* set to 1 to put 2nd camera on USB2 */
 #define IP_ADDRESS		0xC0A80049	/* IP address of Ethernet Camera, 192.168.0.73 in this case */
 #define LINE_LEN 			80
 

@@ -70,6 +70,10 @@
 				Added support for the STX and ST-8300 Cameras.
 				Bumped Version to 1.30.
 
+  10/17/11		Fixed a bug parsing the SBIG Header where CCDSoft
+				was not setting a blank Observer to the required "-"
+				Bumped Version to 1.31
+
 */
 #include "lpardrv.h"
 #include "csbigimg.h"
@@ -88,7 +92,7 @@
 #define FILE_VERSION	3		/* current header version written */
 #define DATA_VERSION	1		/* current data version written */
 #define HEADER_LEN		2048
-#define VERSION_STR		"1.30"	/* version of this class */
+#define VERSION_STR		"1.31"	/* version of this class */
 static const char	*HEADER_KEYWORDS[] =
 {
 	"File_version = ",
@@ -159,6 +163,7 @@ typedef enum
 	HH_SAT_LEVEL,
 	HH_END
 } SBIG_HEADER_HEADING;
+
 static const char *FILE_ERROR_STRINGS[] = {
 	"No File Error",
 	"Error Opening Image File",
@@ -170,8 +175,11 @@ static const char *FILE_ERROR_STRINGS[] = {
 	"FITS Header Error",
 	"Image is the Wrong Size",
 };
+
 static const char HISTORY_CHARS[] = "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvw";
-static const char *HISTORY_PHRASES[] = {
+
+static const char *HISTORY_PHRASES[] =
+{
 	"Unknown Modification", "Image Co-Addition", "Scale ADU Values","Crop Image",
 	"Dark Subtraction", "Remove Cool Pixels", "Flat Field", "Smooth Pixels",
 	"Sharpen Pixels", "Pseudo Flat Field", "Quantize ADU Values", "Remove Warm Pixels",
@@ -188,7 +196,8 @@ static const char *HISTORY_PHRASES[] = {
 	"DDP Image", "Rotate Image", "Fix TDI Background", "ME CCD Spike Removal",
 	"Fix Bloomed Stars", "Remove Image Gradient",
 	"Extract RGB", "Extract Luminance", "Rotate Clockwise", "Rotate Counter-Clockwise",
-	"Median Combine 3 Images", "Rotate 180°", "Raw Single Shot Color"};
+	"Median Combine 3 Images", "Rotate 180ï¿½", "Raw Single Shot Color"
+};
 
 static void stripcontrols(char *s)
 {
@@ -321,29 +330,27 @@ void CSBIGImg::SetImageStartTime(void)
 	SetImageStartTime(time(NULL));
 }
 
-void CSBIGImg::SetImageStartTime(struct tm *pStartTime)
+void CSBIGImg::SetImageStartTime(struct tm* pStartTime)
 {
 	memcpy(&m_sDecodedImageStartTime, pStartTime, sizeof(struct tm));
 }
 
 void CSBIGImg::SetImageStartTime(time_t startTime)
 {
-	/*~~~~~~~~~~~~~*/
-	struct tm	*plt;
-	/*~~~~~~~~~~~~~*/
+	struct tm	*pTm;
 
-	plt = gmtime(&startTime);
-	memcpy(&m_sDecodedImageStartTime, plt, sizeof(struct tm));
+	pTm = gmtime(&startTime);
+	memcpy(&m_sDecodedImageStartTime, pTm, sizeof(struct tm));
 }
 
 void CSBIGImg::SetImageStartTime(int mm, int dd, int yy, int hr, int min, int sec)
 {
-	m_sDecodedImageStartTime.tm_mon = mm - 1;		// month in struct tm is 0 - 11, not 1 - 12
+	m_sDecodedImageStartTime.tm_mon  = mm - 1;		// month in struct tm is 0 - 11, not 1 - 12
 	m_sDecodedImageStartTime.tm_mday = dd;
 	m_sDecodedImageStartTime.tm_year = yy - 1900;	// year is zero based in 1900
 	m_sDecodedImageStartTime.tm_hour = hr;
-	m_sDecodedImageStartTime.tm_min = min;
-	m_sDecodedImageStartTime.tm_sec = sec;
+	m_sDecodedImageStartTime.tm_min  = min;
+	m_sDecodedImageStartTime.tm_sec  = sec;
 }
 
 /*
@@ -1065,12 +1072,15 @@ MY_LOGICAL CSBIGImg::ParseHeader(char *pHeader, MY_LOGICAL &isCompressed)
 		SetHistory(s);
 
 		// Get Observer
+		// Allow this to be a NULL string instead of the
+		// required - so we don't bounce CCDSoft SBIG format files
 		ph = HEADER_KEYWORDS[HH_OBSERVER];
 		if ((p = strstr(p, ph)) == NULL)
 			break;
-		if (sscanf(p += strlen(ph), "%67[^\n]", s) != 1)
-			break;
-		if (strlen(s) == 1 && s[0] == '-')
+		if (sscanf(p += strlen(ph), "%67[^\n]", s) == 1) {
+			if (strlen(s) == 1 && s[0] == '-')
+				s[0] = 0;
+		} else
 			s[0] = 0;
 		stripcontrols(s);
 		SetObserver(s);
@@ -1640,12 +1650,18 @@ void CSBIGImg::GetFormattedImageInfo(string &iiStr, MY_LOGICAL htmlFormat /* = T
 		iiStr += ca + "Exposures:" + cs + c + cb;
 		sprintf(c, "%d Pixels Wide x %d Pixels High", m_nWidth, m_nHeight);
 		iiStr += ca + "Image Size:" + cs + c + cb;
-		if ( m_uReadoutMode <= 2 || (m_uReadoutMode >= 6 && m_uReadoutMode <= 9))
+		if (m_uReadoutMode <= 2 || (m_uReadoutMode >= 6 && m_uReadoutMode <= 9))
+		{
 			sprintf(c, "%s", RES_NAMES[m_uReadoutMode]);
-		else if ( m_uReadoutMode & 0xFF <= 2 )
+		}
+		else if ((m_uReadoutMode & 0xFF) <= 2)
+		{
 			sprintf(c, "%s", RES_NAMES[(m_uReadoutMode & 0xFF) + 3]);
+		}
 		else
+		{
 			sprintf(c, "%s", "Unknown");
+		}
 		iiStr += ca + "Resolution mode:" + cs + c + cb;
 		sprintf(c, "%1.2lf x %1.2lf Microns", m_dPixelWidth * 1000.0, m_dPixelHeight * 1000.0);
 		iiStr += ca + "Pixel Dimensions:" + cs + c + cb;
@@ -1808,11 +1824,13 @@ SBIG_FILE_ERROR CSBIGImg::SaveFITS(const char *filename)
 	/*~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~*/
 
 	remove(filename);	// Delete old file if it already exists
-	if (fits_create_file(&fptr, filename, &status)) { // create new FITS file
+	if (fits_create_file(&fptr, filename, &status)) // create new FITS file
+	{
 		return SBFE_OPEN_ERROR;
     }
 
-	if (fits_create_img(fptr, USHORT_IMG, 2, naxes, &status)) {
+	if (fits_create_img(fptr, USHORT_IMG, 2, naxes, &status))
+	{
 		return SBFE_OPEN_ERROR;
     }
 
@@ -1820,23 +1838,28 @@ SBIG_FILE_ERROR CSBIGImg::SaveFITS(const char *filename)
      * write the array of unsigned integers to the FITS file
      */
 	if (fits_write_img(fptr, TUSHORT, 1, m_nHeight * m_nWidth, m_pImage, &status))
+	{
 		return SBFE_WRITE_ERROR;
+	}
 
-    char        timeBuf[128], dateBuf[128], expStateBuf[5];
-	struct tm	*plt = &m_sDecodedImageStartTime;
-	time_t curTime = time(NULL);
-	sprintf(timeBuf,"%04d-%02d-%02dT%02d.%02d.%02d.000",
+    char 		 timeBuf[128], dateBuf[128], expStateBuf[5];
+	struct tm	*plt 	 = &m_sDecodedImageStartTime;
+	time_t 		 curTime = time(NULL);
+
+	sprintf(timeBuf,"%04d-%02d-%02dT%02d:%02d:%02d.000",
 				 plt->tm_year+1900,
 				 plt->tm_mon + 1,
 				 plt->tm_mday,
 				 plt->tm_hour,
 				 plt->tm_min,
 				 plt->tm_sec);
+
 	plt = gmtime(&curTime);
 	sprintf(dateBuf,"%04d-%02d-%02d",
 				 plt->tm_year+1900,
 				 plt->tm_mon + 1,
 				 plt->tm_mday);
+
 	sprintf(expStateBuf,"%X", m_uExposureState);
 
     status = 0;
@@ -1923,6 +1946,28 @@ SBIG_FILE_ERROR CSBIGImg::SaveFITS(const char *filename)
   Generates a FITS HISTORY card for each history element.
 
 */
+/*
+static const char HISTORY_CHARS[] = "@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvw";
+static const char *HISTORY_PHRASES[] = {
+	"Unknown Modification", "Image Co-Addition", "Scale ADU Values","Crop Image",
+	"Dark Subtraction", "Remove Cool Pixels", "Flat Field", "Smooth Pixels",
+	"Sharpen Pixels", "Pseudo Flat Field", "Quantize ADU Values", "Remove Warm Pixels",
+	"Flip Horizontally", "Flip Vertically", "Zoom In", "Further Additional Modifications",
+	"Log Scale ADU Values", "Combine Pixels", "Auto Dark Subtraction", "Replicate Pixels",
+	"Clip ADU Values", "Compress Dynamic Range", "RGB Merge Version 2",
+	"RGB Merge Version 3", "Translate Image", "Invert ADU Values", "Sharpen Pixels Asymmetrically",
+	"Expand Dynamic Range", "Modernize", "Resample Pixel Size", "Average Images",
+	"Add/Subtract ADU Constant", "Multiply/Divide ADU by Constant",
+	"Enlarge Image", "Reduce Image",
+	"Repair Column", "Adaptive Dark Subtraction", "Make Pseudo 3-D Image",
+	"Auto Dark Subtraction with Hot Pixel Removal","Dark Subtraction with Hot Pixel Removal",
+	"LR Deconvolve Image","Spatial Median Filter", "Set ADU Saturation Level",
+	"DDP Image", "Rotate Image", "Fix TDI Background", "ME CCD Spike Removal",
+	"Fix Bloomed Stars", "Remove Image Gradient",
+	"Extract RGB", "Extract Luminance", "Rotate Clockwise", "Rotate Counter-Clockwise",
+	"Median Combine 3 Images", "Rotate 180", "Raw Single Shot Color"};
+	*/
+
 SBIG_FILE_ERROR CSBIGImg::History2FITS(fitsfile	*fptr)
 {
 	int			status = 0;

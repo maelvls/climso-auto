@@ -13,11 +13,24 @@ lpardrv.h - Local options for pardrv.h
 #define ENV_ESRVWIN		5				/* SBIG Use Only, Ethernet Remote */
 #define ENV_MACOSX		6				/* SBIG Use Only, Mac OSX */
 #define ENV_LINUX		7				/* SBIG Use Only, Linux */
-#define ENV_NIOS	    8				/* SBIG Use ONly, Embedded NIOS */
+#define ENV_NIOS	    8				/* SBIG Use Only, Embedded NIOS */
 #ifndef TARGET
  #define TARGET         ENV_LINUX		/* Set for your target */
 #endif
 
-#include "sbigudrv.h"
+#if TARGET == ENV_MACOSX
+ #include <SBIGUDrv/sbigudrv.h>
+ #ifdef _DEBUG
+  #define _DEBUG		1
+ #endif
+#else
+ #include "sbigudrv.h"
+#endif
+
+#if TARGET == ENV_LINUX
+ #ifdef _DEBUG
+  #define _DEBUG 1
+#endif
+#endif
 
 #endif

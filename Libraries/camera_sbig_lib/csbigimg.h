@@ -3,7 +3,7 @@
  csbigimg.h - Contains the definition of the interface to
 			  the SBIG Image Class
 
- 1. This software (c)2004-2010 Santa Barbara Instrument Group.
+ 1. This software (c)2004-2011 Santa Barbara Instrument Group.
  2. This free software is provided as an example of how
     to communicate with SBIG cameras.  It is provided AS-IS
     without any guarantees by SBIG of suitability for a
@@ -22,13 +22,18 @@
 Compile Time Options
 
 */
-#define	INCLUDE_FITSIO	0		/* set to 1 to compile and link with FITSIO Library */
+#define	INCLUDE_FITSIO	1		/* set to 1 to compile and link with FITSIO Library */
 
 
 #ifndef _LPARDRV_
  #include "lpardrv.h"
 #endif
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/time.h>
 #include <time.h>
+#include <stdint.h>
+#include <unistd.h>
 #include <string>
 
 using namespace std;
@@ -132,7 +137,7 @@ public:
 	/* Constructors/Destructor */
 	CSBIGImg(void);
 	CSBIGImg(int height, int width);
-	~				CSBIGImg(void);
+	~CSBIGImg(void);
 
 	void			Init(void);
 	void			DeleteImageData(void);
