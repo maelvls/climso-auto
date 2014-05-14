@@ -4,6 +4,10 @@
 ------------------------------------------------------------------------												
 */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void miroir_horizon(double **data,int nbpts_x,int nbpts_y);
 
 void hexadec (int j, int *hexa);
@@ -20,3 +24,6 @@ void crea_raw(int nbpts_x,int nbpts_y,double val_sat_haute,double val_sat_basse,
 
 void crea_tiff_4_color(int nbpts_x,int nbpts_y,int resolution,double *val_sat_haute,double *val_sat_basse,int *valeur_imag_max,int *valeur_imag_min,double ***valeurs_points,char *nom_fichier_tiff,int nb_bits);
 
+#ifdef __cplusplus
+}
+#endif

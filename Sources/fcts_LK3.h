@@ -3,6 +3,11 @@
 LK - groupees par DS puis LK  -----   mars 2004 - juin 2009 - avril 2014
 ------------------------------------------------------------------------												
 */
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef struct point {int x; int y;} point;
 
 void** alloc_mat_2D (int n_cols, int n_lignes, int el_size);
@@ -53,4 +58,6 @@ double arrondi(double nombre);
 
 int arrondi_int(double nombre);
 
-
+#ifdef __cplusplus
+}
+#endif

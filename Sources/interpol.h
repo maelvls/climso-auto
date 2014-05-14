@@ -2,6 +2,11 @@
 // ------- constantes ---------
 
 // ---- protos --------
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 double it_pol_neville	 (int n, double *f, double alpha);
 double it_pol_neville_s4 (double *f, double alpha);
 double it_pol_neville_s3 (double *f, double alpha);
@@ -37,3 +42,7 @@ double it_pol_neville2D_s2 (
 	double **f,			// tableau source
 	double x1,			// coordonnée x du point pour lequel on veut une val interpolée
 	double y1);			// coordonnée y du point pour lequel on veut une val interpolée
+
+#ifdef __cplusplus
+}
+#endif

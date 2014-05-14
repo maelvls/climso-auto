@@ -6,6 +6,10 @@
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #ifndef climso_auto_fcts_MV_h
 #define climso_auto_fcts_MV_h
 
@@ -15,4 +19,8 @@
 double diametreSoleilSecArc(time_t t);
 int diametreSoleilPixels(time_t t);
 
+#endif
+
+#ifdef __cplusplus
+}
 #endif

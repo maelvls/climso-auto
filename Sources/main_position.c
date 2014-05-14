@@ -88,9 +88,9 @@ int main (int argc, char * const argv[])
     sprintf (nom_Fich_in, "%s%s", POINT_SLASH, "Soleil_3352x2532.tif"); // nom du fichier contenant l'image du Soleil
 
 	// si nécessaire : ces 3 lignes permettent de connaitre dans quel dir s'execute le programme
-	char current_working_dir[1024];
-	getcwd (current_working_dir, sizeof(current_working_dir));
-	printf ("current working directory : %s\n\n", current_working_dir);
+	//char current_working_dir[1024];
+	//getcwd (current_working_dir, sizeof(current_working_dir));
+	//printf ("current working directory : %s\n\n", current_working_dir);
 
 	// lecture d'un fichier image tiff
     int *caracs = (int*) malloc (3*sizeof(int));	// alloc mémoire pour tableaux de paramètres en lecture des fichiers images tiff
@@ -180,7 +180,7 @@ int main (int argc, char * const argv[])
     sprintf (nom_Fich_out, "%s%s", POINT_SLASH, "lapl_ref.tif"); 
     crea_tiff_4 (size_reference_h, size_reference_v,// dimensions image
                  300,								// resolution
-                 10.0, -10.0,65535,0,               // valeurs max et min en entree, valeurs max et min en sortie
+                 10.0, 0,65535,0,               // valeurs max et min en entree, valeurs max et min en sortie
                  lapl_ref, nom_Fich_out, 16);       // tableau dest, nom de fichier, nb de bits par pixel (8 ou 16)
     /*-----------------------------------------*/
     

@@ -13,13 +13,15 @@
 #include <math.h>
 #include "diametre_soleil.h"
 
-//#define _DEBUG_
+#if DEBUG
+	#define DEBUG 1
+#endif
 
 
 /// Définition des propriétés de l'image de référence
 
 
-#ifdef _DEBUG_
+#if DEBUG
 
 // Nouvelle référence pour débug :
 #define IMAGE_REFERENCE_DIAMETRE 	1616 // En pixels
@@ -30,7 +32,7 @@
 
 #endif
 
-#ifndef _DEBUG_
+#if !DEBUG
 
 // Image de référence calculée par LKoechlin
 #define IMAGE_REFERENCE_DIAMETRE 	1638 // En pixels
@@ -68,7 +70,7 @@ double diametreSoleilSecArc(time_t t) {
     double seconds = difftime(t, t_0_time); // nb de secondes ecoule entre maintenant et 't_0'
     double nb_jours = seconds/3600/24;        // nb de jours    ecoule entre maintenant et 't_0', pas forcement entier
 
-#ifdef _DEBUG_
+#if DEBUG
     printf("Nb jours depuis le perihelie2014=%.4f \n", nb_jours);
 #endif
     
@@ -80,7 +82,7 @@ double diametreSoleilSecArc(time_t t) {
     
     double distanceTerreSoleil = a*(1-e*e) / (1+e*cos(nu));
 
-#ifdef _DEBUG_
+#if DEBUG
     printf("M=%.10f\n"
            "U1=%.10f\n"
            "U2=%.10f\n"
@@ -91,7 +93,7 @@ double diametreSoleilSecArc(time_t t) {
     double angle_apparent = diametreSoleil / distanceTerreSoleil * radsec; // en radians, approx petits angles
     // Sachant que alpha << 1 => alpha ~ tan(alpha).
     
-#ifdef _DEBUG_
+#if DEBUG
     printf("Distance Soleil_Terre aujourd'hui =%.10f, angle en secondes d'arc=%.10f\n",
            distanceTerreSoleil, angle_apparent);
 #endif

@@ -4,6 +4,10 @@
 #include "crea_tiff_3.h"
 #include "convol.h"
 
+#ifndef DEBUG
+	#define DEBUG 0
+#endif
+
 typedef enum { false, true } bool;
 
 /*
@@ -62,14 +66,17 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 			}
 			else mask [vx][hx] = false;	// 'false' indique qu'il ne faudra pas calculer pour ce pixel de 'r'
 		}
-		printf ("seuil =  %4.2e ; nb. pixels > seuil = %4d total pixels= %d \n fraction de l'image négligée %4.2e ; nb de boucles = %4.2e \n", 
+#if DEBUG
+		printf ("Seuil =  %4.2e ; nb. pixels > seuil = %4d total pixels= %d \n fraction de l'image négligée %4.2e ; nb de boucles = %4.2e \n",
 				seuil, nb_pts_non_nuls, size_psf_h * size_psf_v,
 				(integ_psf - integ_sup_seuil) / integ_psf, 
 				(float)size_src_h * (float)size_src_v * nb_pts_non_nuls);
+#endif
 	}
 
 	{
 		// calcul de la convolution
+		int compteur_interne = 0;
 		double t_start = (double)(clock());
 		for (int vx = 0 ; vx <size_psf_v ; vx++)
 		for (int hx = 0 ; hx <size_psf_h ; hx++)
@@ -81,14 +88,18 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 				{
 					double* ptr_src_v = objet_src [va - vx + size_psf_v_s2] - hx + size_psf_h_s2;
 					double* ptr_conv_v = la_convol [va];
-					for (int ha = size_psf_h_s2 ; ha <size_calc_h - size_psf_h_s2 -1; ha++)	// ha parcourt ims srce et conv en horizontal
+					for (int ha = size_psf_h_s2 ; ha <size_calc_h - size_psf_h_s2 -1; ha++) {	// ha parcourt ims srce et conv en horizontal
 						ptr_conv_v[ha] += pixel_psf * ptr_src_v[ha];
+						compteur_interne++;
 // la ligne ci-dessus fait pareil mais plus vite que:
-//						la_convol [va][ha] += psf [vx][hx] * objet_src [va -vx +size_psf_v_s2][ha -hx +size_psf_h_s2];
+//			la_convol [va][ha] += psf [vx][hx] * objet_src [va -vx +size_psf_v_s2][ha -hx+size_psf_h_s2];
+					}
 				}
 			}
 		}
-		printf ("temps calcul = %4.2f s \n",  (double)(clock() - t_start) /CLOCKS_PER_SEC);
+#if DEBUG
+		printf ("Temps calcul = %4.2f s \n",  (double)(clock() - t_start) /CLOCKS_PER_SEC);
+#endif
 	}
 	
 	{
@@ -98,7 +109,9 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 			convol_finale [va][ha] = la_convol [va + size_psf_v_s2][ha + size_psf_h_s2];
 	}
 	
+#if DEBUG
 /* ----------  ecriture du masque pour controle et debug : image tiff des pixels (au dessus du seuil) pris en compte dans le calcul
+ */
     double**mask_real = (double**) alloc_mat_2D (size_psf_h, size_psf_v, sizeof(double));
     if (mask_real == 0) return -1;
     for (int vx = 0 ; vx <size_psf_v ; vx++) // cree un masque la ou la psf est non nulle
@@ -109,9 +122,10 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
      crea_tiff_4 (size_psf_h, size_psf_v,// dimensions image
      300,								// resolution
      1.0,-1.0,65535,0,					// valeurs max et min en entree, valeurs max et min en sortie
-     mask_real,"/Users/laurent/coro_pic/C1C2L1L2_guidage/progs_centrage/correl_images/mask.tiff", 16);
+     mask_real,"mask.tif", 16);
      free_mat_2D ( (void**)mask_real);
----------- */
+/*---------- */
+#endif
     
 	free_mat_2D ( (void**)objet_src);
 	free_mat_2D ( (void**)la_convol);

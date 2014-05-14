@@ -9,6 +9,6 @@
 #ifndef __climso_auto__camera__
 #define __climso_auto__camera__
 
-
+void transformerEnTableauDeDouble(CSBIGImg *img_src, double **img_dest, int *hauteur_dst, int *largeur_dst);
 
 #endif /* defined(__climso_auto__camera__) */
