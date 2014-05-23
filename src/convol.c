@@ -4,10 +4,6 @@
 #include "crea_tiff_3.h"
 #include "convol.h"
 
-#ifndef DEBUG
-	#define DEBUG 0
-#endif
-
 typedef enum { false, true } bool;
 
 /*
@@ -98,7 +94,7 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 			}
 		}
 #if DEBUG
-		printf ("Temps calcul = %4.2f s \n",  (double)(clock() - t_start) /CLOCKS_PER_SEC);
+		printf ("Temps calcul de la correlation : %4.2f s \n",  (double)(clock() - t_start) /CLOCKS_PER_SEC);
 #endif
 	}
 	

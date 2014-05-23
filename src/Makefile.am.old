@@ -1,0 +1,11 @@
+bin_PROGRAMS=climso_auto
+
+climso_auto_SOURCES=\
+	main_position.c\
+	cmd_arduino.c\
+	convol.c crea_tiff_3.c fcts_LK3.c interpol.c\
+	csbigcam.cpp csbigimg.cpp diametre_soleil.c\
+  	exceptions.cpp  image.cpp
+
+
+#	main_arduino.c main_camera.cpp main_global.c main_image.cpp 

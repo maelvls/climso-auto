@@ -59,8 +59,9 @@ Image::Image(Image& src) {
 
 Image::~Image() {
 	if(img != NULL) {
-		for(int l=0; l<lignes; l++)
+		for(int l=0; l<lignes; l++) {
 			delete [] img[l];
+		}
 		delete [] img;
 	}
 }
@@ -574,7 +575,7 @@ Image* Image::correlation_lk(Image& reference, float seuil_ref) {
 
 #if INCLUDE_FCTS_LK3
 Image* Image::dessinerMasqueDeSoleil(int diametre) {
-	const int marge = 2.5;
+	const double marge = 2.5;
 	Image* img = new Image(diametre + 4*marge, diametre + 4*marge);
 
 	draw_doughnut (img->ptr(), img->colonnes, img->lignes,

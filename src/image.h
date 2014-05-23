@@ -6,19 +6,18 @@
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
 
-#define INCLUDE_TIFF	1 	// Si 1, alors -L/usr/local/lib et -ltiff
-#define INCLUDE_SBIGIMG 1 	// Si 1, alors (MAC) -F/Library/Frameworks et -framework SBIGUDrv (selon installation)
-#define INCLUDE_CONVOL	1
-#define INCLUDE_FCTS_LK3 1
-#define INCLUDE_INTERPOL 1
-							// 	(LINUX) -L/usr/local/lib et -lsbigudrv (selon installation)
+#define INCLUDE_TIFF		1 	// Si 1, alors -L/usr/local/lib et -ltiff
+#define INCLUDE_SBIGIMG		1 	// Si 1, alors	(MAC) -F/Library/Frameworks et -framework SBIGUDrv (selon installation)
+								//				(LINUX) -L/usr/local/lib et -lsbigudrv (selon installation)
+#define INCLUDE_CONVOL		1
+#define INCLUDE_FCTS_LK3	1
+#define INCLUDE_INTERPOL	1
+
+#define INCLUDE_SBIGCAM		1
 
 #ifndef __climso_auto__picture__
 #define __climso_auto__picture__
 
-#ifndef DEBUG
-	#define DEBUG 0
-#endif
 
 #include <exception>
 #include <iostream>
@@ -39,7 +38,9 @@ using namespace std;
 #if INCLUDE_SBIGIMG
     #include "csbigimg.h"
 #endif
-
+#if INCLUDE_SBIGCAM
+	#include "csbigcam.h"
+#endif
 #if INCLUDE_CONVOL
 	#include "convol.h"
 #endif

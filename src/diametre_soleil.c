@@ -13,10 +13,6 @@
 #include <math.h>
 #include "diametre_soleil.h"
 
-#if DEBUG
-	#define DEBUG 1
-#endif
-
 
 /// Définition des propriétés de l'image de référence
 

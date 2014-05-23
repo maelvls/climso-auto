@@ -681,7 +681,7 @@ PAR_ERROR CSBIGCam::GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 			m_sGrabInfo.vBin = m_sGrabInfo.vertNBinning;
 		}
 	}
-	else
+    else
 	{
 		if (m_sGrabInfo.rm < 3)
 		{
@@ -700,6 +700,12 @@ PAR_ERROR CSBIGCam::GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 		{
 			m_sGrabInfo.hBin = m_sGrabInfo.vBin = 9;
 		}
+        else if(m_eCameraType == STF_CAMERA && m_sGrabInfo.rm == 10) {
+            // Added for RM_NXN support on STF-8300 (Mael Valais)
+            // RM_NXN Example: RM_NXN | 0x0400 will give a 4x4 binning
+            // or RM_NXN | 0x0400
+            m_sGrabInfo.hBin = m_sGrabInfo.vBin = m_sGrabInfo.vertNBinning;
+        }
 	}
 	gcip.request = (m_eActiveCCD == CCD_IMAGING ? CCD_INFO_IMAGING : CCD_INFO_TRACKING);
 
@@ -740,6 +746,11 @@ PAR_ERROR CSBIGCam::GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 				m_sGrabInfo.height = gcir.readoutInfo[m_sGrabInfo.rm].height / m_sGrabInfo.vertNBinning;
 			}
 		}
+        // Added for RM_NXN mode support for the STF-8300 camera
+		if (m_eCameraType == STF_CAMERA && m_sGrabInfo.rm == 10) {
+            m_sGrabInfo.width  = gcir.readoutInfo[0].width / m_sGrabInfo.vertNBinning;
+            m_sGrabInfo.height = gcir.readoutInfo[0].height / m_sGrabInfo.vertNBinning;
+        }
 	}
 	else
 	{
@@ -1070,7 +1081,7 @@ PAR_ERROR CSBIGCam::StartExposure(SHUTTER_COMMAND shutterState)
 		sep2.width 			= m_nSubFrameWidth;
 		sep2.readoutMode 	= m_uReadoutMode;
 
-		/*
+/*
 		cout << "CSBIGCam::StartExposure2 -------------------------" << endl;
 		cout << "sep2.ccd			: " << sep2.ccd 		<< endl;
 		cout << "sep2.exposureTime	: " << sep2.exposureTime<< endl;
@@ -1080,9 +1091,10 @@ PAR_ERROR CSBIGCam::StartExposure(SHUTTER_COMMAND shutterState)
 		cout << "sep2.left      	: " << sep2.left		<< endl;
 		cout << "sep2.height      	: " << sep2.height		<< endl;
 		cout << "sep2.width      	: " << sep2.width		<< endl;
-		cout << "sep2.readoutMode	: " << sep2.readoutMode	<< endl;
+		cout << "sep2.readoutMode	: " <<hex<<sep2.readoutMode<<dec<< endl;
 		cout << "--------------------------------------------------" << endl;
-		*/
+*/
+		
 		return SBIGUnivDrvCommand(CC_START_EXPOSURE2, &sep2, NULL);
 	}
 	else

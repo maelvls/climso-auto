@@ -27,3 +27,10 @@
 /Debug
 /Builds
 /.DS_Store
+/config.h.in~
+/config.log
+/config.status
+/configure
+/configure.scan
+/Makefile
+/Makefile.in

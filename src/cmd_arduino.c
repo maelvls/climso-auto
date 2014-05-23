@@ -33,7 +33,7 @@
     Envoi d'informations à travers le canal série
     @param direction La direction 
     @param La duree en ms
-    @return 0 si tout s'est bien passé, -1 si problème d'écriture sur le canal
+    @return ARDUINO_OK si tout s'est bien passé, ARDUINO_ERR si problème d'écriture sur le canal
 
     Principe : On concatène le numéro du pin et la duree et on envoie
 */
@@ -42,7 +42,7 @@ int arduinoEnvoyerCmd(int direction, int duree, int fd) {
 	sprintf(commande,"%d,%d",direction,duree);
 	printf("Envoi de la commande '%s'\n",commande);
 	size_t writen = write(fd,commande,strlen(commande)+1);
-	return (writen == strlen(commande)+1)?0:-1;
+	return (writen == strlen(commande)+1)?0:ARDUINO_ERR;
 }
 
 
@@ -50,7 +50,7 @@ int arduinoEnvoyerCmd(int direction, int duree, int fd) {
  * Initialisation de la communication avec arduino à la vitesse SPEED_BAUDS (9600 bauds)
  * en 8N1 (8 bits de données, pas de parité, un seul bit stop)
  * @param device Le nom du device (/dev/ttyUSB ou quelque chose comme ça)
- * @return -1 si erreur
+ * @return ARDUINO_ERR si erreur
  *
  * @author 2006-2013, Tod E. Kurt, http://todbot.com/blog/ (arduino-serial-lib)
  * @author 2014 Mael Valais pour des modifications
@@ -61,11 +61,11 @@ int arduinoInitialiserCom(const char* device_file_name) {
 	fd = open(device_file_name, O_RDWR | O_NONBLOCK ); // On ouvre le /dev/...
 	if (fd == -1)  {
 		perror("arduinoInitialiserCom: Impossible d'ouvrir le fichier /dev/....");
-		return -1;
+		return ARDUINO_ERR;
 	}
 	if (tcgetattr(fd, &toptions) < 0) { // On récupère la config terminal du fichier
 		perror("arduinoInitialiserCom: Impossible de récupérer les attributs termios pour ce /dev/...");
-		return -1;
+		return ARDUINO_ERR;
 	}
 	cfsetispeed(&toptions, SPEED_BAUD); // On met le transfert à 9600 bauds
 	cfsetospeed(&toptions, SPEED_BAUD);
@@ -90,7 +90,7 @@ int arduinoInitialiserCom(const char* device_file_name) {
 	tcsetattr(fd, TCSANOW, &toptions); // On applique la configuration terminal sur le fichier
 	if(tcsetattr(fd, TCSAFLUSH, &toptions) < 0) {
 		perror("arduinoInitialiserCom: Impossible de configurer les paramètre terminal du fichier /dev/...");
-		return -1;
+		return ARDUINO_ERR;
 	}
 	return fd;
 }

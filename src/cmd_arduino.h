@@ -13,12 +13,20 @@
 //          ou alors /dev/ttyAMC0 sous unix...
 //
 
+
 #ifndef __climso_auto__cmd_arduino__
 #define __climso_auto__cmd_arduino__
+#ifdef __cplusplus
+extern "C" {
+#endif
+	
+#define ARDUINO_ERR	-1
 
-
-int arduinoInitialiserCom(const char* device);
+int arduinoInitialiserCom(const char* device_file_name);
 int arduinoEnvoyerCmd(int direction, int duree, int fd_device);
 void arduinoEteindreCom(int fd_device);
 
+#ifdef __cplusplus
+}
+#endif
 #endif /* defined(__climso_auto__cmd_arduino__) */
