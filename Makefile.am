@@ -1,3 +1,4 @@
+CFLAGS=--pedantic -Wall -std=c99 -O2
 bin_PROGRAMS=climso_auto_classe_image climso_auto_main_lk
 
 climso_auto_classe_image_SOURCES=\

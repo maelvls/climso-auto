@@ -21,6 +21,10 @@
 #include <string.h>		// (Lib C) Fonctions sur les chaines (strlen...)
 #include <errno.h>    	// Définition des numéros d'erreur (perror...)
 
+#define _GNU_SOURCE // Ajouté car pose des pbms pour termios.h car certaines macros
+// n'appartiennent pas à la norme POSIX
+// Cf. http://www.gnu.org/software/libc/manual/html_node/Feature-Test-Macros.html
+
 #include <termios.h>  	// (POSIX) fonctions UNIX de contrôle du terminal (tcsetattr...)
 #include <fcntl.h>		// (POSIX) fonctions UNIX d'ouverture de fichiers (open...)
 #include <unistd.h>		// (POSIX) fonctions UNIX d'opération sur les fichiers (write...)
@@ -75,7 +79,7 @@ int arduinoInitialiserCom(const char* device_file_name) {
 	toptions.c_cflag &= ~CSTOPB; // On désactive le second bit de stop
 	toptions.c_cflag &= ~CSIZE; // On désactive le réglage de taille de caractère
 	toptions.c_cflag |= CS8; // On réactive la taille de caractère à 8 bits
-	toptions.c_cflag &= ~CRTSCTS; // On désactive le contrôle de flux
+	//toptions.c_cflag &= ~CRTSCTS; // On désactive le contrôle de flux FIXME: desactive car pbm termios.h
 
 	toptions.c_cflag |= CREAD | CLOCAL;  // turn on READ & ignore ctrl lines
 	toptions.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl

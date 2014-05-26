@@ -21,25 +21,26 @@ AC_PROG_CXX
 AC_PROG_CC
 
 # Checks for GNU/Linux libraries or Mac OS frameworks 
+AC_CHECK_LIB([m], [main],[],[exit])
 AC_CHECK_LIB([tiff], [main],[],[
-	AC_MSG_RESULT([--> Il manque la librairie "tiff" !])
+	AC_MSG_RESULT([--> La librairie -ltiff n'a pas ete trouvee])
 	exit
 ])
 
-AC_CHECK_LIB([sbigudrv], [main], [
-	# La lib existe
-], [ 
+AC_CHECK_LIB([sbigudrv], [main], [], [ 
+	AC_MSG_RESULT([--> La librairie -lsbigudrv n'a pas ete trouvee])
 	# La lib n'existe pas : on cherche un framework
 	MY_CHECK_FRAMEWORK([sbigudrv])
-	AS_IF([test "x$my_cv_framework_sbigudrv"="yes"],[
+	AS_IF([test "$my_cv_framework_sbigudrv" = "xyes"],[
 		# Le framework existe
-		# Note: my_cv_framework_sbigudrv est defini dans MY_CHECK_FRAMEWORK
-		AC_MSG_RESULT([-->Le framework sbigudrv a bien ete trouve !])
+		AC_MSG_RESULT([--> Le framework sbigudrv a bien ete trouve !])
 		],[ # Le framework n'existe pas : erreur
-		AC_MSG_ERROR([-->La librairie -lsbigudrv ou le framework sbigudrv est introuvable])
+		AC_MSG_ERROR([--> La librairie -lsbigudrv ou le framework sbigudrv est introuvable])
 		exit
 	])
 ])
+AC_MSG_RESULT([$LIBS]);
+
 
 
 # Checks for header files.
