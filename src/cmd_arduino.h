@@ -23,7 +23,8 @@ extern "C" {
 #define ARDUINO_ERR	-1
 
 int arduinoInitialiserCom(const char* device_file_name);
-int arduinoEnvoyerCmd(int direction, int duree, int fd_device);
+int arduinoEnvoyerCmd(int pin, int duree, int fd_device);
+int arduinoRecevoirReponse(int fd, char* rep);
 void arduinoEteindreCom(int fd_device);
 
 #ifdef __cplusplus

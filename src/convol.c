@@ -63,7 +63,7 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 			else mask [vx][hx] = false;	// 'false' indique qu'il ne faudra pas calculer pour ce pixel de 'r'
 		}
 #if DEBUG
-		printf ("Seuil =  %4.2e ; nb. pixels > seuil = %4d total pixels= %d \n fraction de l'image négligée %4.2e ; nb de boucles = %4.2e \n",
+		printf ("Seuil:%4.2e ; nb. pixels > seuil = %4d total pixels= %d \n fraction de l'image négligée %4.2e ; nb de boucles = %4.2e \n",
 				seuil, nb_pts_non_nuls, size_psf_h * size_psf_v,
 				(integ_psf - integ_sup_seuil) / integ_psf, 
 				(float)size_src_h * (float)size_src_v * nb_pts_non_nuls);
@@ -73,7 +73,9 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 	{
 		// calcul de la convolution
 		int compteur_interne = 0;
+#if DEBUG
 		double t_start = (double)(clock());
+#endif
 		for (int vx = 0 ; vx <size_psf_v ; vx++)
 		for (int hx = 0 ; hx <size_psf_h ; hx++)
 		{
@@ -107,7 +109,7 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
 	
 #if DEBUG
 /* ----------  ecriture du masque pour controle et debug : image tiff des pixels (au dessus du seuil) pris en compte dans le calcul
- */
+
     double**mask_real = (double**) alloc_mat_2D (size_psf_h, size_psf_v, sizeof(double));
     if (mask_real == 0) return -1;
     for (int vx = 0 ; vx <size_psf_v ; vx++) // cree un masque la ou la psf est non nulle
@@ -120,7 +122,7 @@ int	calc_convol	(double **objet_src_initial, double **psf, double **convol_final
      1.0,-1.0,65535,0,					// valeurs max et min en entree, valeurs max et min en sortie
      mask_real,"mask.tif", 16);
      free_mat_2D ( (void**)mask_real);
-/*---------- */
+---------- */
 #endif
     
 	free_mat_2D ( (void**)objet_src);

@@ -10,6 +10,9 @@
 //	- Pixel : ensemble de Samples ; en nuances de gris, nb(Samples)=1
 //	- Sample : sous-partie du pixel ; 3 par pixel pour une image en couleurs, 1 pour du gris
 //
+// Problème avec la classe Image : l'utilisation d'objets avec allocation dynamique a deux pbms :
+//		- il y a des fuites de mémoire dans la boucle, et cette fuite va faire crasher le système
+// 		- les allocation dynamiques à chaque fois (environ 10 à 40 mo par objet) ralentissent
 //
 
 #include "image.h"
@@ -506,24 +509,24 @@ void Image::maxPixel(int *l, int *c) {
 
 /**
  * Réduit d'un facteur donné la taille de l'image
- * @param facteur_binning Le facteur de binning (binning 2x2 -> facteur 2)
+ * @param binning La taille du carré de binning (binning 3x3 -> bin 3)
  * @return L'image réduite
  */
-Image* Image::reduire(int facteur_binning) {
-    Image *img_dst = new Image(lignes/facteur_binning, colonnes/facteur_binning);
+Image* Image::reduire(int binning) {
+    Image *img_dst = new Image(lignes/binning, colonnes/binning);
     // On parcourt l'image de destination qui reçoit le bining (img_dst)
     for (int l_dst = 0 ; l_dst< img_dst->lignes ; l_dst++) {
         for (int c_dst = 0 ; c_dst< img_dst->colonnes ; c_dst++) {
-            int l_src = l_dst * facteur_binning;
-            int c_src = c_dst * facteur_binning;
+            int l_src = l_dst * binning;
+            int c_src = c_dst * binning;
             MonDouble somme = 0;
             // On parcourt le carré où on fait la moyenne du binning
-            for (int l_tab_moy = l_src; l_tab_moy < l_src + facteur_binning; l_tab_moy++) {
-                for (int c_tab_moy=c_src; c_tab_moy < c_src + facteur_binning; c_tab_moy++) {
+            for (int l_tab_moy = l_src; l_tab_moy < l_src + binning; l_tab_moy++) {
+                for (int c_tab_moy=c_src; c_tab_moy < c_src + binning; c_tab_moy++) {
                     somme += this->getPix(l_tab_moy, c_tab_moy);
                 }
             }
-            img_dst->setPix(l_dst, c_dst, somme / (facteur_binning*facteur_binning));
+            img_dst->setPix(l_dst, c_dst, somme / (binning*binning));
         }
     }
     return img_dst;
@@ -610,6 +613,16 @@ Image* Image::interpolerAutourDeCePoint(int l, int c) {
 	const int marge = 20;
 	const float pas_interp = 1/8;
 	return interpolerAutourDeCePoint(l, c, pas_interp, marge);
+}
+
+double Image::sommePixels() {
+	double som = 0;
+	for(int l=0; l<lignes; l++) {
+		for(int c=0; c<colonnes; c++) {
+			som += getPix(l,c);
+		}
+	}
+	return som;
 }
 
 void Image::maxParInterpolation(double *l, double *c) {

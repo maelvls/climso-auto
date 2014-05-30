@@ -1,4 +1,6 @@
-#
+# 
+# ANCIEN MAKEFILE Inutile maintenant ; on utilisera ./configure; make
+# 
 # makefile
 # Mael Valais, 2014-04-07 15:23
 #

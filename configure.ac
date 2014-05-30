@@ -1,4 +1,5 @@
-# Fichier utilisé pour la génération par les outils autoconf et automake 
+# configure.ac pour autoconf par Mael Valais - 2014
+# Fichier utilisé pour la génération autoconf
 
 AC_PREREQ([2.69])
 AC_INIT([climso-auto], [1.0], [mael.valais@irap.omp.eu])

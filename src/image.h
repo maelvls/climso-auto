@@ -92,6 +92,7 @@ public:
     Image* correlation_reduite_MV(Image& reference, float seuil_ref);
     Image* correlation_reduite2_MV(Image& reference, float seuil_ref);
     Image* convoluer(const int *noyau, int taille);
+    double sommePixels();
 
     // Entrées/sorties (depuis/vers)
 #if INCLUDE_TIFF
@@ -114,7 +115,7 @@ public:
     //void setPix(int l, int c, MonDouble intensite) { img[l*colonnes + c]=intensite;}
 
     MonDouble** ptr() { return img; }
-#if DEBUG
+#if DEBUG // Pour detecter d'eventuels acces interdits lors de debugs
 	MonDouble getPix(int l, int c) {
 		if(l < 0 || l >= lignes || c < 0 || c >= colonnes)
 			throw "getPix: Pixel hors-image";

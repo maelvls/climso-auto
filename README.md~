@@ -30,8 +30,4 @@ On utilise les autotools : autoconf, automake...
 ### Problème avec la connexion Arduino
 ### Problème avec la connexion SBIG
 * "Permission denied" : il faut être root pour y accéder. La solution est d'ajouter la règle udev dans /usr/lib/udev/rules.d/51-mes-regles-climso.rules.
-
-* "No error" : c'était une erreur qui apparaissait lorsque le modèle de la caméra n'était pas connu, mais là je ne sais pas d'où vient l'erreur
-
-* "Camera Not Found" : 
  

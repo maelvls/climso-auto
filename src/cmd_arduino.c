@@ -35,18 +35,37 @@
 
 /**
     Envoi d'informations à travers le canal série
-    @param direction La direction 
+    @param pin Le pin sur lequel envoyer l'impulsion
     @param La duree en ms
     @return ARDUINO_OK si tout s'est bien passé, ARDUINO_ERR si problème d'écriture sur le canal
 
     Principe : On concatène le numéro du pin et la duree et on envoie
 */
-int arduinoEnvoyerCmd(int direction, int duree, int fd) {
+int arduinoEnvoyerCmd(int pin, int duree, int fd) {
 	char commande [30];
-	sprintf(commande,"%d,%d",direction,duree);
-	printf("Envoi de la commande '%s'\n",commande);
+	sprintf(commande,"%d,%d",pin,duree);
+	printf("Envoi de la commande '%s' (%d ms au pin %d)\n",commande,duree,pin);
 	size_t writen = write(fd,commande,strlen(commande)+1);
 	return (writen == strlen(commande)+1)?0:ARDUINO_ERR;
+}
+
+/**
+ * Lit les messages envoyés par arduino (maximum 300 caractères)
+ * @param fd
+ * @param rep
+ * @return
+ */
+int arduinoRecevoirReponse(int fd, char* rep) {
+	const int maxLongRep = 300;
+	rep[0]='\0';
+	int longueurLue = 0;
+	int longueur = lseek(fd,0,SEEK_END);
+	if(longueur >= maxLongRep) {
+		longueurLue = maxLongRep;
+		rep[maxLongRep-1]='\0';
+	}
+	size_t answerRead = read(fd,rep,longueurLue);
+	return (answerRead);
 }
 
 
@@ -64,12 +83,13 @@ int arduinoInitialiserCom(const char* device_file_name) {
 	int fd;
 	fd = open(device_file_name, O_RDWR | O_NONBLOCK ); // On ouvre le /dev/...
 	if (fd == -1)  {
-		perror("arduinoInitialiserCom: Impossible d'ouvrir le fichier /dev/....");
-		return ARDUINO_ERR;
+		fprintf(stderr,"arduinoInitialiserCom: Impossible d'ouvrir %s\n",device_file_name);
+		fprintf(stderr,"arduinoInitialiserCom: le mode d'accès du fichier semble être trop restreint\n");
+		perror("arduinoInitialiserCom"); return ARDUINO_ERR;
 	}
 	if (tcgetattr(fd, &toptions) < 0) { // On récupère la config terminal du fichier
-		perror("arduinoInitialiserCom: Impossible de récupérer les attributs termios pour ce /dev/...");
-		return ARDUINO_ERR;
+		fprintf(stderr,"arduinoInitialiserCom: Impossible de récupérer les attributs termios pour %s\n",device_file_name);
+		perror("arduinoInitialiserCom"); return ARDUINO_ERR;
 	}
 	cfsetispeed(&toptions, SPEED_BAUD); // On met le transfert à 9600 bauds
 	cfsetospeed(&toptions, SPEED_BAUD);
@@ -93,8 +113,8 @@ int arduinoInitialiserCom(const char* device_file_name) {
 
 	tcsetattr(fd, TCSANOW, &toptions); // On applique la configuration terminal sur le fichier
 	if(tcsetattr(fd, TCSAFLUSH, &toptions) < 0) {
-		perror("arduinoInitialiserCom: Impossible de configurer les paramètre terminal du fichier /dev/...");
-		return ARDUINO_ERR;
+		fprintf(stderr,"arduinoInitialiserCom: Impossible de configurer les paramètre terminal du fichier %s\n",device_file_name);
+		perror("arduinoInitialiserCom"); return ARDUINO_ERR;
 	}
 	return fd;
 }

@@ -905,10 +905,12 @@ PAR_ERROR CSBIGCam::GrabMain(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 		}
 	}
 	
-	EndReadout();
+	EndReadout(); 	// FIXME: MV 2014: Si une erreur s'est produite pendant ReadoutLine, m_eLastError sera modifié
+					// par EndReadout et on ne pourra donc pas lire la vrai erreur !
 	
 	if (err != CE_NO_ERROR)
 	{
+		m_eLastError = err; // FIXME: MV 2014: voici un fix pour le probleme
 		return err;
 	}
 	
