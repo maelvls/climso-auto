@@ -22,12 +22,13 @@
 *.x86_64
 *.hex
 
+# Fichiers backup
+*.*~
 
 *.tif
 /Debug
 /Builds
 /.DS_Store
-/config.h.in~
 /config.log
 /config.status
 /configure
