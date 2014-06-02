@@ -557,7 +557,17 @@ Image* Image::convoluer(const int *noyau, int taille) {
     return img_dst;
 }
 
-
+/**
+ * Calcule la dérivée au carré de l'image ; on fait ça au lieu d'utiliser un noyau
+ * de convolution Laplacien par exemple. Permet entre autres de diminuer la sensibilité
+ * au bruit.
+ * @return L'image résultat
+ *
+ * @author LK
+ */
+Image* Image::deriveeCarre() {
+	// FIXME: utliser la fonction codée par LK
+}
 
 //----------------------- Fonctions LK ---------------------
 

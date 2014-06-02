@@ -92,6 +92,7 @@ public:
     Image* correlation_reduite_MV(Image& reference, float seuil_ref);
     Image* correlation_reduite2_MV(Image& reference, float seuil_ref);
     Image* convoluer(const int *noyau, int taille);
+    Image* deriveeCarre();
     double sommePixels();
 
     // Entrées/sorties (depuis/vers)
