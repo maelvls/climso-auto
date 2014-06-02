@@ -80,7 +80,7 @@ int initialiserArduino() {
 
 void signalHandler(int signum)
 {
-    cout << "Interruption " << signum << ") recue\n";
+    cout << "Interruption " << signum << " recue\n";
     exit(signum);
 }
 
@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
 	/*
 	 * Création de l'image ayant la forme du soleil puis laplacien
 	 */
-	Image *ref = Image::dessinerMasqueDeSoleil(238);
+	Image *ref = Image::dessinerMasqueDeSoleil(256);
 	Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
 
 	int larg_img_cam, haut_img_cam;
@@ -197,12 +197,6 @@ int main(int argc, char **argv) {
         cerr << "Erreur avec la camera : " << cam->GetErrorString() << endl;
         exit(1);
     }
-	return 0;
-}
-
-int main_fuite_memoire(int argc, char **argv) {
-	Image* i = new Image(10000,10000);
-	i->~Image();
 	return 0;
 }
 
