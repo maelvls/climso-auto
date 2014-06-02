@@ -567,6 +567,7 @@ Image* Image::convoluer(const int *noyau, int taille) {
  */
 Image* Image::deriveeCarre() {
 	// FIXME: utliser la fonction codée par LK
+	return NULL;
 }
 
 //----------------------- Fonctions LK ---------------------

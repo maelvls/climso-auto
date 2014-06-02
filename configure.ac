@@ -29,10 +29,9 @@ AC_CHECK_LIB([tiff], [main],[],[
 ])
 
 AC_CHECK_LIB([sbigudrv], [main], [], [ 
-	AC_MSG_RESULT([--> La librairie -lsbigudrv n'a pas ete trouvee])
 	# La lib n'existe pas : on cherche un framework
 	MY_CHECK_FRAMEWORK([sbigudrv])
-	AS_IF([test "$my_cv_framework_sbigudrv" = "xyes"],[
+	AS_IF([test "$my_cv_framework_sbigudrv" = "yes"],[
 		# Le framework existe
 		AC_MSG_RESULT([--> Le framework sbigudrv a bien ete trouve !])
 		],[ # Le framework n'existe pas : erreur
@@ -40,9 +39,6 @@ AC_CHECK_LIB([sbigudrv], [main], [], [
 		exit
 	])
 ])
-AC_MSG_RESULT([$LIBS]);
-
-
 
 # Checks for header files.
 AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h tiffio.h])

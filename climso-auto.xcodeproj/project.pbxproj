@@ -63,7 +63,6 @@
 		1CD3BECA1925F64A00CA005D /* lpardrv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lpardrv.h; path = src/lpardrv.h; sourceTree = "<group>"; };
 		1CD3BECB1925F64A00CA005D /* main_arduino.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main_arduino.c; path = src/main_arduino.c; sourceTree = "<group>"; };
 		1CD3BECC1925F64A00CA005D /* main_camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_camera.cpp; path = src/main_camera.cpp; sourceTree = "<group>"; };
-		1CD3BECD1925F64A00CA005D /* main_global.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main_global.c; path = src/main_global.c; sourceTree = "<group>"; };
 		1CD3BECE1925F64A00CA005D /* main_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_image.cpp; path = src/main_image.cpp; sourceTree = "<group>"; };
 		1CD3BECF1925F64A00CA005D /* main_position_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main_position_test.c; path = src/main_position_test.c; sourceTree = "<group>"; };
 		1CD3BED01925F64A00CA005D /* main_position.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main_position.c; path = src/main_position.c; sourceTree = "<group>"; };
@@ -114,7 +113,6 @@
 				1CD3BECA1925F64A00CA005D /* lpardrv.h */,
 				1CD3BECB1925F64A00CA005D /* main_arduino.c */,
 				1CD3BECC1925F64A00CA005D /* main_camera.cpp */,
-				1CD3BECD1925F64A00CA005D /* main_global.c */,
 				1CD3BECF1925F64A00CA005D /* main_position_test.c */,
 				1CD3BED01925F64A00CA005D /* main_position.c */,
 				1CD3BED11925F64A00CA005D /* Makefile.am */,
