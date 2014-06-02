@@ -13,14 +13,19 @@
 #define	PIN_EST				10
 #define PIN_OUEST			9
 
-#define ARDUINO_DEV_LIST "/dev/ttyACM0 /dev/ttyACM1 /dev/ttyACM2 /dev/tty.usbmodemfa131"
+#define ARDUINO_DEV_LIST "/dev/ttyACM0 /dev/ttyACM1 /dev/ttyACM2 /dev/tty.usbmodemfa131 /dev/tty.usbmodemfd111"
 
 #include <iostream>
 #include <iomanip> // Pour cout << setprecision(4)
 #include <csignal> // Pour éviter de ctrl+C sans supprimer les objets en mémoire
+using namespace std;
 
 #include "image.h"
 #include "cmd_arduino.h"
+
+// Emplacement des images
+const string emplacement = "images-de-correlation/test-sbig/\0";
+
 
 CSBIGCam* initialiserCamera() {
 	CSBIGCam *cam = NULL;
@@ -72,10 +77,6 @@ int initialiserArduino() {
 	return fd_arduino;
 }
 
-using namespace std;
-
-// Emplacement des images
-const string emplacement = "/home/admin/images-de-correlation/test-sbig/\0";
 
 void signalHandler(int signum)
 {
