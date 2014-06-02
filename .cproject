@@ -23,7 +23,7 @@
 							<targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.595767157" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
 							<builder id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.526740909" keepEnvironmentInBuildfile="false" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.968234909" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure">
-								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.1287050439" name="Name" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1673111399" valueType="string"/>
+								<option id="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name.1287050439" name="Nom" superClass="org.eclipse.linuxtools.cdt.autotools.core.option.configure.name" value="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1673111399" valueType="string"/>
 							</tool>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.1735950772" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen"/>
 							<tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.2053275471" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc">
@@ -65,6 +65,7 @@
 		<configuration configurationName="Debug">
 			<resource resourceType="PROJECT" workspacePath="/climso-auto"/>
 		</configuration>
+		<configuration configurationName="Build (GNU)"/>
 	</storageModule>
 	<storageModule moduleId="org.eclipse.cdt.internal.ui.text.commentOwnerProjectMappings"/>
 	<storageModule moduleId="org.eclipse.cdt.make.core.buildtargets">
