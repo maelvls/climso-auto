@@ -200,9 +200,3 @@ int main(int argc, char **argv) {
 	return 0;
 }
 
-int main_fuite_memoire(int argc, char **argv) {
-	Image* i = new Image(10000,10000);
-	i->~Image();
-	return 0;
-}
-
