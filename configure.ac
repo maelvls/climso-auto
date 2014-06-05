@@ -5,17 +5,22 @@ AC_PREREQ([2.69])
 AC_INIT([climso-auto], [1.0], [mael.valais@irap.omp.eu])
 
 
-m4_include([check_framework.m4])
-
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([config])
 
+# Les fichiers où sont stockées mes macros .m4 :
+m4_include([m4/check_framework.m4])
+# Je devrais utiliser AC_CONFIG_MACRO_DIR() mais
+# ça ne marche pas (car pas libtoolize?)
+
+
 AM_INIT_AUTOMAKE([foreign subdir-objects])
-
-
 # foreign pour ne pas creer INSTALL, README, NEWS...
-# subdir-objects pour ne pas faire du Makefile.am recursif
+#   subdir-objects pour ne pas faire du Makefile.am recursif,
+#   du coup plus besoin de src/Makefile.am
+
+
 
 # Checks for programs.
 AC_PROG_CXX
@@ -55,6 +60,7 @@ AC_TYPE_UINT8_T
 AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
+
 
 
 AC_CONFIG_FILES(Makefile src/Makefile)

@@ -9,7 +9,6 @@
 #include <math.h>
 
 #include "interpol.h"
-#include "fcts_LK3.h"
 
 
 static inline int min (int a, int b) {return (a < b) ? a:b ;}

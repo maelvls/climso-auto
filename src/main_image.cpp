@@ -23,8 +23,34 @@ using namespace std;
 #include "image.h"
 #include "cmd_arduino.h"
 
-// Emplacement des images
-const string emplacement = "images-de-correlation/test-sbig/\0";
+void boucleDeGuidage(); // Prototype fonction
+int main(int argc, char **argv) {
+	boucleDeGuidage();
+	return 0;
+}
+
+
+int main2(int argc, char **argv) {
+	string empl = "images-de-correlation/test-correl-mv/\0";
+	Image* obj = Image::depuisTiff(empl+"obj.tif");
+	Image* ref = Image::tracerFormeSoleil(202);
+	ref->versTiff(empl+"ref.tif");
+
+	Image* obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB,NOYAU_LAPLACIEN_TAILLE);
+	Image* ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB,NOYAU_LAPLACIEN_TAILLE);
+
+	Image* correl = obj_lapl->correlation_rapide(*ref_lapl,0.9);
+	correl->versTiff(empl+"correl.tif");
+	double l_max, c_max;
+	correl->maxParInterpolation(&l_max, &c_max);
+	cout << "Max : (x=" << c_max << ",y=" << l_max << ")" <<endl;
+
+	cout << "Hauteur relative : " << correl->calculerHauteurRelativeAutour(l_max,c_max) << endl;
+	delete correl;
+	delete obj; delete ref;
+	delete obj_lapl; delete ref_lapl;
+}
+
 
 
 CSBIGCam* initialiserCamera() {
@@ -84,31 +110,35 @@ void signalHandler(int signum)
     exit(signum);
 }
 
-int main(int argc, char **argv) {
+void boucleDeGuidage() {
+#if DEBUG
+	// Emplacement des images
+	string emplacement = "images-de-correlation/test-sbig/\0";
+#endif
     signal(SIGINT, signalHandler);
     signal(SIGABRT, signalHandler);
 
 	int fd_arduino = initialiserArduino();
 	
-	/*
-	 * Création de l'image ayant la forme du soleil puis laplacien
-	 */
-	Image *ref = Image::dessinerMasqueDeSoleil(256);
+	//
+	// Création de l'image ayant la forme du soleil puis laplacien
+	//
+	Image *ref = Image::tracerFormeSoleil(256);
 	Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
 
 	int larg_img_cam, haut_img_cam;
 	double l_max_initial,c_max_initial;
 	double l_max, c_max;
 
-	/*
-	 * Connexion à la caméra
-	 */
+	//
+	// Connexion à la caméra
+	//
 	CSBIGImg *obj_sbig = new CSBIGImg;
 	CSBIGCam *cam = initialiserCamera();
 
-	/*
-	 * Prise de vue, corrélation et interpolation pour trouver le centre du Soleil
-	 */
+	//
+	// Prise de vue, corrélation et interpolation pour trouver le centre du Soleil
+	//
 	while (cam->GrabImage(obj_sbig, SBDF_DARK_ALSO) != CE_NO_ERROR) {
         cerr << "Erreur avec la camera lors de la capture d'une image : " << cam->GetErrorString() << endl;
         delete cam; cam = initialiserCamera();
@@ -117,7 +147,7 @@ int main(int argc, char **argv) {
     Image *obj_no_bin = Image::depuisSBIGImg(*obj_sbig);
 	Image *obj = obj_no_bin->reduire(2);
     Image *obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
-    Image *correl = obj_lapl->correlation_lk(*ref_lapl, 0.70);
+    Image *correl = obj_lapl->correlation_rapide(*ref_lapl, 0.70);
 	correl->maxParInterpolation(&l_max_initial, &c_max_initial);
 
 #if DEBUG
@@ -151,7 +181,7 @@ int main(int argc, char **argv) {
 		obj_no_bin = Image::depuisSBIGImg(*obj_sbig);
 		obj = obj_no_bin->reduire(2); // Binning 2x2 logiciel
 		obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
-		correl = obj_lapl->correlation_lk(*ref_lapl, 0.70);
+		correl = obj_lapl->correlation_rapide(*ref_lapl, 0.90);
 		correl->maxParInterpolation(&l_max, &c_max);
 
 #if DEBUG
@@ -165,9 +195,9 @@ int main(int argc, char **argv) {
 		delete correl;
 		delete obj_lapl;
 		delete obj_no_bin;
-		/*
-		 * Calcul du décalage x,y entre la position initiale
-		 */
+		//
+		// Calcul du décalage x,y entre la position initiale
+		//
 		double l_decal = l_max - l_max_initial;
 		double c_decal = c_max - c_max_initial;
 
@@ -176,6 +206,7 @@ int main(int argc, char **argv) {
 				<< c_max << ", y=" <<l_max<<")" << endl;
 		cout << "Le décalage avec l'image d'origine est de (x= "
 				<< c_decal << ", y=" <<l_decal<<")" << endl;
+		cout << "Ratio moyenne_autour_pix/valeur_pix : " << correl->calculerHauteurRelativeAutour(l_max,c_max) << endl;
 
 
 		while(arduinoEnvoyerCmd((l_decal<0)?PIN_SUD:PIN_NORD,
@@ -197,6 +228,4 @@ int main(int argc, char **argv) {
         cerr << "Erreur avec la camera : " << cam->GetErrorString() << endl;
         exit(1);
     }
-	return 0;
 }
-

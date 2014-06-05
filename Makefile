@@ -79,7 +79,7 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-bin_PROGRAMS = classe_image_test$(EXEEXT) lk_test$(EXEEXT)
+bin_PROGRAMS = test_classe_image$(EXEEXT)
 subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
@@ -88,7 +88,7 @@ DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/config/compile $(top_srcdir)/config/install-sh \
 	$(top_srcdir)/config/missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/check_framework.m4 \
+am__aclocal_m4_deps = $(top_srcdir)/m4/check_framework.m4 \
 	$(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
@@ -101,26 +101,17 @@ CONFIG_CLEAN_VPATH_FILES =
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS)
 am__dirstamp = $(am__leading_dot)dirstamp
-am_classe_image_test_OBJECTS =  \
-	src/classe_image_test-main_image.$(OBJEXT) \
-	src/classe_image_test-cmd_arduino.$(OBJEXT) \
-	src/classe_image_test-convol.$(OBJEXT) \
-	src/classe_image_test-crea_tiff_3.$(OBJEXT) \
-	src/classe_image_test-fcts_LK3.$(OBJEXT) \
-	src/classe_image_test-interpol.$(OBJEXT) \
-	src/classe_image_test-csbigcam.$(OBJEXT) \
-	src/classe_image_test-csbigimg.$(OBJEXT) \
-	src/classe_image_test-diametre_soleil.$(OBJEXT) \
-	src/classe_image_test-exceptions.$(OBJEXT) \
-	src/classe_image_test-image.$(OBJEXT)
-classe_image_test_OBJECTS = $(am_classe_image_test_OBJECTS)
-classe_image_test_LDADD = $(LDADD)
-am_lk_test_OBJECTS = src/main_position.$(OBJEXT) \
-	src/cmd_arduino.$(OBJEXT) src/convol.$(OBJEXT) \
-	src/crea_tiff_3.$(OBJEXT) src/fcts_LK3.$(OBJEXT) \
-	src/interpol.$(OBJEXT) src/diametre_soleil.$(OBJEXT)
-lk_test_OBJECTS = $(am_lk_test_OBJECTS)
-lk_test_LDADD = $(LDADD)
+am_test_classe_image_OBJECTS =  \
+	src/test_classe_image-main_image.$(OBJEXT) \
+	src/test_classe_image-cmd_arduino.$(OBJEXT) \
+	src/test_classe_image-interpol.$(OBJEXT) \
+	src/test_classe_image-csbigcam.$(OBJEXT) \
+	src/test_classe_image-csbigimg.$(OBJEXT) \
+	src/test_classe_image-diametre_soleil.$(OBJEXT) \
+	src/test_classe_image-exceptions.$(OBJEXT) \
+	src/test_classe_image-image.$(OBJEXT)
+test_classe_image_OBJECTS = $(am_test_classe_image_OBJECTS)
+test_classe_image_LDADD = $(LDADD)
 AM_V_P = $(am__v_P_$(V))
 am__v_P_ = $(am__v_P_$(AM_DEFAULT_VERBOSITY))
 am__v_P_0 = false
@@ -166,8 +157,8 @@ AM_V_CXXLD = $(am__v_CXXLD_$(V))
 am__v_CXXLD_ = $(am__v_CXXLD_$(AM_DEFAULT_VERBOSITY))
 am__v_CXXLD_0 = @echo "  CXXLD   " $@;
 am__v_CXXLD_1 = 
-SOURCES = $(classe_image_test_SOURCES) $(lk_test_SOURCES)
-DIST_SOURCES = $(classe_image_test_SOURCES) $(lk_test_SOURCES)
+SOURCES = $(test_classe_image_SOURCES)
+DIST_SOURCES = $(test_classe_image_SOURCES)
 am__can_run_installinfo = \
   case $$AM_UPDATE_INFO_DIR in \
     n|no|NO) false;; \
@@ -304,21 +295,18 @@ target_alias =
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
-classe_image_test_SOURCES = \
+
+# Pour que aclocal puisse trouver les fichiers .m4
+ACLOCAL_AMFLAGS = -I m4
+test_classe_image_SOURCES = \
 	src/main_image.cpp\
 	src/cmd_arduino.c\
-	src/convol.c src/crea_tiff_3.c src/fcts_LK3.c src/interpol.c\
+	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
   	src/exceptions.cpp  src/image.cpp
 
-lk_test_SOURCES = \
-	src/main_position.c\
-	src/cmd_arduino.c\
-	src/convol.c src/crea_tiff_3.c src/fcts_LK3.c src/interpol.c\
-	src/diametre_soleil.c
-
-#classe_image_test_LDFLAGS = 
-classe_image_test_CPPFLAGS = -DDEBUG
+#test_classe_image_LDFLAGS = 
+test_classe_image_CPPFLAGS = -DDEBUG
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
@@ -421,50 +409,26 @@ src/$(am__dirstamp):
 src/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/$(DEPDIR)
 	@: > src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-main_image.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-main_image.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-cmd_arduino.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-cmd_arduino.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-convol.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-interpol.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-crea_tiff_3.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-csbigcam.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-fcts_LK3.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-csbigimg.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-interpol.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-diametre_soleil.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-csbigcam.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-exceptions.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-csbigimg.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-diametre_soleil.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-exceptions.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/classe_image_test-image.$(OBJEXT): src/$(am__dirstamp) \
+src/test_classe_image-image.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 
-classe_image_test$(EXEEXT): $(classe_image_test_OBJECTS) $(classe_image_test_DEPENDENCIES) $(EXTRA_classe_image_test_DEPENDENCIES) 
-	@rm -f classe_image_test$(EXEEXT)
-	$(AM_V_CXXLD)$(CXXLINK) $(classe_image_test_OBJECTS) $(classe_image_test_LDADD) $(LIBS)
-src/main_position.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/cmd_arduino.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/convol.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/crea_tiff_3.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/fcts_LK3.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/interpol.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-src/diametre_soleil.$(OBJEXT): src/$(am__dirstamp) \
-	src/$(DEPDIR)/$(am__dirstamp)
-
-lk_test$(EXEEXT): $(lk_test_OBJECTS) $(lk_test_DEPENDENCIES) $(EXTRA_lk_test_DEPENDENCIES) 
-	@rm -f lk_test$(EXEEXT)
-	$(AM_V_CCLD)$(LINK) $(lk_test_OBJECTS) $(lk_test_LDADD) $(LIBS)
+test_classe_image$(EXEEXT): $(test_classe_image_OBJECTS) $(test_classe_image_DEPENDENCIES) $(EXTRA_test_classe_image_DEPENDENCIES) 
+	@rm -f test_classe_image$(EXEEXT)
+	$(AM_V_CXXLD)$(CXXLINK) $(test_classe_image_OBJECTS) $(test_classe_image_LDADD) $(LIBS)
 
 mostlyclean-compile:
 	-rm -f *.$(OBJEXT)
@@ -473,24 +437,14 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include src/$(DEPDIR)/classe_image_test-cmd_arduino.Po
-include src/$(DEPDIR)/classe_image_test-convol.Po
-include src/$(DEPDIR)/classe_image_test-crea_tiff_3.Po
-include src/$(DEPDIR)/classe_image_test-csbigcam.Po
-include src/$(DEPDIR)/classe_image_test-csbigimg.Po
-include src/$(DEPDIR)/classe_image_test-diametre_soleil.Po
-include src/$(DEPDIR)/classe_image_test-exceptions.Po
-include src/$(DEPDIR)/classe_image_test-fcts_LK3.Po
-include src/$(DEPDIR)/classe_image_test-image.Po
-include src/$(DEPDIR)/classe_image_test-interpol.Po
-include src/$(DEPDIR)/classe_image_test-main_image.Po
-include src/$(DEPDIR)/cmd_arduino.Po
-include src/$(DEPDIR)/convol.Po
-include src/$(DEPDIR)/crea_tiff_3.Po
-include src/$(DEPDIR)/diametre_soleil.Po
-include src/$(DEPDIR)/fcts_LK3.Po
-include src/$(DEPDIR)/interpol.Po
-include src/$(DEPDIR)/main_position.Po
+include src/$(DEPDIR)/test_classe_image-cmd_arduino.Po
+include src/$(DEPDIR)/test_classe_image-csbigcam.Po
+include src/$(DEPDIR)/test_classe_image-csbigimg.Po
+include src/$(DEPDIR)/test_classe_image-diametre_soleil.Po
+include src/$(DEPDIR)/test_classe_image-exceptions.Po
+include src/$(DEPDIR)/test_classe_image-image.Po
+include src/$(DEPDIR)/test_classe_image-interpol.Po
+include src/$(DEPDIR)/test_classe_image-main_image.Po
 
 .c.o:
 	$(AM_V_CC)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -508,89 +462,47 @@ include src/$(DEPDIR)/main_position.Po
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
 #	$(AM_V_CC_no)$(COMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-src/classe_image_test-cmd_arduino.o: src/cmd_arduino.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-cmd_arduino.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-cmd_arduino.Tpo -c -o src/classe_image_test-cmd_arduino.o `test -f 'src/cmd_arduino.c' || echo '$(srcdir)/'`src/cmd_arduino.c
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-cmd_arduino.Tpo src/$(DEPDIR)/classe_image_test-cmd_arduino.Po
-#	$(AM_V_CC)source='src/cmd_arduino.c' object='src/classe_image_test-cmd_arduino.o' libtool=no \
+src/test_classe_image-cmd_arduino.o: src/cmd_arduino.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/test_classe_image-cmd_arduino.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-cmd_arduino.Tpo -c -o src/test_classe_image-cmd_arduino.o `test -f 'src/cmd_arduino.c' || echo '$(srcdir)/'`src/cmd_arduino.c
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-cmd_arduino.Tpo src/$(DEPDIR)/test_classe_image-cmd_arduino.Po
+#	$(AM_V_CC)source='src/cmd_arduino.c' object='src/test_classe_image-cmd_arduino.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-cmd_arduino.o `test -f 'src/cmd_arduino.c' || echo '$(srcdir)/'`src/cmd_arduino.c
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/test_classe_image-cmd_arduino.o `test -f 'src/cmd_arduino.c' || echo '$(srcdir)/'`src/cmd_arduino.c
 
-src/classe_image_test-cmd_arduino.obj: src/cmd_arduino.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-cmd_arduino.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-cmd_arduino.Tpo -c -o src/classe_image_test-cmd_arduino.obj `if test -f 'src/cmd_arduino.c'; then $(CYGPATH_W) 'src/cmd_arduino.c'; else $(CYGPATH_W) '$(srcdir)/src/cmd_arduino.c'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-cmd_arduino.Tpo src/$(DEPDIR)/classe_image_test-cmd_arduino.Po
-#	$(AM_V_CC)source='src/cmd_arduino.c' object='src/classe_image_test-cmd_arduino.obj' libtool=no \
+src/test_classe_image-cmd_arduino.obj: src/cmd_arduino.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/test_classe_image-cmd_arduino.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-cmd_arduino.Tpo -c -o src/test_classe_image-cmd_arduino.obj `if test -f 'src/cmd_arduino.c'; then $(CYGPATH_W) 'src/cmd_arduino.c'; else $(CYGPATH_W) '$(srcdir)/src/cmd_arduino.c'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-cmd_arduino.Tpo src/$(DEPDIR)/test_classe_image-cmd_arduino.Po
+#	$(AM_V_CC)source='src/cmd_arduino.c' object='src/test_classe_image-cmd_arduino.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-cmd_arduino.obj `if test -f 'src/cmd_arduino.c'; then $(CYGPATH_W) 'src/cmd_arduino.c'; else $(CYGPATH_W) '$(srcdir)/src/cmd_arduino.c'; fi`
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/test_classe_image-cmd_arduino.obj `if test -f 'src/cmd_arduino.c'; then $(CYGPATH_W) 'src/cmd_arduino.c'; else $(CYGPATH_W) '$(srcdir)/src/cmd_arduino.c'; fi`
 
-src/classe_image_test-convol.o: src/convol.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-convol.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-convol.Tpo -c -o src/classe_image_test-convol.o `test -f 'src/convol.c' || echo '$(srcdir)/'`src/convol.c
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-convol.Tpo src/$(DEPDIR)/classe_image_test-convol.Po
-#	$(AM_V_CC)source='src/convol.c' object='src/classe_image_test-convol.o' libtool=no \
+src/test_classe_image-interpol.o: src/interpol.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/test_classe_image-interpol.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-interpol.Tpo -c -o src/test_classe_image-interpol.o `test -f 'src/interpol.c' || echo '$(srcdir)/'`src/interpol.c
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-interpol.Tpo src/$(DEPDIR)/test_classe_image-interpol.Po
+#	$(AM_V_CC)source='src/interpol.c' object='src/test_classe_image-interpol.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-convol.o `test -f 'src/convol.c' || echo '$(srcdir)/'`src/convol.c
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/test_classe_image-interpol.o `test -f 'src/interpol.c' || echo '$(srcdir)/'`src/interpol.c
 
-src/classe_image_test-convol.obj: src/convol.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-convol.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-convol.Tpo -c -o src/classe_image_test-convol.obj `if test -f 'src/convol.c'; then $(CYGPATH_W) 'src/convol.c'; else $(CYGPATH_W) '$(srcdir)/src/convol.c'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-convol.Tpo src/$(DEPDIR)/classe_image_test-convol.Po
-#	$(AM_V_CC)source='src/convol.c' object='src/classe_image_test-convol.obj' libtool=no \
+src/test_classe_image-interpol.obj: src/interpol.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/test_classe_image-interpol.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-interpol.Tpo -c -o src/test_classe_image-interpol.obj `if test -f 'src/interpol.c'; then $(CYGPATH_W) 'src/interpol.c'; else $(CYGPATH_W) '$(srcdir)/src/interpol.c'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-interpol.Tpo src/$(DEPDIR)/test_classe_image-interpol.Po
+#	$(AM_V_CC)source='src/interpol.c' object='src/test_classe_image-interpol.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-convol.obj `if test -f 'src/convol.c'; then $(CYGPATH_W) 'src/convol.c'; else $(CYGPATH_W) '$(srcdir)/src/convol.c'; fi`
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/test_classe_image-interpol.obj `if test -f 'src/interpol.c'; then $(CYGPATH_W) 'src/interpol.c'; else $(CYGPATH_W) '$(srcdir)/src/interpol.c'; fi`
 
-src/classe_image_test-crea_tiff_3.o: src/crea_tiff_3.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-crea_tiff_3.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-crea_tiff_3.Tpo -c -o src/classe_image_test-crea_tiff_3.o `test -f 'src/crea_tiff_3.c' || echo '$(srcdir)/'`src/crea_tiff_3.c
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-crea_tiff_3.Tpo src/$(DEPDIR)/classe_image_test-crea_tiff_3.Po
-#	$(AM_V_CC)source='src/crea_tiff_3.c' object='src/classe_image_test-crea_tiff_3.o' libtool=no \
+src/test_classe_image-diametre_soleil.o: src/diametre_soleil.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/test_classe_image-diametre_soleil.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-diametre_soleil.Tpo -c -o src/test_classe_image-diametre_soleil.o `test -f 'src/diametre_soleil.c' || echo '$(srcdir)/'`src/diametre_soleil.c
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-diametre_soleil.Tpo src/$(DEPDIR)/test_classe_image-diametre_soleil.Po
+#	$(AM_V_CC)source='src/diametre_soleil.c' object='src/test_classe_image-diametre_soleil.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-crea_tiff_3.o `test -f 'src/crea_tiff_3.c' || echo '$(srcdir)/'`src/crea_tiff_3.c
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/test_classe_image-diametre_soleil.o `test -f 'src/diametre_soleil.c' || echo '$(srcdir)/'`src/diametre_soleil.c
 
-src/classe_image_test-crea_tiff_3.obj: src/crea_tiff_3.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-crea_tiff_3.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-crea_tiff_3.Tpo -c -o src/classe_image_test-crea_tiff_3.obj `if test -f 'src/crea_tiff_3.c'; then $(CYGPATH_W) 'src/crea_tiff_3.c'; else $(CYGPATH_W) '$(srcdir)/src/crea_tiff_3.c'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-crea_tiff_3.Tpo src/$(DEPDIR)/classe_image_test-crea_tiff_3.Po
-#	$(AM_V_CC)source='src/crea_tiff_3.c' object='src/classe_image_test-crea_tiff_3.obj' libtool=no \
+src/test_classe_image-diametre_soleil.obj: src/diametre_soleil.c
+	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/test_classe_image-diametre_soleil.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-diametre_soleil.Tpo -c -o src/test_classe_image-diametre_soleil.obj `if test -f 'src/diametre_soleil.c'; then $(CYGPATH_W) 'src/diametre_soleil.c'; else $(CYGPATH_W) '$(srcdir)/src/diametre_soleil.c'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-diametre_soleil.Tpo src/$(DEPDIR)/test_classe_image-diametre_soleil.Po
+#	$(AM_V_CC)source='src/diametre_soleil.c' object='src/test_classe_image-diametre_soleil.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-crea_tiff_3.obj `if test -f 'src/crea_tiff_3.c'; then $(CYGPATH_W) 'src/crea_tiff_3.c'; else $(CYGPATH_W) '$(srcdir)/src/crea_tiff_3.c'; fi`
-
-src/classe_image_test-fcts_LK3.o: src/fcts_LK3.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-fcts_LK3.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-fcts_LK3.Tpo -c -o src/classe_image_test-fcts_LK3.o `test -f 'src/fcts_LK3.c' || echo '$(srcdir)/'`src/fcts_LK3.c
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-fcts_LK3.Tpo src/$(DEPDIR)/classe_image_test-fcts_LK3.Po
-#	$(AM_V_CC)source='src/fcts_LK3.c' object='src/classe_image_test-fcts_LK3.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-fcts_LK3.o `test -f 'src/fcts_LK3.c' || echo '$(srcdir)/'`src/fcts_LK3.c
-
-src/classe_image_test-fcts_LK3.obj: src/fcts_LK3.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-fcts_LK3.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-fcts_LK3.Tpo -c -o src/classe_image_test-fcts_LK3.obj `if test -f 'src/fcts_LK3.c'; then $(CYGPATH_W) 'src/fcts_LK3.c'; else $(CYGPATH_W) '$(srcdir)/src/fcts_LK3.c'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-fcts_LK3.Tpo src/$(DEPDIR)/classe_image_test-fcts_LK3.Po
-#	$(AM_V_CC)source='src/fcts_LK3.c' object='src/classe_image_test-fcts_LK3.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-fcts_LK3.obj `if test -f 'src/fcts_LK3.c'; then $(CYGPATH_W) 'src/fcts_LK3.c'; else $(CYGPATH_W) '$(srcdir)/src/fcts_LK3.c'; fi`
-
-src/classe_image_test-interpol.o: src/interpol.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-interpol.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-interpol.Tpo -c -o src/classe_image_test-interpol.o `test -f 'src/interpol.c' || echo '$(srcdir)/'`src/interpol.c
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-interpol.Tpo src/$(DEPDIR)/classe_image_test-interpol.Po
-#	$(AM_V_CC)source='src/interpol.c' object='src/classe_image_test-interpol.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-interpol.o `test -f 'src/interpol.c' || echo '$(srcdir)/'`src/interpol.c
-
-src/classe_image_test-interpol.obj: src/interpol.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-interpol.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-interpol.Tpo -c -o src/classe_image_test-interpol.obj `if test -f 'src/interpol.c'; then $(CYGPATH_W) 'src/interpol.c'; else $(CYGPATH_W) '$(srcdir)/src/interpol.c'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-interpol.Tpo src/$(DEPDIR)/classe_image_test-interpol.Po
-#	$(AM_V_CC)source='src/interpol.c' object='src/classe_image_test-interpol.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-interpol.obj `if test -f 'src/interpol.c'; then $(CYGPATH_W) 'src/interpol.c'; else $(CYGPATH_W) '$(srcdir)/src/interpol.c'; fi`
-
-src/classe_image_test-diametre_soleil.o: src/diametre_soleil.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-diametre_soleil.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-diametre_soleil.Tpo -c -o src/classe_image_test-diametre_soleil.o `test -f 'src/diametre_soleil.c' || echo '$(srcdir)/'`src/diametre_soleil.c
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-diametre_soleil.Tpo src/$(DEPDIR)/classe_image_test-diametre_soleil.Po
-#	$(AM_V_CC)source='src/diametre_soleil.c' object='src/classe_image_test-diametre_soleil.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-diametre_soleil.o `test -f 'src/diametre_soleil.c' || echo '$(srcdir)/'`src/diametre_soleil.c
-
-src/classe_image_test-diametre_soleil.obj: src/diametre_soleil.c
-	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/classe_image_test-diametre_soleil.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-diametre_soleil.Tpo -c -o src/classe_image_test-diametre_soleil.obj `if test -f 'src/diametre_soleil.c'; then $(CYGPATH_W) 'src/diametre_soleil.c'; else $(CYGPATH_W) '$(srcdir)/src/diametre_soleil.c'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-diametre_soleil.Tpo src/$(DEPDIR)/classe_image_test-diametre_soleil.Po
-#	$(AM_V_CC)source='src/diametre_soleil.c' object='src/classe_image_test-diametre_soleil.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/classe_image_test-diametre_soleil.obj `if test -f 'src/diametre_soleil.c'; then $(CYGPATH_W) 'src/diametre_soleil.c'; else $(CYGPATH_W) '$(srcdir)/src/diametre_soleil.c'; fi`
+#	$(AM_V_CC_no)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/test_classe_image-diametre_soleil.obj `if test -f 'src/diametre_soleil.c'; then $(CYGPATH_W) 'src/diametre_soleil.c'; else $(CYGPATH_W) '$(srcdir)/src/diametre_soleil.c'; fi`
 
 .cpp.o:
 	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -608,75 +520,75 @@ src/classe_image_test-diametre_soleil.obj: src/diametre_soleil.c
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
 #	$(AM_V_CXX_no)$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
-src/classe_image_test-main_image.o: src/main_image.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-main_image.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-main_image.Tpo -c -o src/classe_image_test-main_image.o `test -f 'src/main_image.cpp' || echo '$(srcdir)/'`src/main_image.cpp
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-main_image.Tpo src/$(DEPDIR)/classe_image_test-main_image.Po
-#	$(AM_V_CXX)source='src/main_image.cpp' object='src/classe_image_test-main_image.o' libtool=no \
+src/test_classe_image-main_image.o: src/main_image.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-main_image.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-main_image.Tpo -c -o src/test_classe_image-main_image.o `test -f 'src/main_image.cpp' || echo '$(srcdir)/'`src/main_image.cpp
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-main_image.Tpo src/$(DEPDIR)/test_classe_image-main_image.Po
+#	$(AM_V_CXX)source='src/main_image.cpp' object='src/test_classe_image-main_image.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-main_image.o `test -f 'src/main_image.cpp' || echo '$(srcdir)/'`src/main_image.cpp
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-main_image.o `test -f 'src/main_image.cpp' || echo '$(srcdir)/'`src/main_image.cpp
 
-src/classe_image_test-main_image.obj: src/main_image.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-main_image.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-main_image.Tpo -c -o src/classe_image_test-main_image.obj `if test -f 'src/main_image.cpp'; then $(CYGPATH_W) 'src/main_image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main_image.cpp'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-main_image.Tpo src/$(DEPDIR)/classe_image_test-main_image.Po
-#	$(AM_V_CXX)source='src/main_image.cpp' object='src/classe_image_test-main_image.obj' libtool=no \
+src/test_classe_image-main_image.obj: src/main_image.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-main_image.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-main_image.Tpo -c -o src/test_classe_image-main_image.obj `if test -f 'src/main_image.cpp'; then $(CYGPATH_W) 'src/main_image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main_image.cpp'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-main_image.Tpo src/$(DEPDIR)/test_classe_image-main_image.Po
+#	$(AM_V_CXX)source='src/main_image.cpp' object='src/test_classe_image-main_image.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-main_image.obj `if test -f 'src/main_image.cpp'; then $(CYGPATH_W) 'src/main_image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main_image.cpp'; fi`
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-main_image.obj `if test -f 'src/main_image.cpp'; then $(CYGPATH_W) 'src/main_image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/main_image.cpp'; fi`
 
-src/classe_image_test-csbigcam.o: src/csbigcam.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-csbigcam.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-csbigcam.Tpo -c -o src/classe_image_test-csbigcam.o `test -f 'src/csbigcam.cpp' || echo '$(srcdir)/'`src/csbigcam.cpp
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-csbigcam.Tpo src/$(DEPDIR)/classe_image_test-csbigcam.Po
-#	$(AM_V_CXX)source='src/csbigcam.cpp' object='src/classe_image_test-csbigcam.o' libtool=no \
+src/test_classe_image-csbigcam.o: src/csbigcam.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-csbigcam.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-csbigcam.Tpo -c -o src/test_classe_image-csbigcam.o `test -f 'src/csbigcam.cpp' || echo '$(srcdir)/'`src/csbigcam.cpp
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-csbigcam.Tpo src/$(DEPDIR)/test_classe_image-csbigcam.Po
+#	$(AM_V_CXX)source='src/csbigcam.cpp' object='src/test_classe_image-csbigcam.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-csbigcam.o `test -f 'src/csbigcam.cpp' || echo '$(srcdir)/'`src/csbigcam.cpp
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-csbigcam.o `test -f 'src/csbigcam.cpp' || echo '$(srcdir)/'`src/csbigcam.cpp
 
-src/classe_image_test-csbigcam.obj: src/csbigcam.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-csbigcam.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-csbigcam.Tpo -c -o src/classe_image_test-csbigcam.obj `if test -f 'src/csbigcam.cpp'; then $(CYGPATH_W) 'src/csbigcam.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigcam.cpp'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-csbigcam.Tpo src/$(DEPDIR)/classe_image_test-csbigcam.Po
-#	$(AM_V_CXX)source='src/csbigcam.cpp' object='src/classe_image_test-csbigcam.obj' libtool=no \
+src/test_classe_image-csbigcam.obj: src/csbigcam.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-csbigcam.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-csbigcam.Tpo -c -o src/test_classe_image-csbigcam.obj `if test -f 'src/csbigcam.cpp'; then $(CYGPATH_W) 'src/csbigcam.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigcam.cpp'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-csbigcam.Tpo src/$(DEPDIR)/test_classe_image-csbigcam.Po
+#	$(AM_V_CXX)source='src/csbigcam.cpp' object='src/test_classe_image-csbigcam.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-csbigcam.obj `if test -f 'src/csbigcam.cpp'; then $(CYGPATH_W) 'src/csbigcam.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigcam.cpp'; fi`
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-csbigcam.obj `if test -f 'src/csbigcam.cpp'; then $(CYGPATH_W) 'src/csbigcam.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigcam.cpp'; fi`
 
-src/classe_image_test-csbigimg.o: src/csbigimg.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-csbigimg.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-csbigimg.Tpo -c -o src/classe_image_test-csbigimg.o `test -f 'src/csbigimg.cpp' || echo '$(srcdir)/'`src/csbigimg.cpp
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-csbigimg.Tpo src/$(DEPDIR)/classe_image_test-csbigimg.Po
-#	$(AM_V_CXX)source='src/csbigimg.cpp' object='src/classe_image_test-csbigimg.o' libtool=no \
+src/test_classe_image-csbigimg.o: src/csbigimg.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-csbigimg.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-csbigimg.Tpo -c -o src/test_classe_image-csbigimg.o `test -f 'src/csbigimg.cpp' || echo '$(srcdir)/'`src/csbigimg.cpp
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-csbigimg.Tpo src/$(DEPDIR)/test_classe_image-csbigimg.Po
+#	$(AM_V_CXX)source='src/csbigimg.cpp' object='src/test_classe_image-csbigimg.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-csbigimg.o `test -f 'src/csbigimg.cpp' || echo '$(srcdir)/'`src/csbigimg.cpp
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-csbigimg.o `test -f 'src/csbigimg.cpp' || echo '$(srcdir)/'`src/csbigimg.cpp
 
-src/classe_image_test-csbigimg.obj: src/csbigimg.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-csbigimg.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-csbigimg.Tpo -c -o src/classe_image_test-csbigimg.obj `if test -f 'src/csbigimg.cpp'; then $(CYGPATH_W) 'src/csbigimg.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigimg.cpp'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-csbigimg.Tpo src/$(DEPDIR)/classe_image_test-csbigimg.Po
-#	$(AM_V_CXX)source='src/csbigimg.cpp' object='src/classe_image_test-csbigimg.obj' libtool=no \
+src/test_classe_image-csbigimg.obj: src/csbigimg.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-csbigimg.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-csbigimg.Tpo -c -o src/test_classe_image-csbigimg.obj `if test -f 'src/csbigimg.cpp'; then $(CYGPATH_W) 'src/csbigimg.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigimg.cpp'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-csbigimg.Tpo src/$(DEPDIR)/test_classe_image-csbigimg.Po
+#	$(AM_V_CXX)source='src/csbigimg.cpp' object='src/test_classe_image-csbigimg.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-csbigimg.obj `if test -f 'src/csbigimg.cpp'; then $(CYGPATH_W) 'src/csbigimg.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigimg.cpp'; fi`
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-csbigimg.obj `if test -f 'src/csbigimg.cpp'; then $(CYGPATH_W) 'src/csbigimg.cpp'; else $(CYGPATH_W) '$(srcdir)/src/csbigimg.cpp'; fi`
 
-src/classe_image_test-exceptions.o: src/exceptions.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-exceptions.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-exceptions.Tpo -c -o src/classe_image_test-exceptions.o `test -f 'src/exceptions.cpp' || echo '$(srcdir)/'`src/exceptions.cpp
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-exceptions.Tpo src/$(DEPDIR)/classe_image_test-exceptions.Po
-#	$(AM_V_CXX)source='src/exceptions.cpp' object='src/classe_image_test-exceptions.o' libtool=no \
+src/test_classe_image-exceptions.o: src/exceptions.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-exceptions.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-exceptions.Tpo -c -o src/test_classe_image-exceptions.o `test -f 'src/exceptions.cpp' || echo '$(srcdir)/'`src/exceptions.cpp
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-exceptions.Tpo src/$(DEPDIR)/test_classe_image-exceptions.Po
+#	$(AM_V_CXX)source='src/exceptions.cpp' object='src/test_classe_image-exceptions.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-exceptions.o `test -f 'src/exceptions.cpp' || echo '$(srcdir)/'`src/exceptions.cpp
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-exceptions.o `test -f 'src/exceptions.cpp' || echo '$(srcdir)/'`src/exceptions.cpp
 
-src/classe_image_test-exceptions.obj: src/exceptions.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-exceptions.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-exceptions.Tpo -c -o src/classe_image_test-exceptions.obj `if test -f 'src/exceptions.cpp'; then $(CYGPATH_W) 'src/exceptions.cpp'; else $(CYGPATH_W) '$(srcdir)/src/exceptions.cpp'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-exceptions.Tpo src/$(DEPDIR)/classe_image_test-exceptions.Po
-#	$(AM_V_CXX)source='src/exceptions.cpp' object='src/classe_image_test-exceptions.obj' libtool=no \
+src/test_classe_image-exceptions.obj: src/exceptions.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-exceptions.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-exceptions.Tpo -c -o src/test_classe_image-exceptions.obj `if test -f 'src/exceptions.cpp'; then $(CYGPATH_W) 'src/exceptions.cpp'; else $(CYGPATH_W) '$(srcdir)/src/exceptions.cpp'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-exceptions.Tpo src/$(DEPDIR)/test_classe_image-exceptions.Po
+#	$(AM_V_CXX)source='src/exceptions.cpp' object='src/test_classe_image-exceptions.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-exceptions.obj `if test -f 'src/exceptions.cpp'; then $(CYGPATH_W) 'src/exceptions.cpp'; else $(CYGPATH_W) '$(srcdir)/src/exceptions.cpp'; fi`
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-exceptions.obj `if test -f 'src/exceptions.cpp'; then $(CYGPATH_W) 'src/exceptions.cpp'; else $(CYGPATH_W) '$(srcdir)/src/exceptions.cpp'; fi`
 
-src/classe_image_test-image.o: src/image.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-image.o -MD -MP -MF src/$(DEPDIR)/classe_image_test-image.Tpo -c -o src/classe_image_test-image.o `test -f 'src/image.cpp' || echo '$(srcdir)/'`src/image.cpp
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-image.Tpo src/$(DEPDIR)/classe_image_test-image.Po
-#	$(AM_V_CXX)source='src/image.cpp' object='src/classe_image_test-image.o' libtool=no \
+src/test_classe_image-image.o: src/image.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-image.o -MD -MP -MF src/$(DEPDIR)/test_classe_image-image.Tpo -c -o src/test_classe_image-image.o `test -f 'src/image.cpp' || echo '$(srcdir)/'`src/image.cpp
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-image.Tpo src/$(DEPDIR)/test_classe_image-image.Po
+#	$(AM_V_CXX)source='src/image.cpp' object='src/test_classe_image-image.o' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-image.o `test -f 'src/image.cpp' || echo '$(srcdir)/'`src/image.cpp
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-image.o `test -f 'src/image.cpp' || echo '$(srcdir)/'`src/image.cpp
 
-src/classe_image_test-image.obj: src/image.cpp
-	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/classe_image_test-image.obj -MD -MP -MF src/$(DEPDIR)/classe_image_test-image.Tpo -c -o src/classe_image_test-image.obj `if test -f 'src/image.cpp'; then $(CYGPATH_W) 'src/image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/image.cpp'; fi`
-	$(AM_V_at)$(am__mv) src/$(DEPDIR)/classe_image_test-image.Tpo src/$(DEPDIR)/classe_image_test-image.Po
-#	$(AM_V_CXX)source='src/image.cpp' object='src/classe_image_test-image.obj' libtool=no \
+src/test_classe_image-image.obj: src/image.cpp
+	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/test_classe_image-image.obj -MD -MP -MF src/$(DEPDIR)/test_classe_image-image.Tpo -c -o src/test_classe_image-image.obj `if test -f 'src/image.cpp'; then $(CYGPATH_W) 'src/image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/image.cpp'; fi`
+	$(AM_V_at)$(am__mv) src/$(DEPDIR)/test_classe_image-image.Tpo src/$(DEPDIR)/test_classe_image-image.Po
+#	$(AM_V_CXX)source='src/image.cpp' object='src/test_classe_image-image.obj' libtool=no \
 #	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(classe_image_test_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/classe_image_test-image.obj `if test -f 'src/image.cpp'; then $(CYGPATH_W) 'src/image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/image.cpp'; fi`
+#	$(AM_V_CXX_no)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(test_classe_image_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/test_classe_image-image.obj `if test -f 'src/image.cpp'; then $(CYGPATH_W) 'src/image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/image.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

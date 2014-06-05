@@ -6,27 +6,19 @@
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
 
-#define VERSION_LINEAIRE	0 /// Version linéaire "simple pointeur" ("double pointeur" sinon) (voir NOTE1)
+#ifndef __climso_auto__picture__
+#define __climso_auto__picture__
 
+#define INCLUDE_INTERPOL	1	// Fonctions contenues dans interpol.c
 
 #define INCLUDE_TIFF		1 	// Si 1, alors -L/usr/local/lib et -ltiff
 #define INCLUDE_SBIGCAM		1
 #define INCLUDE_SBIGIMG		1 	// Si 1, alors	(MAC) -F/Library/Frameworks et -framework SBIGUDrv (selon installation)
 								//				(LINUX) -L/usr/local/lib et -lsbigudrv (selon installation)
-#if not VERSION_LINEAIRE
-#define INCLUDE_CONVOL		1
-#define INCLUDE_FCTS_LK3	1
-#define INCLUDE_INTERPOL	1
-#endif
-
 
 #ifndef DEBUG
 #define DEBUG 1
 #endif
-
-#ifndef __climso_auto__picture__
-#define __climso_auto__picture__
-
 
 #include <exception>
 #include <iostream>
@@ -48,12 +40,6 @@ using namespace std;
 #endif
 #if INCLUDE_SBIGCAM
 	#include "csbigcam.h"
-#endif
-#if INCLUDE_CONVOL
-	#include "convol.h"
-#endif
-#if INCLUDE_FCTS_LK3
-	#include "fcts_LK3.h"
 #endif
 #if INCLUDE_INTERPOL
 	#include "interpol.h"
@@ -78,7 +64,11 @@ typedef double MonDouble;
  * NOTE1: Concernant la représentation en mémoire de l'image, j'hésite encore beaucoup entre la représentation
  * linéaire (un seul tableau de "double" avec les lignes les unes à la suite des autres) et la représentation
  * matricielle, c'est à dire un tableau de tableaux de "double".
- * 			-> VOIR le #define VERSION_LINEAIRE
+ * 			-> j'ai choisi une représentation linéaire, mais non-compatible avec les fonctions antérieures
+ * 			mais par contre compatibles avec les fonctions d'affichage Qt par exemple
+ * NOTE3: Après pas mal de recul, je pense que cette représentation linéaire n'aide pas lors des optimisations
+ * car pour le calcul (type correlation), on manipule des pointeurs pour optimiser... Or, ça veut dire qu'on
+ * utilise plus les getters et donc la classe telle qu'elle est définie est moins "solide".
  *
  * NOTE2: Cette classe a un gros soucis avec la création multiple d'objets lourds : à chaque fois qu'on traite
  * une image, on crée un nouvel objet en mémoire. Dans une boucle, cela ralenti le processus...
@@ -87,12 +77,7 @@ typedef double MonDouble;
 class Image {
 private:
     int lignes, colonnes; // hauteur, largeur
-
-#if VERSION_LINEAIRE
     MonDouble *img; // Des pixels nuances de gris sur 16 bits
-#else
-    MonDouble **img;
-#endif
 public:
     Image();
     Image(int hauteur, int largeur);
@@ -108,14 +93,13 @@ public:
     Image* reduire(int facteur_binning);
     void minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max);
     void maxPixel(int *l, int *c);
-    Image* correlation_MV(Image& p, float seuil_ref);
-    Image* correlation_reduite_MV(Image& reference, float seuil_ref);
-#if VERSION_LINEAIRE
-    Image* correlation_reduite2_MV(Image& reference, float seuil_ref);
-#endif
+    Image* correlation_simple(Image& p, float seuil_ref);
+    void tracerDonut(int l_centre, int c_centre, double freq_min, double marge_int, double freq_max, double marge_ext);
+    static Image* tracerFormeSoleil(int diametre);
+    Image* correlation_rapide(Image& reference, float seuil_ref);
     Image* convoluer(const int *noyau, int taille);
     Image* deriveeCarre();
-    double sommePixels();
+    double calculerHauteurRelativeAutour(int l, int c);
 
     // Entrées/sorties (depuis/vers)
 #if INCLUDE_TIFF
@@ -127,46 +111,19 @@ public:
     static Image* depuisSBIGImg(CSBIGImg &img);
 #endif
     static Image* depuisTableauDouble(double ** tableau, int hauteur, int largeur);
-    void versTableauDeDouble(double **tab, int *hauteur_dst, int *largeur_dst);
+    double** versTableauDeDouble();
 
     // Getters/Setters
     int getLignes()  {return lignes; }
     int getColonnes() { return colonnes;}
-
-#if VERSION_LINEAIRE
     MonDouble* ptr() { return img; }
     MonDouble getPix(int l, int c) { return img[l*colonnes + c];}
     void setPix(int l, int c, MonDouble intensite) { img[l*colonnes + c]=intensite;}
-#else
-    MonDouble** ptr() { return img; }
-	MonDouble getPix(int l, int c) { return img[l][c];}
-	void setPix(int l, int c, MonDouble intensite) {img[l][c]=intensite;}
-#endif
 
-/*
-	// Pour detecter d'eventuels acces interdits lors de debugs
-	MonDouble getPix(int l, int c) {
-		if(l < 0 || l >= lignes || c < 0 || c >= colonnes)
-			throw "getPix: Pixel hors-image";
-		return img[l][c];
-	}
 
-	void setPix(int l, int c, MonDouble intensite) {
-		if(l < 0 || l >= lignes || c < 0 || c >= colonnes)
-			throw "setPix: Pixel hors-image";
-		img[l][c]=intensite;
-	}
-*/
+    void afficher(); // Affiche les intensités brutes, pour debug
 	
-    void afficher();
-	
-	// --------- Fonctions liées à convol.h, fcts_lk3.h, crea_tiff_3.h ------
-#if INCLUDE_CONVOL
-	Image* correlation_lk(Image& reference, float seuil_ref);
-#endif
-#if INCLUDE_FCTS_LK3
-	static Image* dessinerMasqueDeSoleil(int diametre_en_pixel);
-#endif
+	// --------- Fonctions liées à interpol.h  ------
 #if INCLUDE_INTERPOL
 	Image* interpolerAutourDeCePoint(int l, int c);
 	Image* interpolerAutourDeCePoint(int l, int c, float pas_interp, float marge);

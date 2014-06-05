@@ -15,6 +15,7 @@
 // 		- les allocation dynamiques à chaque fois (environ 10 à 40 mo par objet) ralentissent
 //
 
+#include <cmath>
 #include "image.h"
 
 Image::Image() {
@@ -22,7 +23,6 @@ Image::Image() {
     colonnes = 0;
     img = NULL;
 }
-#if VERSION_LINEAIRE
 Image::Image(int hauteur, int largeur) {
     lignes = hauteur;
     colonnes = largeur;
@@ -40,36 +40,6 @@ Image::~Image() {
     if(img != NULL)
     	delete img;
 }
-#else
-
-
-Image::Image(int hauteur, int largeur) {
-    lignes = hauteur;
-    colonnes = largeur;
-    img = new MonDouble*[lignes];
-    for(int l = 0; l < lignes; l++) {
-    	img[l] = new MonDouble[colonnes];
-    }
-}
-Image::Image(Image& src) {
-	lignes = src.lignes;
-    colonnes = src.colonnes;
-    img = new MonDouble*[lignes];
-    for(int l = 0; l < lignes; l++) {
-    	img[l] = new MonDouble[colonnes];
-    }
-    copier(src);
-}
-
-Image::~Image() {
-	if(img != NULL) {
-		for(int l=0; l<lignes; l++) {
-			delete [] img[l];
-		}
-		delete [] img;
-	}
-}
-#endif
 
 /**
     Charge une image TIFF dans un objet Image
@@ -207,17 +177,19 @@ Image* Image::depuisTableauDouble(double **tableau, int hauteur, int largeur) {
     return img_out;
 }
 
-void Image::versTableauDeDouble(double **tab, int *hauteur_dst, int *largeur_dst) {
-    *hauteur_dst = lignes;
-	*largeur_dst = colonnes;
-	
-	tab = new double*[lignes];
-	for (int lign=0; lign< *hauteur_dst; lign++) {
-		tab[lign] = new double[*largeur_dst];
-		for (int col=0; col< *largeur_dst; col++) {
+/**
+ * @return Tableau à deux dimensions tableau[lignes][colonnes]
+ * Doit être supprimé avec des for(l) delete [] tab[l]; delete [] tab;
+ */
+double** Image::versTableauDeDouble() {
+	double** tab = new double*[lignes];
+	for (int lign=0; lign< lignes; lign++) {
+		tab[lign] = new double[colonnes];
+		for (int col=0; col< colonnes; col++) {
 			tab[lign][col] = getPix(lign, col);
 		}
 	}
+	return tab;
 }
 
 /**
@@ -262,7 +234,7 @@ void Image::init(int val) {
  * @param seuil Le seuil entre 0 et 1
  * @return L'espace de corrélation
  */
-Image* Image::correlation_MV(Image& reference, float seuil_ref) {
+Image* Image::correlation_simple(Image& reference, float seuil_ref) {
 	Image* obj = this;
 	Image* ref = new Image(reference);
 
@@ -334,67 +306,10 @@ Image* Image::correlation_MV(Image& reference, float seuil_ref) {
 	return convol;
 }
 
-
-
-// Correl où l'espace de correl est limité à l'image "obj", donc on n'étudie pas
-// les cas de décalage où la référence n'est pas incluse dans l'objet
-Image* Image::correlation_reduite_MV(Image& reference, float seuil_ref) {
-	Image* obj = this;
-	Image* ref = new Image(reference);
-    
-	ref->normaliser(); // normalisation pour le seuil
-	MonDouble seuil_relatif = seuil_ref*INTENSITE_MAX;
-
-    Image *convol = new Image(obj->getLignes()+ref->getLignes()-1, obj->getColonnes()+ref->getColonnes()-1);
-	convol->init(0);
-    
-	int haut_convol = obj->lignes+ref->lignes-1;
-	int larg_convol = obj->colonnes+ref->colonnes-1;
-
-	double temps_calcul = (double)(clock());
-
-	for (int l_ref=0; l_ref < ref->lignes; l_ref++) {
-		for (int c_ref=0; c_ref < ref->colonnes; c_ref++) {
-            int ref_pix = ref->getPix(l_ref,c_ref);
-			if(ref_pix > seuil_relatif) {
-				// On calcule quels point de "convol" correspondent à des décalages
-				// valides (c'est à dire provoquant une intersection entre "ref" et "obj") ;
-				// Un décalage est un vecteur (l_decal, c_decal) équivalent à (l_convol,c_convol)
-				// entre ref(nblignes-1,nbcolonnes-1) et obj(0,0)
-				//
-				//			l_obj = l_ref+l_decalage-(ref->lignes-1);       (1)
-				//			c_obj = c_ref+c_decalage-(ref->colonnes-1);     (2)
-
-				int l_decal_deb = max(0,        0-l_ref+(ref->lignes-1)); // (cf (1) inversée)
-				int c_decal_deb = max(0,        0-c_ref+(ref->colonnes-1));
-				int l_decal_fin = min(haut_convol, 	obj->lignes-l_ref+(ref->lignes-1));
-				int c_decal_fin = min(larg_convol, 	obj->colonnes-c_ref+(ref->colonnes-1));
-                
-				for (int l_decal=l_decal_deb; l_decal < l_decal_fin; l_decal++) {
-					for (int c_decal=c_decal_deb; c_decal < c_decal_fin; c_decal++) {
-						convol->setPix(l_decal,c_decal,
-								convol->getPix(l_decal,c_decal)
-								+ ref_pix
-								* obj->getPix(l_ref+l_decal-(ref->lignes-1),c_ref+c_decal-(ref->colonnes-1)));
-					}
-				}
-			}
-		}
-	}
-
-	printf ("Temps calcul = %4.2f s \n",  (double)(clock() - temps_calcul) /CLOCKS_PER_SEC);
-
-	delete ref;
-	convol->normaliser();
-	return convol;
-}
-
-
-#if VERSION_LINEAIRE
 // Correl où l'espace de correl est limité à l'image "obj", donc on n'étudie pas
 // les cas de décalage où la référence n'est pas incluse dans l'objet
 // avec opti pointeurs
-Image* Image::correlation_reduite2_MV(Image& reference, float seuil_ref) {
+Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
 	Image* obj = this;
 	Image* ref = new Image(reference);
     
@@ -408,7 +323,8 @@ Image* Image::correlation_reduite2_MV(Image& reference, float seuil_ref) {
 	int larg_convol = obj->colonnes+ref->colonnes-1;
     
 	double temps_calcul = (double)(clock());
-    
+    double nbboucles=0;
+
 	for (int l_ref=0; l_ref < ref->lignes; l_ref++) {
 		for (int c_ref=0; c_ref < ref->colonnes; c_ref++) {
             int ref_pix = ref->getPix(l_ref,c_ref);
@@ -438,10 +354,10 @@ Image* Image::correlation_reduite2_MV(Image& reference, float seuil_ref) {
                 		*convol_pt += ref_pix * (*obj_pt);
                 		obj_pt += 1;
                 		convol_pt += 1;
+                		nbboucles++;
                 	}
                 	// PUIS D'AVANCER CES POINTEURS DE LA BONNE FACON QUAND ON PASSE A LA LIGNE SUIVANTE
                     // On passe à la ligne suivante sur convol et obj
-                	MonDouble* obj_pt_test = obj->ptr() + (l_decal+1)*obj->colonnes;
                 	//obj_pt += 1; // ATTENTION, le for avance de 1, donc pas besoin (en sortie de for) d'avancer de nouveau
                 	convol_pt += convol->colonnes - larg_decal; // ATTENTION, pas de +1 non plus ici
                 }
@@ -449,13 +365,12 @@ Image* Image::correlation_reduite2_MV(Image& reference, float seuil_ref) {
 		}
 	}
 
-	printf ("Temps calcul = %4.2f s \n",  (double)(clock() - temps_calcul) /CLOCKS_PER_SEC);
+	printf ("Temps calcul = %4.2f s (%.0f boucles)\n",  (double)(clock() - temps_calcul) /CLOCKS_PER_SEC, nbboucles);
 
 	delete ref;
 	convol->normaliser();
 	return convol;
 }
-#endif
 
 /**
  * Affiche sur la sortie standard l'image en terme d'intensité (pour débug)
@@ -577,72 +492,134 @@ Image* Image::deriveeCarre() {
 	return NULL;
 }
 
-//----------------------- Fonctions LK ---------------------
+/**
+ * Draws a doughnut-shaped region that can be used for example as a spatial frequency filter ;
+ * it will be drawn into the receiver object
+ * @author Lk@2010, traduit d'un code LK 2010 en python
+ * @author Mv@2014 pour le portage dans la classe Image
+ *
+ * @param c_centre Center column of doughnut in the array
+ * @param l_centre Center row
+ * @param freq_min Inner radius of doughnut. If freq_min = marge_int = 0, there is no central hole : a disc is drawn.
+ * @param marge_int Width in pixels of the inner margin of doughnut (Hanning smooth)
+ * @param freq_max Outer radius of doughnut
+ * @param marge_ext Width in pixels of the outer margin of doughnut (Hanning smooth)
+ */
+void Image::tracerDonut(int l_centre, int c_centre, double freq_min, double marge_int, double freq_max, double marge_ext) {
+	this->init(0); // On initialise à 0
+    // Defines corona at "1" between two concentric circles and "0" elsewhere
+    double ra = freq_min;
+    double rc = freq_max;
+    // Mask limits are smooth: go from 0 to 1 between ra and rb, then from 1 to 0 between rc and rd
+    double rb = freq_min + marge_int;
+    double rd = freq_max + marge_ext;
 
-#if INCLUDE_CONVOL
-Image* Image::correlation_lk(Image& reference, float seuil_ref) {
-	Image* ref = &reference;
-	int min_l, min_c, max_l, max_c;
-	ref->minMaxPixel(&min_l, &min_c, &max_l, &max_c);
-	MonDouble seuil_relatif = seuil_ref*(ref->getPix(max_l, max_c) - ref->getPix(min_l, min_c));
-	
-	Image* correl = new Image(this->lignes,this->colonnes);
+    double ra2 = ra * ra; 	// square these radii, for speed
+    double rb2 = rb * rb;
+    double rc2 = rc * rc;
+    double rd2 = rd * rd;
 
-	calc_convol(this->ptr(), ref->ptr(), correl->ptr(), this->colonnes, this->lignes, ref->colonnes, ref->lignes, seuil_relatif);
-	correl->normaliser();
-	return correl;
+    int c_min = (int) (c_centre - (freq_max + marge_ext));	// Shrink bounds, for speed
+    int c_max = (int) (c_centre + (freq_max + marge_ext));
+    int l_min = (int) (l_centre - (freq_max + marge_ext));
+    int l_max = (int) (l_centre + (freq_max + marge_ext));
+
+    if (c_min < 0) c_min=0; 	// Securities. Sould be shorter syntax such as 'cap((i_min,i_max,j_min,j_max), domainshape)'
+    if (c_max < 0) c_max=0;
+    if (l_min < 0) l_min=0;
+    if (l_max < 0) l_max=0;
+    if (c_min > this->colonnes) c_min = this->colonnes;
+    if (c_max > this->colonnes) c_max = this->colonnes;
+    if (l_min > this->lignes) l_min = this->lignes;
+    if (l_max > this->lignes) l_max = this->lignes;
+
+    for (int l = l_min ; l < l_max ; l++) {
+        int dv = l - l_centre; 		// position center in v
+        for (int c = c_min; c < c_max ; c++) {
+            int dh = c - c_centre;       // position center in h
+            int r2 = (dh*dh + dv*dv);	// square of current radius
+            if (r2 < ra2)   this->setPix(l,c,0.); //image[v][h] = 0.;
+            else if (r2 < rb2) {		// from 0 to 1, smoothly: 'Hanning window' like
+                double dr = (sqrt(r2) - ra) / marge_int;
+                this->setPix(l,c,(0.5*(1. - cos(PI * dr))));
+            }
+            else if (r2 < rc2)      setPix(l,c,1.);
+            else if (r2 < rd2)		// from 1 to 0, smoothly
+            {
+                double dr = (sqrt(r2) - rc)  / (float)(marge_ext);
+                setPix(l,c,0.5 * (1. + cos(PI * dr)));
+            }
+            else setPix(l,c,0.);
+        }
+    }
 }
-#endif
-
-#if INCLUDE_FCTS_LK3
-Image* Image::dessinerMasqueDeSoleil(int diametre) {
+/**
+ * @param diametre Le diamètre du soleil voulu
+ * @return Une forme de soleil B/W dans une nouvelle image de taille appropriée
+ */
+Image* Image::tracerFormeSoleil(int diametre) {
 	const double marge = 2.5;
 	Image* img = new Image(diametre + 4*marge, diametre + 4*marge);
-
-	draw_doughnut (img->ptr(), img->colonnes, img->lignes,
-				   img->colonnes/2, img->lignes/2,
-				   0, 0, diametre/2 - marge/2, marge);
+	img->tracerDonut(img->colonnes/2, img->lignes/2,0, 0, diametre/2 - marge/2, marge);
 	img->normaliser();
 	return img;
 }
-#endif
 
+//----------------------- Fonctions LK ---------------------
 #if INCLUDE_INTERPOL
+/**
+ * Interpolation d'une zone par Nevillle Aitken
+ * Utilise la fonction d'interpolation d'un point codée par Lk@1999
+ * @param l Coordonnées (ligne, colonne) du point autour duquel on interpole
+ * @param c
+ * @param pas_interp Finesse avec laquelle on interpole (1/8 par exemple)
+ * @param taille Taille du carré d'interpolation
+ * @return L'image du carré d'interpolation
+ */
 Image* Image::interpolerAutourDeCePoint(int l, int c, float pas_interp, float taille) {
 	int marge_interp = taille/pas_interp;
 	
 	Image* interp = new Image(marge_interp,marge_interp);
 	interp->init(0);
 	
+	// Création du tableau temporaire contenant l'objet receveur
+	double** source = this->versTableauDeDouble();
+
+	// Interpolation point par point en utilisant le tableau temporaire
 	for (int l_interp = 0; l_interp < marge_interp; l_interp++) {
 		for (int c_interp = 0; c_interp < marge_interp; c_interp++) {
 			if(l_interp < this->getLignes() && c_interp < this->getColonnes()) {
 				double l_correl = l_interp*pas_interp + l - taille/2;
 				double c_correl = c_interp*pas_interp + c - taille/2;
 				interp->setPix(l_interp, c_interp,
-					it_pol_neville2D_s4(this->getLignes(), this->getColonnes(), this->ptr(),
+					it_pol_neville2D_s4(this->getLignes(), this->getColonnes(), source,
 										l_correl, c_correl));
 			}
 		}
 	}
+	// Suppression du tableau temporaire
+	for(int l=0; l<this->lignes; l++)
+		delete [] source[l];
+	delete [] source;
     return interp;
 }
+/**
+ * Interpolation d'une zone par Nevillle Aitken
+ * Utilise la fonction d'interpolation d'un point codée par Lk@1999
+ * @param l Coordonnées (ligne, colonne) du point autour duquel on interpole
+ * @param c
+ * @return L'image du carré d'interpolation
+ */
 Image* Image::interpolerAutourDeCePoint(int l, int c) {
 	const int marge = 20;
 	const float pas_interp = 1/8;
 	return interpolerAutourDeCePoint(l, c, pas_interp, marge);
 }
-
-double Image::sommePixels() {
-	double som = 0;
-	for(int l=0; l<lignes; l++) {
-		for(int c=0; c<colonnes; c++) {
-			som += getPix(l,c);
-		}
-	}
-	return som;
-}
-
+/**
+ * Trouve le maximum après interpolation de la zone maximale par Nevillle Aitken
+ * @param l Coordonnées du point max trouvé
+ * @param c
+ */
 void Image::maxParInterpolation(double *l, double *c) {
 	const int taille = 20; // carré de 20 de pixels ; le max est au centre
 	const float pas_interp = 1/8.0; // le pas d'interpolation
@@ -660,7 +637,45 @@ void Image::maxParInterpolation(double *l, double *c) {
 	*c = c_max - taille/2.0 + c_max_interp * pas_interp;
 	delete interp;
 }
-
 #endif
+/**
+ * Fait une moyenne des alentours dans un carré de 100px de côté autour d'un point_donné,
+ * en excluant les valeurs dans un carré de 50px de côté autour du point_donné,
+ * puis donne le ratio moyenne_alentours/point_donné.
+ * Le point C sera le pic ou le maximum présumé.
+ * @param l Coordonnée ligne du point_donné
+ * @param c Coordonnée colonnedu point_donné
+ * @return ratio moyenne_alentours/point_donné ou -1 si aucune valeur possible
+ */
+double Image::calculerHauteurRelativeAutour(int l_point, int c_point) {
+	const int taille_carre_externe = 100;
+	const int taille_carre_interne = 50;
+
+	// On trouve les bornes min et max
+	int l_deb = max(0, l_point - taille_carre_externe/2);
+	int c_deb = max(0,c_point - taille_carre_externe/2);
+	int l_fin = min(this->lignes, l_point + taille_carre_externe/2);
+	int c_fin = min(this->colonnes, c_point + taille_carre_externe/2);
+
+	double somme = 0;
+	int compteur = 0;
+
+	for(int l=l_deb; l<l_fin; l++) {
+		for(int c=c_deb; c<c_fin; c++) {
+			if(not((l > l_point-taille_carre_interne/2)
+				&& (l < l_point + taille_carre_interne/2)
+				&& (c > c_point-taille_carre_interne/2)
+				&& (c < c_point + taille_carre_interne/2))) {
+				somme += getPix(l,c); compteur++;
+			}
+		}
+	}
+	if(compteur > 0) {
+		double moyenne = somme/compteur;
+		double point = getPix(l_point,c_point);
+		return moyenne/point;
+	}
+	else return -1;
+}
 
 

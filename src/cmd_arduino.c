@@ -117,7 +117,7 @@ int arduinoInitialiserCom(const char* device_file_name_list) {
 	toptions.c_iflag &= ~(IXON | IXOFF | IXANY); // turn off s/w flow ctrl
 
 	toptions.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG); // make raw
-	toptions.c_oflag &= ~OPOST; // make raw
+    toptions.c_oflag &= ~OPOST; // make raw
 
 	toptions.c_cc[VMIN]  = 0; // see http://unixwiz.net/techtips/termios-vmin-vtime.html
 	toptions.c_cc[VTIME] = 0;
