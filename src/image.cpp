@@ -22,7 +22,7 @@ Image::Image() {
     colonnes = 0;
     img = NULL;
 }
-/*
+#if VERSION_LINEAIRE
 Image::Image(int hauteur, int largeur) {
     lignes = hauteur;
     colonnes = largeur;
@@ -40,7 +40,8 @@ Image::~Image() {
     if(img != NULL)
     	delete img;
 }
-*/
+#else
+
 
 Image::Image(int hauteur, int largeur) {
     lignes = hauteur;
@@ -68,7 +69,7 @@ Image::~Image() {
 		delete [] img;
 	}
 }
-
+#endif
 
 /**
     Charge une image TIFF dans un objet Image
@@ -387,7 +388,9 @@ Image* Image::correlation_reduite_MV(Image& reference, float seuil_ref) {
 	convol->normaliser();
 	return convol;
 }
-/*
+
+
+#if VERSION_LINEAIRE
 // Correl où l'espace de correl est limité à l'image "obj", donc on n'étudie pas
 // les cas de décalage où la référence n'est pas incluse dans l'objet
 // avec opti pointeurs
@@ -425,17 +428,22 @@ Image* Image::correlation_reduite2_MV(Image& reference, float seuil_ref) {
                 int haut_decal = l_decal_fin - l_decal_deb;
                 int larg_decal = c_decal_fin - c_decal_deb;
                 
+                // LES DIFFICULTÉS SONT DE TROUVER LES BONS POINTEURS INITIAUX
                 MonDouble* convol_pt = convol->ptr() + l_decal_deb*convol->colonnes + c_decal_deb;
-                MonDouble* obj_pt = obj->ptr() + (l_ref+l_decal_deb-(ref->lignes-1))*obj->colonnes + (c_ref+c_decal_deb-(ref->colonnes-1));
+                int l_obj_pt_initial = l_ref+l_decal_deb-(ref->lignes-1);
+                int c_obj_pt_initial = c_ref+c_decal_deb-(ref->colonnes-1);
+                MonDouble* obj_pt = obj->ptr() + l_obj_pt_initial*obj->colonnes + c_obj_pt_initial;
                 for (int l_decal=0; l_decal < haut_decal; l_decal++) {
                 	for (int c_decal=0; c_decal < larg_decal; c_decal++) {
                 		*convol_pt += ref_pix * (*obj_pt);
                 		obj_pt += 1;
                 		convol_pt += 1;
                 	}
+                	// PUIS D'AVANCER CES POINTEURS DE LA BONNE FACON QUAND ON PASSE A LA LIGNE SUIVANTE
                     // On passe à la ligne suivante sur convol et obj
-                	convol_pt += convol->colonnes - larg_decal + 1;
-                	obj_pt += 1;
+                	MonDouble* obj_pt_test = obj->ptr() + (l_decal+1)*obj->colonnes;
+                	//obj_pt += 1; // ATTENTION, le for avance de 1, donc pas besoin (en sortie de for) d'avancer de nouveau
+                	convol_pt += convol->colonnes - larg_decal; // ATTENTION, pas de +1 non plus ici
                 }
 			}
 		}
@@ -447,8 +455,7 @@ Image* Image::correlation_reduite2_MV(Image& reference, float seuil_ref) {
 	convol->normaliser();
 	return convol;
 }
-*/
-
+#endif
 
 /**
  * Affiche sur la sortie standard l'image en terme d'intensité (pour débug)

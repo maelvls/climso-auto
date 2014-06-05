@@ -6,14 +6,23 @@
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
 
+#define VERSION_LINEAIRE	0 /// Version linéaire "simple pointeur" ("double pointeur" sinon) (voir NOTE1)
+
+
 #define INCLUDE_TIFF		1 	// Si 1, alors -L/usr/local/lib et -ltiff
+#define INCLUDE_SBIGCAM		1
 #define INCLUDE_SBIGIMG		1 	// Si 1, alors	(MAC) -F/Library/Frameworks et -framework SBIGUDrv (selon installation)
 								//				(LINUX) -L/usr/local/lib et -lsbigudrv (selon installation)
+#if not VERSION_LINEAIRE
 #define INCLUDE_CONVOL		1
 #define INCLUDE_FCTS_LK3	1
 #define INCLUDE_INTERPOL	1
+#endif
 
-#define INCLUDE_SBIGCAM		1
+
+#ifndef DEBUG
+#define DEBUG 1
+#endif
 
 #ifndef __climso_auto__picture__
 #define __climso_auto__picture__
@@ -31,7 +40,6 @@ using namespace std;
  * - si on est en dehors des indices de l'image
  */
 
-
 #if INCLUDE_TIFF
 	#include <tiffio.h>
 #endif
@@ -44,7 +52,6 @@ using namespace std;
 #if INCLUDE_CONVOL
 	#include "convol.h"
 #endif
-
 #if INCLUDE_FCTS_LK3
 	#include "fcts_LK3.h"
 #endif
@@ -67,12 +74,25 @@ typedef double MonDouble;
  * J'ai choisit la convention "matrice" : un point est désigné par point(ligne,colonne)
  * en partant du point extrème nord-ouest. D'autres représentations conseillent point(x,y)
  * mais je n'ai pas pris cette convention.
+ *
+ * NOTE1: Concernant la représentation en mémoire de l'image, j'hésite encore beaucoup entre la représentation
+ * linéaire (un seul tableau de "double" avec les lignes les unes à la suite des autres) et la représentation
+ * matricielle, c'est à dire un tableau de tableaux de "double".
+ * 			-> VOIR le #define VERSION_LINEAIRE
+ *
+ * NOTE2: Cette classe a un gros soucis avec la création multiple d'objets lourds : à chaque fois qu'on traite
+ * une image, on crée un nouvel objet en mémoire. Dans une boucle, cela ralenti le processus...
  */
+
 class Image {
 private:
     int lignes, colonnes; // hauteur, largeur
-    //MonDouble *img; // Des pixels nuances de gris sur 16 bits
+
+#if VERSION_LINEAIRE
+    MonDouble *img; // Des pixels nuances de gris sur 16 bits
+#else
     MonDouble **img;
+#endif
 public:
     Image();
     Image(int hauteur, int largeur);
@@ -90,7 +110,9 @@ public:
     void maxPixel(int *l, int *c);
     Image* correlation_MV(Image& p, float seuil_ref);
     Image* correlation_reduite_MV(Image& reference, float seuil_ref);
+#if VERSION_LINEAIRE
     Image* correlation_reduite2_MV(Image& reference, float seuil_ref);
+#endif
     Image* convoluer(const int *noyau, int taille);
     Image* deriveeCarre();
     double sommePixels();
@@ -111,12 +133,18 @@ public:
     int getLignes()  {return lignes; }
     int getColonnes() { return colonnes;}
 
-    //MonDouble* ptr() { return img; }
-    //MonDouble getPix(int l, int c) { return img[l*colonnes + c];}
-    //void setPix(int l, int c, MonDouble intensite) { img[l*colonnes + c]=intensite;}
-
+#if VERSION_LINEAIRE
+    MonDouble* ptr() { return img; }
+    MonDouble getPix(int l, int c) { return img[l*colonnes + c];}
+    void setPix(int l, int c, MonDouble intensite) { img[l*colonnes + c]=intensite;}
+#else
     MonDouble** ptr() { return img; }
-#if DEBUG // Pour detecter d'eventuels acces interdits lors de debugs
+	MonDouble getPix(int l, int c) { return img[l][c];}
+	void setPix(int l, int c, MonDouble intensite) {img[l][c]=intensite;}
+#endif
+
+/*
+	// Pour detecter d'eventuels acces interdits lors de debugs
 	MonDouble getPix(int l, int c) {
 		if(l < 0 || l >= lignes || c < 0 || c >= colonnes)
 			throw "getPix: Pixel hors-image";
@@ -128,11 +156,7 @@ public:
 			throw "setPix: Pixel hors-image";
 		img[l][c]=intensite;
 	}
-#else
-	MonDouble getPix(int l, int c) { return img[l][c];}
-	void setPix(int l, int c, MonDouble intensite) {img[l][c]=intensite;}
-#endif
-	
+*/
 	
     void afficher();
 	
