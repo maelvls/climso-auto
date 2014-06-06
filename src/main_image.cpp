@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 int main2(int argc, char **argv) {
 	string empl = "images-de-correlation/test-correl-mv/\0";
 	Image* obj = Image::depuisTiff(empl+"obj.tif");
-	Image* ref = Image::tracerFormeSoleil(202);
+	Image* ref = Image::tracerFormeSoleil(232);
 	ref->versTiff(empl+"ref.tif");
 
 	Image* obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB,NOYAU_LAPLACIEN_TAILLE);
