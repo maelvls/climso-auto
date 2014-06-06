@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
 	/*
 	 * Création de l'image ayant la forme du soleil puis laplacien
 	 */
-	Image *ref = Image::dessinerMasqueDeSoleil(256);
+	Image *ref = Image::dessinerMasqueDeSoleil(230);
 	Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
 
 	int larg_img_cam, haut_img_cam;
