@@ -678,4 +678,7 @@ double Image::calculerHauteurRelativeAutour(int l_point, int c_point) {
 	else return -1;
 }
 
+Image* Image::convoluerParDerivee() {
+	return NULL;
+}
 

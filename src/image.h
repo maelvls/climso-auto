@@ -98,6 +98,7 @@ public:
     static Image* tracerFormeSoleil(int diametre);
     Image* correlation_rapide(Image& reference, float seuil_ref);
     Image* convoluer(const int *noyau, int taille);
+    Image* convoluerParDerivee();
     Image* deriveeCarre();
     double calculerHauteurRelativeAutour(int l, int c);
 
