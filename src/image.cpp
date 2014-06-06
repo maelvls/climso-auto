@@ -670,9 +670,9 @@ double Image::calculerHauteurRelativeAutour(int l_point, int c_point) {
 			}
 		}
 	}
-	if(compteur > 0) {
+	double point = getPix(l_point,c_point);
+	if(compteur > 0 && point > 0) {
 		double moyenne = somme/compteur;
-		double point = getPix(l_point,c_point);
 		return moyenne/point;
 	}
 	else return -1;

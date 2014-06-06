@@ -111,11 +111,10 @@ void signalHandler(int signum)
 }
 
 void boucleDeGuidage() {
-#if DEBUG
-	// Emplacement des images
+	// Emplacement des images debug
 	string emplacement = "images-de-correlation/test-sbig/\0";
-#endif
-    signal(SIGINT, signalHandler);
+
+	signal(SIGINT, signalHandler);
     signal(SIGABRT, signalHandler);
 
 	int fd_arduino = initialiserArduino();
@@ -123,7 +122,7 @@ void boucleDeGuidage() {
 	//
 	// Création de l'image ayant la forme du soleil puis laplacien
 	//
-	Image *ref = Image::tracerFormeSoleil(256);
+	Image *ref = Image::tracerFormeSoleil(226);
 	Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
 
 	int larg_img_cam, haut_img_cam;
@@ -145,17 +144,19 @@ void boucleDeGuidage() {
     }
 	obj_sbig->AutoBackgroundAndRange();
     Image *obj_no_bin = Image::depuisSBIGImg(*obj_sbig);
+    //obj_no_bin->versTiff(emplacement+"obj_initial");
+    //obj_no_bin = Image::depuisTiff(emplacement+"obj_initial.tif");
 	Image *obj = obj_no_bin->reduire(2);
     Image *obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
     Image *correl = obj_lapl->correlation_rapide(*ref_lapl, 0.70);
 	correl->maxParInterpolation(&l_max_initial, &c_max_initial);
 
 #if DEBUG
-    obj->versTiff(emplacement+"obj_t0.tif");
-	correl->versTiff(emplacement+"correl_t0.tif");
-	obj_lapl->versTiff(emplacement+"obj_lapl_t0.tif");
-    ref_lapl->versTiff(emplacement+"ref_lapl_t0.tif");
-	ref->versTiff(emplacement+"ref_t0.tif");
+    obj->versTiff(emplacement+"t0_obj.tif");
+	correl->versTiff(emplacement+"t0_correl.tif");
+	obj_lapl->versTiff(emplacement+"t0_obj_lapl.tif");
+    ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
+	ref->versTiff(emplacement+"t0_ref.tif");
 #endif
     
     delete obj_sbig;
@@ -170,6 +171,7 @@ void boucleDeGuidage() {
 
 
 	do {
+
 		sleep(5); // attendre N secondes
 
 		obj_sbig = new CSBIGImg();
@@ -179,15 +181,18 @@ void boucleDeGuidage() {
 		}
 		obj_sbig->AutoBackgroundAndRange();
 		obj_no_bin = Image::depuisSBIGImg(*obj_sbig);
+	    //obj_no_bin = Image::depuisTiff(emplacement+"obj_initial.tif");
 		obj = obj_no_bin->reduire(2); // Binning 2x2 logiciel
-		obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
-		correl = obj_lapl->correlation_rapide(*ref_lapl, 0.90);
+	    obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+		correl = obj_lapl->correlation_rapide(*ref_lapl, 0.70);
 		correl->maxParInterpolation(&l_max, &c_max);
+		double ratio = correl->calculerHauteurRelativeAutour(l_max,c_max);
+
 
 #if DEBUG
-		obj->versTiff(emplacement+"obj.tif");
-		correl->versTiff(emplacement+"correl.tif");
-		obj_lapl->versTiff(emplacement+"obj_lapl.tif");
+		obj->versTiff(emplacement+"t_obj.tif");
+		correl->versTiff(emplacement+"t_correl.tif");
+		obj_lapl->versTiff(emplacement+"t_obj_lapl.tif");
 #endif
 
 		delete obj_sbig; 	// On devrait éviter de créer autant d'objet à chaque itération
@@ -206,7 +211,7 @@ void boucleDeGuidage() {
 				<< c_max << ", y=" <<l_max<<")" << endl;
 		cout << "Le décalage avec l'image d'origine est de (x= "
 				<< c_decal << ", y=" <<l_decal<<")" << endl;
-		cout << "Ratio moyenne_autour_pix/valeur_pix : " << correl->calculerHauteurRelativeAutour(l_max,c_max) << endl;
+		cout << "Ratio moyenne_autour_pix/valeur_pix : " << ratio << endl;
 
 
 		while(arduinoEnvoyerCmd((l_decal<0)?PIN_SUD:PIN_NORD,
