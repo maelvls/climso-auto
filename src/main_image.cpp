@@ -33,7 +33,7 @@ int main(int argc, char **argv) {
 int main2(int argc, char **argv) {
 	string empl = "images-de-correlation/test-correl-mv/\0";
 	Image* obj = Image::depuisTiff(empl+"obj.tif");
-	Image* ref = Image::tracerFormeSoleil(232);
+	Image* ref = Image::tracerFormeSoleil(221);
 	ref->versTiff(empl+"ref.tif");
 
 	Image* obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB,NOYAU_LAPLACIEN_TAILLE);
@@ -122,9 +122,9 @@ void boucleDeGuidage() {
 	//
 	// Création de l'image ayant la forme du soleil puis laplacien
 	//
-	Image *ref = Image::tracerFormeSoleil(230);
-	Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
-
+	Image *ref = Image::tracerFormeSoleil(221);
+	//Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+	Image *ref_lapl = ref->convoluerParDerivee();
 	int larg_img_cam, haut_img_cam;
 	double l_max_initial,c_max_initial;
 	double l_max, c_max;
@@ -147,7 +147,7 @@ void boucleDeGuidage() {
     //obj_no_bin->versTiff(emplacement+"obj_initial");
     //obj_no_bin = Image::depuisTiff(emplacement+"obj_initial.tif");
 	Image *obj = obj_no_bin->reduire(2);
-    Image *obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+    Image *obj_lapl = obj->convoluerParDerivee();//convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
     Image *correl = obj_lapl->correlation_rapide(*ref_lapl, 0.70);
 	correl->maxParInterpolation(&l_max_initial, &c_max_initial);
 
@@ -183,7 +183,7 @@ void boucleDeGuidage() {
 		obj_no_bin = Image::depuisSBIGImg(*obj_sbig);
 	    //obj_no_bin = Image::depuisTiff(emplacement+"obj_initial.tif");
 		obj = obj_no_bin->reduire(2); // Binning 2x2 logiciel
-	    obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+	    obj_lapl = obj->convoluerParDerivee();//convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
 		correl = obj_lapl->correlation_rapide(*ref_lapl, 0.70);
 		correl->maxParInterpolation(&l_max, &c_max);
 		double ratio = correl->calculerHauteurRelativeAutour(l_max,c_max);

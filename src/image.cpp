@@ -678,7 +678,27 @@ double Image::calculerHauteurRelativeAutour(int l_point, int c_point) {
 	else return -1;
 }
 
+
+	/**
+	 * Calcul la somme de : (valeur absolue de dérivée partielle en x + val.abs.deriv.partielle en y)
+	 * d'un tableau 2D scalaire : |df/dx| + |df/dy|
+	 * @author Lk@2014
+	 * @param data
+	 * @param absderiv
+	 * @param size_x
+	 * @param size_y
+	 */
 Image* Image::convoluerParDerivee() {
-	return NULL;
+	Image* img = new Image(*this);
+	img->init(0);
+	double calcul;
+	for (int l=1 ; l < lignes-1 ; l++) {
+		for (int c=1 ; c < colonnes-1 ; c++) {
+			calcul = sqrt((getPix(l,c)-getPix(l-1,c))*(getPix(l,c) - getPix(l-1,c))
+					+ (getPix(l,c)-getPix(l,c-1))* (getPix(l,c)-getPix(l,c-1)));
+			img->setPix(l,c,calcul);
+		}
+	}
+	return img;
 }
 
