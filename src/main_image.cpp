@@ -122,7 +122,7 @@ void boucleDeGuidage() {
 	//
 	// Création de l'image ayant la forme du soleil puis laplacien
 	//
-	Image *ref = Image::tracerFormeSoleil(221);
+	Image *ref = Image::tracerFormeSoleil(228);
 	//Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
 	Image *ref_lapl = ref->convoluerParDerivee();
 	int larg_img_cam, haut_img_cam;
