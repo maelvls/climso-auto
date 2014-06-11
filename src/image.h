@@ -72,6 +72,11 @@ typedef double MonDouble;
  *
  * NOTE2: Cette classe a un gros soucis avec la création multiple d'objets lourds : à chaque fois qu'on traite
  * une image, on crée un nouvel objet en mémoire. Dans une boucle, cela ralenti le processus...
+ *
+ * NOTE3: Pourquoi utiliser des doubles alors que de simples 16-bits (ushort par exemple) sont suffisants
+ * et codent pour 65535 tons ? En fait, on a besoin de ces doubles uniquement dans le cas de la correlation.
+ * Du coup, on pourrait juste utiliser un tableau de double pour la correlation et ensuite copier dans l'image
+ * résultat...
  */
 
 class Image {
