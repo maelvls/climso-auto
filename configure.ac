@@ -11,15 +11,17 @@ AC_CONFIG_AUX_DIR([config])
 
 # Les fichiers où sont stockées mes macros .m4 :
 m4_include([m4/check_framework.m4])
+m4_include([m4/autotroll.m4])
 # Je devrais utiliser AC_CONFIG_MACRO_DIR() mais
 # ça ne marche pas (car pas libtoolize?)
-
 
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 # foreign pour ne pas creer INSTALL, README, NEWS...
 #   subdir-objects pour ne pas faire du Makefile.am recursif,
 #   du coup plus besoin de src/Makefile.am
 
+# Vérifie si la librairie Qt est présente
+AT_WITH_QT
 
 
 # Checks for programs.

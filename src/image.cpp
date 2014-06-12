@@ -5,16 +5,22 @@
 //  Created by Maël Valais on 15/04/2014.
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
-//	Vocabulaire TIFF :
-//	- Strip : un ensemble de lignes ; généralement nb(strips)=nb(lignes)
-//	- Pixel : ensemble de Samples ; en nuances de gris, nb(Samples)=1
-//	- Sample : sous-partie du pixel ; 3 par pixel pour une image en couleurs, 1 pour du gris
-//
-// Problème avec la classe Image : l'utilisation d'objets avec allocation dynamique a deux pbms :
-//		- il y a des fuites de mémoire dans la boucle, et cette fuite va faire crasher le système
-// 		- les allocation dynamiques à chaque fois (environ 10 à 40 mo par objet) ralentissent
-//
+/*
+    Vocabulaire TIFF :
+    - Strip : un ensemble de lignes ; généralement nb(strips)=nb(lignes)
+    - Pixel : ensemble de Samples ; en nuances de gris, nb(Samples)=1
+    - Sample : sous-partie du pixel ; 3 par pixel pour une image en couleurs, 1 pour du gris
 
+    Problème avec la classe Image : l'utilisation d'objets avec allocation dynamique a deux pbms :
+        - il y a des fuites de mémoire dans la boucle, et cette fuite va faire crasher le système
+        - les allocation dynamiques à chaque fois (environ 10 à 40 mo par objet) ralentissent
+
+
+ A FAIRE:
+ - recoder correlation tel que ce soit la fonction de lk qui soit utilisée
+
+
+*/
 #include <cmath>
 #include "image.h"
 
