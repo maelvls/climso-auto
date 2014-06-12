@@ -48,7 +48,8 @@ AC_CHECK_LIB([sbigudrv], [main], [], [
 ])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h tiffio.h])
+AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h ])
+AC_CHECK_HEADERS([tiffio.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
@@ -67,5 +68,5 @@ AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
 
 AC_CONFIG_FILES(Makefile src/Makefile)
 AC_OUTPUT
-AC_MSG_RESULT([-> LIBS : $LIBS /// $QT_LIBS /// $QT_QTDIR])
+AC_MSG_RESULT([-> LIBS : $LIBS /// $QT_LIBS /// $QT_QTDIR /// $QTDIR])
 

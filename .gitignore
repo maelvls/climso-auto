@@ -31,7 +31,6 @@
 /.DS_Store
 /config.log
 /config.status
-/configure
 /configure.scan
 /Makefile
 /autom4te.cache
