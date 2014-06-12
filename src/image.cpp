@@ -5,22 +5,16 @@
 //  Created by Maël Valais on 15/04/2014.
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
-/*
-    Vocabulaire TIFF :
-    - Strip : un ensemble de lignes ; généralement nb(strips)=nb(lignes)
-    - Pixel : ensemble de Samples ; en nuances de gris, nb(Samples)=1
-    - Sample : sous-partie du pixel ; 3 par pixel pour une image en couleurs, 1 pour du gris
+//	Vocabulaire TIFF :
+//	- Strip : un ensemble de lignes ; généralement nb(strips)=nb(lignes)
+//	- Pixel : ensemble de Samples ; en nuances de gris, nb(Samples)=1
+//	- Sample : sous-partie du pixel ; 3 par pixel pour une image en couleurs, 1 pour du gris
+//
+// Problème avec la classe Image : l'utilisation d'objets avec allocation dynamique a deux pbms :
+//		- il y a des fuites de mémoire dans la boucle, et cette fuite va faire crasher le système
+// 		- les allocation dynamiques à chaque fois (environ 10 à 40 mo par objet) ralentissent
+//
 
-    Problème avec la classe Image : l'utilisation d'objets avec allocation dynamique a deux pbms :
-        - il y a des fuites de mémoire dans la boucle, et cette fuite va faire crasher le système
-        - les allocation dynamiques à chaque fois (environ 10 à 40 mo par objet) ralentissent
-
-
- A FAIRE:
- - recoder correlation tel que ce soit la fonction de lk qui soit utilisée
-
-
-*/
 #include <cmath>
 #include "image.h"
 
@@ -44,7 +38,7 @@ Image::Image(Image& src) {
 
 Image::~Image() {
     if(img != NULL)
-    	delete img;
+        delete [] img;
 }
 
 /**
@@ -196,6 +190,20 @@ double** Image::versTableauDeDouble() {
 		}
 	}
 	return tab;
+}
+/**
+ * @return Tableau linéaire : tableau[lignes * colonnes]
+ * Doit être supprimé avec delete [] tab;
+ */
+unsigned char* Image::versUchar() {
+    double coef = 255./INTENSITE_MAX;
+    unsigned char *tab = new unsigned char[lignes*colonnes];
+    for (int lign=0; lign < lignes; lign++) {
+        for (int col=0; col < colonnes; col++) {
+            tab[lign*colonnes + col] = getPix(lign, col)*coef;
+        }
+    }
+    return tab;
 }
 
 /**
