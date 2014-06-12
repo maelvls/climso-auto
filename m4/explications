@@ -1,0 +1,15 @@
+Pour passer le projet Qmake que j'avais fait sous Qcreator, j'ai trouvé l'outil Autotroll.
+
+---------- Probleme de sed dans ./configure : --------------
+J'ai remarqué des erreurs de parsing du fichier Makefile généré par Qmake pour trouver les flags CFLAGS etc. J'ai corrigé cela dans autotroll.m4.
+
+---------- Problème avec la génération .ui.h :--------------
+Lorsque le mainwindow.ui.h était généré, le #define MAINWINDOW_H était le même que celui présent dans mainwindow.h. D'ou une erreur. 
+Je suspecte uic de prendre toute la chaine avant le premier point : du coup mainwindow.ui.h devient MAINWINDOW_H.
+J'ai donc décidé de passer, comme dans QCreator, les noms de fichiers générés en mainwindow_ui.h au lieu de mainwindow.ui.h. 
+Dans autotroll.mk : 
+	.ui.ui.h:
+		$(UIC) $< -o $@
+devient :
+	%_ui.h: %.ui
+		$(UIC) $< -o $@
