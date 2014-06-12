@@ -31,10 +31,9 @@
 /.DS_Store
 /config.log
 /config.status
-/configure
 /configure.scan
 /Makefile
-/autom4te.cache
+/autom4te.cache 
 /climso_auto_classe_image
 /climso_auto_main_lk
 /.cproject
