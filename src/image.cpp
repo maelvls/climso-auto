@@ -615,6 +615,8 @@ Image* Image::interpolerAutourDeCePoint(int l, int c) {
 	const float pas_interp = 1/8;
 	return interpolerAutourDeCePoint(l, c, pas_interp, marge);
 }
+
+
 /**
  * Trouve le maximum après interpolation de la zone maximale par Nevillle Aitken
  * @param l Coordonnées du point max trouvé

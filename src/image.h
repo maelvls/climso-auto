@@ -108,6 +108,7 @@ public:
     double calculerHauteurRelativeAutour(int l, int c);
 
     // Entrées/sorties (depuis/vers)
+    void versUchar(unsigned char *data);
 #if INCLUDE_TIFF
     static Image* depuisTiff(string fichierEntree);
     void versTiff(string fichierSortie);
