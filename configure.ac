@@ -69,4 +69,5 @@ AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
 AC_CONFIG_FILES(Makefile src/Makefile)
 AC_OUTPUT
 AC_MSG_RESULT([-> LIBS : $LIBS /// $QT_LIBS /// $QT_QTDIR /// $QTDIR])
+AC_MSG_RESULT([-> LIBS : $LIBS /// $QT_LIBS /// $QTDIR])
 
