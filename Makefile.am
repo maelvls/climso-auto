@@ -22,24 +22,30 @@ include autotroll.mk
 # Pour que aclocal puisse trouver les fichiers .m4
 ACLOCAL_AMFLAGS = -I m4
 
-CFLAGS=-g --pedantic -Wall -std=c99 -O2
-CXXFLAGS=-g
-bin_PROGRAMS=test_classe_image
 
-test_classe_image_SOURCES=\
-	src/main_image.cpp\
+bin_PROGRAMS=main_qt
+
+main_qt_SOURCES=\
 	src/cmd_arduino.c\
 	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
-  	src/exceptions.cpp  src/image.cpp
-#test_classe_image_HEADERS=
-#	src/mainwindow.ui
+	src/exceptions.cpp  src/image.cpp\
+	src/fenetreprincipale.c src/fenetreprincipale.moc.cpp\
+	src/main_qt_gui.cpp
+include_HEADERS=\
+	src/cmd_arduino.h\
+	src/interpol.h\
+	src/csbigcam.h src/csbigimg.h src/diametre_soleil.h\
+	src/exceptions.h src/image.h\
+	src/fenetreprincipale.h src/fenetreprincipale_ui.h
   	
-test_classe_image_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
-test_classe_image_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS) -DDEBUG
-test_classe_image_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
-test_classe_image_LDADD    = $(QT_LIBS) $(LDADD)
+CFLAGS=-g --pedantic -Wall -std=c99 -O2
+CXXFLAGS=-g
+main_qt_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
+main_qt_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS) -DDEBUG
+main_qt_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
+main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 
 # Fichiers qui devront être compilés par uic ou moc avant la compilation
 # Voir CONCERNANT Qt au dessus
-BUILT_SOURCES=
+BUILT_SOURCES=src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h
