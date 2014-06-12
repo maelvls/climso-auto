@@ -48,8 +48,7 @@ AC_CHECK_LIB([sbigudrv], [main], [], [
 ])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h ])
-AC_CHECK_HEADERS([tiffio.h])
+AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h tiffio.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_HEADER_STDBOOL
