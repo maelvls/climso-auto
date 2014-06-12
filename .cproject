@@ -453,178 +453,130 @@
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-cmd_arduino.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-cmd_arduino.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-cmd_arduino.o</buildTarget>
+				<buildTarget>src/test_classe_image-cmd_arduino.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-cmd_arduino.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-cmd_arduino.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-cmd_arduino.obj</buildTarget>
+				<buildTarget>src/test_classe_image-cmd_arduino.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-convol.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-csbigcam.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-convol.o</buildTarget>
+				<buildTarget>src/test_classe_image-csbigcam.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-convol.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-csbigcam.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-convol.obj</buildTarget>
+				<buildTarget>src/test_classe_image-csbigcam.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-crea_tiff_3.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-csbigimg.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-crea_tiff_3.o</buildTarget>
+				<buildTarget>src/test_classe_image-csbigimg.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-crea_tiff_3.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-csbigimg.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-crea_tiff_3.obj</buildTarget>
+				<buildTarget>src/test_classe_image-csbigimg.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-csbigcam.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-diametre_soleil.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-csbigcam.o</buildTarget>
+				<buildTarget>src/test_classe_image-diametre_soleil.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-csbigcam.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-diametre_soleil.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-csbigcam.obj</buildTarget>
+				<buildTarget>src/test_classe_image-diametre_soleil.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-csbigimg.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-exceptions.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-csbigimg.o</buildTarget>
+				<buildTarget>src/test_classe_image-exceptions.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-csbigimg.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-exceptions.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-csbigimg.obj</buildTarget>
+				<buildTarget>src/test_classe_image-exceptions.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-diametre_soleil.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-image.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-diametre_soleil.o</buildTarget>
+				<buildTarget>src/test_classe_image-image.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-diametre_soleil.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-image.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-diametre_soleil.obj</buildTarget>
+				<buildTarget>src/test_classe_image-image.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-exceptions.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-interpol.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-exceptions.o</buildTarget>
+				<buildTarget>src/test_classe_image-interpol.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-exceptions.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-interpol.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-exceptions.obj</buildTarget>
+				<buildTarget>src/test_classe_image-interpol.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-fcts_LK3.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-main_image.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-fcts_LK3.o</buildTarget>
+				<buildTarget>src/test_classe_image-main_image.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/classe_image_test-fcts_LK3.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/test_classe_image-main_image.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/classe_image_test-fcts_LK3.obj</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>false</runAllBuilders>
-			</target>
-			<target name="src/classe_image_test-image.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments/>
-				<buildTarget>src/classe_image_test-image.o</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>false</runAllBuilders>
-			</target>
-			<target name="src/classe_image_test-image.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments/>
-				<buildTarget>src/classe_image_test-image.obj</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>false</runAllBuilders>
-			</target>
-			<target name="src/classe_image_test-interpol.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments/>
-				<buildTarget>src/classe_image_test-interpol.o</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>false</runAllBuilders>
-			</target>
-			<target name="src/classe_image_test-interpol.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments/>
-				<buildTarget>src/classe_image_test-interpol.obj</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>false</runAllBuilders>
-			</target>
-			<target name="src/classe_image_test-main_image.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments/>
-				<buildTarget>src/classe_image_test-main_image.o</buildTarget>
-				<stopOnError>true</stopOnError>
-				<useDefaultCommand>true</useDefaultCommand>
-				<runAllBuilders>false</runAllBuilders>
-			</target>
-			<target name="src/classe_image_test-main_image.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
-				<buildCommand>make</buildCommand>
-				<buildArguments/>
-				<buildTarget>src/classe_image_test-main_image.obj</buildTarget>
+				<buildTarget>src/test_classe_image-main_image.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>

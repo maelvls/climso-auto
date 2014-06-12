@@ -6,6 +6,34 @@
 //  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
 
+/**
+ * J'ai écrit cette classe pour simplifier l'utilisation des nombreuses fonctions sur des images, du type
+ * uneFonction(double** tab_entree, tab_entree_larg, tab_entree_haut, double** tab_sortie, int tab_sortie_larg, int tab_sortie_long)
+ *
+ * Une image équivaut à un tableau 2D de "double" (pour rester compatible avec les fonctions existantes)
+ * J'ai choisit la convention "matrice" : un point est désigné par point(ligne,colonne)
+ * en partant du point extrème nord-ouest. D'autres représentations conseillent point(x,y)
+ * mais je n'ai pas pris cette convention.
+ *
+ * NOTE1: Concernant la représentation en mémoire de l'image, j'hésite encore beaucoup entre la représentation
+ * linéaire (un seul tableau de "double" avec les lignes les unes à la suite des autres) et la représentation
+ * matricielle, c'est à dire un tableau de tableaux de "double".
+ * 			-> j'ai choisi une représentation linéaire, mais non-compatible avec les fonctions antérieures
+ * 			mais par contre compatibles avec les fonctions d'affichage Qt par exemple
+ * NOTE3: Après pas mal de recul, je pense que cette représentation linéaire n'aide pas lors des optimisations
+ * car pour le calcul (type correlation), on manipule des pointeurs pour optimiser... Or, ça veut dire qu'on
+ * utilise plus les getters et donc la classe telle qu'elle est définie est moins "solide".
+ *
+ * NOTE2: Cette classe a un gros soucis avec la création multiple d'objets lourds : à chaque fois qu'on traite
+ * une image, on crée un nouvel objet en mémoire. Dans une boucle, cela ralenti le processus...
+ *
+ * NOTE3: Pourquoi utiliser des doubles alors que de simples 16-bits (ushort par exemple) sont suffisants
+ * et codent pour 65535 tons ? En fait, on a besoin de ces doubles uniquement dans le cas de la correlation.
+ * Du coup, on pourrait juste utiliser un tableau de double pour la correlation et ensuite copier dans l'image
+ * résultat...
+ *
+ */
+
 #ifndef __climso_auto__picture__
 #define __climso_auto__picture__
 
@@ -55,29 +83,7 @@ const int NOYAU_LAPLACIEN_TAILLE = 3;
 
 typedef double MonDouble;
 
-/**
- * Une image équivaut à un tableau 2D de "double" (pour rester compatible avec les fonctions existantes)
- * J'ai choisit la convention "matrice" : un point est désigné par point(ligne,colonne)
- * en partant du point extrème nord-ouest. D'autres représentations conseillent point(x,y)
- * mais je n'ai pas pris cette convention.
- *
- * NOTE1: Concernant la représentation en mémoire de l'image, j'hésite encore beaucoup entre la représentation
- * linéaire (un seul tableau de "double" avec les lignes les unes à la suite des autres) et la représentation
- * matricielle, c'est à dire un tableau de tableaux de "double".
- * 			-> j'ai choisi une représentation linéaire, mais non-compatible avec les fonctions antérieures
- * 			mais par contre compatibles avec les fonctions d'affichage Qt par exemple
- * NOTE3: Après pas mal de recul, je pense que cette représentation linéaire n'aide pas lors des optimisations
- * car pour le calcul (type correlation), on manipule des pointeurs pour optimiser... Or, ça veut dire qu'on
- * utilise plus les getters et donc la classe telle qu'elle est définie est moins "solide".
- *
- * NOTE2: Cette classe a un gros soucis avec la création multiple d'objets lourds : à chaque fois qu'on traite
- * une image, on crée un nouvel objet en mémoire. Dans une boucle, cela ralenti le processus...
- *
- * NOTE3: Pourquoi utiliser des doubles alors que de simples 16-bits (ushort par exemple) sont suffisants
- * et codent pour 65535 tons ? En fait, on a besoin de ces doubles uniquement dans le cas de la correlation.
- * Du coup, on pourrait juste utiliser un tableau de double pour la correlation et ensuite copier dans l'image
- * résultat...
- */
+
 
 class Image {
 private:
@@ -108,7 +114,7 @@ public:
     double calculerHauteurRelativeAutour(int l, int c);
 
     // Entrées/sorties (depuis/vers)
-    void versUchar(unsigned char *data);
+    unsigned char* versUchar();
 #if INCLUDE_TIFF
     static Image* depuisTiff(string fichierEntree);
     void versTiff(string fichierSortie);
