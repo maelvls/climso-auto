@@ -34,6 +34,7 @@
 							</tool>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="org.eclipse.linuxtools.cdt.autotools.core.configuration.build.1673111399.697311788" name="README.md" rcbsApplicability="disable" resourcePath="README.md" toolsToInvoke=""/>
 				</configuration>
 			</storageModule>
 			<storageModule moduleId="org.eclipse.cdt.core.externalSettings"/>

@@ -1,9 +1,9 @@
 climso-auto
 ===========
-
+Notes sur le format de ce fichier : .md permet de mettre en forme son texte avec des balises simples du type de "#" ou "_"
 
 # Résumé
-Logiciel d'automatisation de l'ajustement de la monture équatoria'le des appareil CLIMSO au Pic du Midi
+Logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi
 
 # Structure du projet
 
