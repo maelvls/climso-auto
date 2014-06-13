@@ -30,7 +30,7 @@ main_qt_SOURCES=\
 	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
 	src/exceptions.cpp  src/image.cpp\
-	src/fenetreprincipale.c src/fenetreprincipale.moc.cpp\
+	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
 	src/main_qt_gui.cpp
 include_HEADERS=\
 	src/cmd_arduino.h\

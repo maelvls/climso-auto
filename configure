@@ -14,7 +14,7 @@
 ## M4sh Initialization. ##
 ## -------------------- ##
 
-# Be more Bourne compatible 
+# Be more Bourne compatible
 DUALCASE=1; export DUALCASE # for MKS sh
 if test -n "${ZSH_VERSION+set}" && (emulate sh) >/dev/null 2>&1; then :
   emulate sh
@@ -6076,25 +6076,13 @@ fi
 done
 
 
-for ac_header in fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h
+for ac_header in fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h tiffio.h
 do :
   as_ac_Header=`$as_echo "ac_cv_header_$ac_header" | $as_tr_sh`
 ac_fn_c_check_header_mongrel "$LINENO" "$ac_header" "$as_ac_Header" "$ac_includes_default"
 if eval test \"x\$"$as_ac_Header"\" = x"yes"; then :
   cat >>confdefs.h <<_ACEOF
 #define `$as_echo "HAVE_$ac_header" | $as_tr_cpp` 1
-_ACEOF
-
-fi
-
-done
-
-for ac_header in tiffio.h
-do :
-  ac_fn_c_check_header_mongrel "$LINENO" "tiffio.h" "ac_cv_header_tiffio_h" "$ac_includes_default"
-if test "x$ac_cv_header_tiffio_h" = xyes; then :
-  cat >>confdefs.h <<_ACEOF
-#define HAVE_TIFFIO_H 1
 _ACEOF
 
 fi
@@ -8130,6 +8118,6 @@ if test -n "$ac_unrecognized_opts" && test "$enable_option_checking" != no; then
 $as_echo "$as_me: WARNING: unrecognized options: $ac_unrecognized_opts" >&2;}
 fi
 
-{ $as_echo "$as_me:${as_lineno-$LINENO}: result: -> LIBS : $LIBS /// $QT_LIBS /// $QT_QTDIR /// $QTDIR" >&5
-$as_echo "-> LIBS : $LIBS /// $QT_LIBS /// $QT_QTDIR /// $QTDIR" >&6; }
+{ $as_echo "$as_me:${as_lineno-$LINENO}: result: -> LIBS : $LIBS /// $QT_LIBS /// $QTDIR" >&5
+$as_echo "-> LIBS : $LIBS /// $QT_LIBS /// $QTDIR" >&6; }
 

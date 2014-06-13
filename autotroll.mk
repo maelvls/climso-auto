@@ -28,7 +28,8 @@
 
 SUFFIXES = .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh \
            .ui .ui.h .ui.hh \
-           .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C
+           .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C\
+           _ui.h
 
 # --- #
 # MOC #
