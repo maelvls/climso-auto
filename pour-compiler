@@ -1,0 +1,30 @@
+pour-compiler
+ Created on: 13 juin 2014
+     Author: mael65
+
+On distinguera deux compilations différentes : celle de l'utilisateur et celle du développeur.
+L'utilisateur n'exécute que le ./configure puis make, le développeur modifie la configuration de compilation.
+-------- Comment compiler le projet ----------------------
+Pour la compilation simple par l'utilisateur :
+	./configure
+	make
+Pour la compilation et la mise à jour des fichiers de configuration de la compilation :
+	aclocal
+	automake
+	autoconf
+-------- Fichiers requis par la suite Autotools ----------
+Pour compiler par un utilisateur, il faut :
+- les Makefile.in dans tous les sous-dossiers
+- le ./configure
+- config/compile, 
+- config/missing, 
+- config/install-sh
+- le config.h.in éventuellement
+
+Pour les développeurs du projet, il faut 
+- les Makefile.am dans tous les sous-dossiers
+- le configure.ac
+- les fichiers complémentaires 
+		autotroll.mk, 
+		m4/autotroll.m4,
+		m4/check_framework.m4,
