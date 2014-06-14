@@ -10,7 +10,8 @@ classe_image_test_SOURCES=\
 	src/cmd_arduino.c\
 	src/convol.c src/crea_tiff_3.c src/fcts_LK3.c src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
-  	src/exceptions.cpp  src/image.cpp
+  	src/exceptions.cpp  src/image.cpp\
+  	src/image.h
 lk_test_SOURCES=\
 	src/main_position.c\
 	src/cmd_arduino.c\

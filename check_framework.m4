@@ -19,6 +19,10 @@ m4_define([MY_CHECK_FRAMEWORK],
 	 AS_TR_CPP([FRAMEWORK_$1])="-framework $1"
      AC_SUBST(AS_TR_CPP([FRAMEWORK_$1])) 
    	 # We add the framework to the library list LIBS
+   	 # if not, our libs won't be included during the compilation
+   	 # I think we should use something like $(FRAMEWORK_SBIGUDRV) 
+   	 # into the theprogram_LADD line in the Makefile.am
+   	 # (MV 2014)
      LIBS="$LIBS -framework $1"
    fi])
 

@@ -4,24 +4,27 @@
 AC_PREREQ([2.69])
 AC_INIT([climso-auto], [1.0], [mael.valais@irap.omp.eu])
 
-
+# La fonction qui permet de vérifier que (pour un mac) le framework sbigudrv existe
 m4_include([check_framework.m4])
 
-AC_CONFIG_SRCDIR([config.h.in])
-AC_CONFIG_HEADERS([config.h])
+# Vérifie que le ./configure agira bien sur les fichiers du projet ; simple test
+AC_CONFIG_SRCDIR([src/image.cpp])
+
+AC_CONFIG_HEADERS([config.h:config.h.in])
+# Dossier contenant les scripts de configuration à utiliser par l'utilisateur
 AC_CONFIG_AUX_DIR([config])
 
+# Initiation du script d'automake
+# foreign pour ne pas obliger à avoir INSTALL, README, NEWS...
+# subdir-objects permet de garder les .o dans leurs dossiers respectifs
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
-
-# foreign pour ne pas creer INSTALL, README, NEWS...
-# subdir-objects pour ne pas faire du Makefile.am recursif
 
 # Checks for programs.
 AC_PROG_CXX
 AC_PROG_CC
 
-# Checks for GNU/Linux libraries or Mac OS frameworks 
+# Checks for GNU/Linux libraries or Mac OS frameworks
 AC_CHECK_LIB([m], [main],[],[exit])
 AC_CHECK_LIB([tiff], [main],[],[
 	AC_MSG_RESULT([--> La librairie -ltiff n'a pas ete trouvee])
@@ -56,7 +59,9 @@ AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
 
-
-AC_CONFIG_FILES(Makefile src/Makefile)
+# Fichiers Makefile à configurer ; ici, on en utilise qu'un seul mais en général, on
+# en utilise pour chaque sous-dossier source (on aurait pu mettre src/Makefile).
+# A chaque emplacement où on ajoute un Makefile, il faut avoir un Makefile.am.
+AC_CONFIG_FILES(Makefile:Makefile.in) 
 AC_OUTPUT
 
