@@ -2,4 +2,3 @@
 # Nécessaire à automake
 
 # VIDE car on met tout dans le Makefile.am de la racine
-# grâce à 
