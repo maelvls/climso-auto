@@ -12,31 +12,37 @@ Pour la mise à jour des fichiers de configuration de la compilation :
 	aclocal
 	automake
 	autoconf
+ATTENTION pour rendre le projet "portable" et ne plus nécessiter la suite Autotools, il faut faire
+	make dist
+ce qui creera un zip contenant le projet avec seulement les fichiers vitaux.
 -------- Fichiers requis par la suite Autotools ----------
 Pour compiler un executable par un utilisateur :
 - les Makefile.in dans tous les sous-dossiers
 - le ./configure
 - config/compile, 
-- config/missing, 
-- config/install-sh
-- le config.h.in éventuellement
+- config/missing, (généré par automake)
+- config/install-sh (généré par automake)
 
 Pour la configuration de la compilation par les développeurs du projet : 
-- les Makefile.am dans tous les sous-dossiers
-- le configure.ac
-- les fichiers complémentaires 
-		autotroll.mk, 
-		m4/autotroll.m4,
-		m4/check_framework.m4
+- Makefile.am dans tous les sous-dossiers (écrits à la main)
+- configure.ac (écrit à la main)
+- autotroll.mk (pour gérer Qt)
+- m4/autotroll.m4, (pour gérer Qt)
+- m4/check_framework.m4 (pour vérifier que le framework sbigudrv est présent)
+- config.h.in éventuellement (généré par Autoheader)
 -------- Fichiers générés automatiquement ----------------
 Certains fichiers sont générés lors de la compilation ou de la configuration du projet sont inutiles dans certains cas ; ces fichiers sont temporaires.
+
 Lors de la tâche de compilation de l'executable :
 - config.h
 - Makefile
 - config.log
 - config.status (permet de debugger)
+- stamp-h1
+
 Lors de la tâche de configuration de la compilation :
 - configure
 - aclocal.m4 (généré par aclocal)
+- 
 
 --------
