@@ -1,23 +1,20 @@
 climso-auto
 ===========
-
+Notes sur le format de ce fichier : .md permet de mettre en forme son texte avec des balises simples du type de "#" ou "_"
 
 # Résumé
-Logiciel d'automatisation de l'ajustement de la monture équatoria'le des appareil CLIMSO au Pic du Midi
-
-### Le source du micro-programme d'Arduino
-https://gist.github.com/mael65/b2b2e67395e6c45ad814#file-arduino-ino
+Logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi
 
 # Structure du projet
 
-Pour le moment, il y a deux "branches" :
-* master : projet à un état fonctionnel en ligne de commande,
-* essai-qt : état de test pour l'interface Qt, mais aussi des améliorations dans les algorithmes et dans la classe Image et Arduino
+La structure n'est pas évidente : du code déjà existant est mélangé à du nouveau code. Ainsi, nous avons les sources existantes :
 
-Le mieux est de choisir la deuxième branche
-
+* 
+* azdazd
+* 
 
 # Contenu
+
 ## Concernant la compilation
 On utilise les autotools : autoconf, automake...
 
@@ -30,10 +27,11 @@ On utilise les autotools : autoconf, automake...
 * ./configure → prend Makefile.in pour fabriquer Makefile
 
 ## Notes
+### Problème avec la connexion Arduino
 ### Problème avec la connexion SBIG
 * "Permission denied" : il faut être root pour y accéder. La solution est d'ajouter la règle udev dans /usr/lib/udev/rules.d/51-mes-regles-climso.rules.
 
 * "No error" : c'était une erreur qui apparaissait lorsque le modèle de la caméra n'était pas connu, mais là je ne sais pas d'où vient l'erreur
 
-* "Camera Not Found" : certainement que la caméra est utilisée dans un autre programme
+* "Camera Not Found" : 
  
