@@ -27,20 +27,22 @@ bin_PROGRAMS=main_qt
 
 # Fichiers source (.c, .cpp, .h ou tout autre fichier utile aux étapes de compilation)
 main_qt_SOURCES=\
-	src/cmd_arduino.c\
+	src/arduino.cpp\
 	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
 	src/exceptions.cpp  src/image.cpp\
 	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
 	src/main_qt_gui.cpp\
+	src/guidage.cpp src/guidage.moc.cpp\
 	\
-	src/cmd_arduino.h\
+	src/arduino.h\
 	src/interpol.h\
 	src/diametre_soleil.h\
 	src/exceptions.h src/image.h\
 	src/fenetreprincipale.h src/fenetreprincipale_ui.h\
 	src/csbigcam.h src/csbigimg.h\
-	src/sbigudrv.h src/lpardrv.h
+	src/sbigudrv.h src/lpardrv.h\
+	src/guidage.h
   	
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
 CXXFLAGS=-g
@@ -51,7 +53,7 @@ main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 
 # Fichiers qui devront être compilés par uic ou moc avant la compilation
 # Voir CONCERNANT Qt au dessus
-BUILT_SOURCES=src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h
+BUILT_SOURCES=src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h src/guidage.moc.cpp
 
 
 # NOTE sur $(srcdir) et $(includedir)

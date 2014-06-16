@@ -86,7 +86,7 @@
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>90</y>
+      <y>110</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -112,7 +112,7 @@
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>70</y>
+      <y>90</y>
       <width>141</width>
       <height>16</height>
      </rect>
@@ -125,7 +125,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>120</y>
+      <y>140</y>
       <width>69</width>
       <height>24</height>
      </rect>
@@ -135,7 +135,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>125</y>
+      <y>145</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -148,7 +148,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>150</y>
+      <y>170</y>
       <width>69</width>
       <height>24</height>
      </rect>
@@ -158,7 +158,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>150</y>
+      <y>170</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -185,6 +185,32 @@
       <width>131</width>
       <height>31</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="lancerGuidage">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>220</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>lancer guidage</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stopperGuidage">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>260</y>
+      <width>121</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>stopper guidage</string>
     </property>
    </widget>
   </widget>
