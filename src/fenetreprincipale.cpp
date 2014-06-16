@@ -1,5 +1,6 @@
 #include "fenetreprincipale.h"
 #include "fenetreprincipale_ui.h"
+#include <stdlib.h> // pour itoa (conversion int vers char*)
 
 FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QMainWindow(parent),
@@ -10,6 +11,12 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     img_sbig = new CSBIGImg;
     img = NULL;
     img_affichee =NULL;
+
+
+    ui->nomFichierArduino->setText(DEV_DEFAULT);
+    ui->textEdit->append ("Bienvenue");
+    ui->duree->setValue(1);
+    arduino = NULL;
 }
 
 FenetrePrincipale::~FenetrePrincipale()
@@ -118,7 +125,7 @@ void FenetrePrincipale::connecterArduino() {
 }
 void FenetrePrincipale::deconnecterArduino() {
     if(arduino != NULL) {
-        ui->textEdit->append("Le fichier "+QString::fromStdString(arduino->getPath())+" a ete ferme");
+        ui->textEdit->append("Le fichier "+arduino->getPath()+" a ete ferme");
         delete arduino;
         arduino = NULL;
     }

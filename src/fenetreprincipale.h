@@ -45,6 +45,9 @@ private:
     void essaiAffichageImage();
     void afficherImage(Image* img);
 
+    void connecterArduino();
+    void deconnecterArduino();
+    void envoyerImpulsion(int pin, int duree);
 };
 
 #endif // FENETREPRINCIPALE_H

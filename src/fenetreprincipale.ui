@@ -73,7 +73,7 @@
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>10</y>
+      <y>60</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -86,7 +86,7 @@
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>40</y>
+      <y>90</y>
       <width>141</width>
       <height>21</height>
      </rect>
@@ -125,7 +125,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>70</y>
+      <y>120</y>
       <width>69</width>
       <height>24</height>
      </rect>
@@ -135,7 +135,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>75</y>
+      <y>125</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -148,7 +148,7 @@
     <property name="geometry">
      <rect>
       <x>670</x>
-      <y>100</y>
+      <y>150</y>
       <width>69</width>
       <height>24</height>
      </rect>
@@ -158,7 +158,7 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>100</y>
+      <y>150</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -174,6 +174,16 @@
       <y>10</y>
       <width>371</width>
       <height>101</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="nomFichierArduino">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>10</y>
+      <width>131</width>
+      <height>31</height>
      </rect>
     </property>
    </widget>
