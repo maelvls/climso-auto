@@ -5,7 +5,8 @@ AC_PREREQ([2.69])
 AC_INIT([climso-auto], [1.0], [mael.valais@irap.omp.eu])
 
 # La fonction qui permet de vérifier que (pour un mac) le framework sbigudrv existe
-m4_include([check_framework.m4])
+m4_include([m4/check_framework.m4])
+m4_include([m4/autotroll.m4])
 
 # Vérifie que le ./configure agira bien sur les fichiers du projet ; simple test
 AC_CONFIG_SRCDIR([src/image.cpp])
@@ -19,6 +20,8 @@ AC_CONFIG_AUX_DIR([config])
 # subdir-objects permet de garder les .o dans leurs dossiers respectifs
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
+# Vérifie si la librairie Qt est présente
+AT_WITH_QT
 
 # Checks for programs.
 AC_PROG_CXX
