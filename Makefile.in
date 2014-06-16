@@ -394,7 +394,8 @@ top_srcdir = @top_srcdir@
 # .ui.ui.h: signifie %.ui: %.ui.h
 SUFFIXES = .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh \
            .ui .ui.h .ui.hh \
-           .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C
+           .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C\
+           _ui.h
 
 DISTCLEANFILES = $(BUILT_SOURCES)
 
@@ -408,7 +409,7 @@ main_qt_SOURCES = \
 	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
 	src/exceptions.cpp  src/image.cpp\
-	src/fenetreprincipale.c src/fenetreprincipale.moc.cpp\
+	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
 	src/main_qt_gui.cpp
 
 include_HEADERS = \
@@ -430,7 +431,7 @@ all: $(BUILT_SOURCES) config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
 .SUFFIXES:
-.SUFFIXES: .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh .ui .ui.h .ui.hh .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C .c .cpp .o .obj
+.SUFFIXES: .moc.cpp .moc.cc .moc.cxx .moc.C .h .hh .ui .ui.h .ui.hh .qrc .qrc.cpp .qrc.cc .qrc.cxx .qrc.C _ui.h .c .cpp .o .obj
 am--refresh: Makefile
 	@:
 $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am $(srcdir)/autotroll.mk $(am__configure_deps)
@@ -630,20 +631,6 @@ src/main_qt-diametre_soleil.obj: src/diametre_soleil.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/main_qt-diametre_soleil.obj `if test -f 'src/diametre_soleil.c'; then $(CYGPATH_W) 'src/diametre_soleil.c'; else $(CYGPATH_W) '$(srcdir)/src/diametre_soleil.c'; fi`
 
-src/main_qt-fenetreprincipale.o: src/fenetreprincipale.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/main_qt-fenetreprincipale.o -MD -MP -MF src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo -c -o src/main_qt-fenetreprincipale.o `test -f 'src/fenetreprincipale.c' || echo '$(srcdir)/'`src/fenetreprincipale.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo src/$(DEPDIR)/main_qt-fenetreprincipale.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/fenetreprincipale.c' object='src/main_qt-fenetreprincipale.o' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/main_qt-fenetreprincipale.o `test -f 'src/fenetreprincipale.c' || echo '$(srcdir)/'`src/fenetreprincipale.c
-
-src/main_qt-fenetreprincipale.obj: src/fenetreprincipale.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/main_qt-fenetreprincipale.obj -MD -MP -MF src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo -c -o src/main_qt-fenetreprincipale.obj `if test -f 'src/fenetreprincipale.c'; then $(CYGPATH_W) 'src/fenetreprincipale.c'; else $(CYGPATH_W) '$(srcdir)/src/fenetreprincipale.c'; fi`
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo src/$(DEPDIR)/main_qt-fenetreprincipale.Po
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/fenetreprincipale.c' object='src/main_qt-fenetreprincipale.obj' libtool=no @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/main_qt-fenetreprincipale.obj `if test -f 'src/fenetreprincipale.c'; then $(CYGPATH_W) 'src/fenetreprincipale.c'; else $(CYGPATH_W) '$(srcdir)/src/fenetreprincipale.c'; fi`
-
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
 @am__fastdepCXX_TRUE@	$(CXXCOMPILE) -MT $@ -MD -MP -MF $$depbase.Tpo -c -o $@ $< &&\
@@ -715,6 +702,20 @@ src/main_qt-image.obj: src/image.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/image.cpp' object='src/main_qt-image.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(main_qt_CXXFLAGS) $(CXXFLAGS) -c -o src/main_qt-image.obj `if test -f 'src/image.cpp'; then $(CYGPATH_W) 'src/image.cpp'; else $(CYGPATH_W) '$(srcdir)/src/image.cpp'; fi`
+
+src/main_qt-fenetreprincipale.o: src/fenetreprincipale.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(main_qt_CXXFLAGS) $(CXXFLAGS) -MT src/main_qt-fenetreprincipale.o -MD -MP -MF src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo -c -o src/main_qt-fenetreprincipale.o `test -f 'src/fenetreprincipale.cpp' || echo '$(srcdir)/'`src/fenetreprincipale.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo src/$(DEPDIR)/main_qt-fenetreprincipale.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/fenetreprincipale.cpp' object='src/main_qt-fenetreprincipale.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(main_qt_CXXFLAGS) $(CXXFLAGS) -c -o src/main_qt-fenetreprincipale.o `test -f 'src/fenetreprincipale.cpp' || echo '$(srcdir)/'`src/fenetreprincipale.cpp
+
+src/main_qt-fenetreprincipale.obj: src/fenetreprincipale.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(main_qt_CXXFLAGS) $(CXXFLAGS) -MT src/main_qt-fenetreprincipale.obj -MD -MP -MF src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo -c -o src/main_qt-fenetreprincipale.obj `if test -f 'src/fenetreprincipale.cpp'; then $(CYGPATH_W) 'src/fenetreprincipale.cpp'; else $(CYGPATH_W) '$(srcdir)/src/fenetreprincipale.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/main_qt-fenetreprincipale.Tpo src/$(DEPDIR)/main_qt-fenetreprincipale.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/fenetreprincipale.cpp' object='src/main_qt-fenetreprincipale.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(main_qt_CXXFLAGS) $(CXXFLAGS) -c -o src/main_qt-fenetreprincipale.obj `if test -f 'src/fenetreprincipale.cpp'; then $(CYGPATH_W) 'src/fenetreprincipale.cpp'; else $(CYGPATH_W) '$(srcdir)/src/fenetreprincipale.cpp'; fi`
 
 src/main_qt-fenetreprincipale.moc.o: src/fenetreprincipale.moc.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(main_qt_CPPFLAGS) $(CPPFLAGS) $(main_qt_CXXFLAGS) $(CXXFLAGS) -MT src/main_qt-fenetreprincipale.moc.o -MD -MP -MF src/$(DEPDIR)/main_qt-fenetreprincipale.moc.Tpo -c -o src/main_qt-fenetreprincipale.moc.o `test -f 'src/fenetreprincipale.moc.cpp' || echo '$(srcdir)/'`src/fenetreprincipale.moc.cpp

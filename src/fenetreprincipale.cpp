@@ -96,6 +96,9 @@ void FenetrePrincipale::essaiAffichageImage() {
 void FenetrePrincipale::afficherMessage(string err) {
     ui->textEdit->append(QString::fromStdString(err));
 }
+void FenetrePrincipale::afficherMessage(QString err) {
+    ui->textEdit->append(err);
+}
 
 void FenetrePrincipale::on_connecterCamera_clicked() {
     connecterCamera();
@@ -113,3 +116,55 @@ void FenetrePrincipale::on_capturerImage_clicked() {
 int FenetrePrincipale::cameraConnectee() {
     return cam && cam->CheckLink();
 }
+
+
+void FenetrePrincipale::connecterArduino() {
+    QString dev_path = ui->lineEditDeviceName->text();
+    if(dev_path.length()==0) {
+        dev_path = DEV_DEFAULT;
+        ui->lineEditDeviceName->setText(dev_path);
+    }
+    if(arduino != NULL)
+        delete arduino;
+    arduino = new Arduino(dev_path.toStdString());
+    if(arduino->getErreur()!=NO_ERR) {
+        ui->textEdit->append(QString::fromStdString(arduino->getDerniereErreurMessage()));
+    }
+    else
+        ui->textEdit->append("L'arduino est connecte a travers le fichier "+QString::fromStdString(arduino->getPath()));
+}
+void FenetrePrincipale::deconnecterArduino() {
+    if(arduino != NULL) {
+        ui->textEdit->append("Le fichier "+QString::fromStdString(arduino->getPath())+" a ete ferme");
+        delete arduino;
+        arduino = NULL;
+    }
+    else
+        ui->textEdit->append("Aucun fichier n'etait ouvert");
+}
+
+void FenetrePrincipale::envoyerImpulsion(int pin,int duree) {
+    if(arduino && arduino->getErreur() == NO_ERR) {
+        arduino->EnvoyerCmd(pin,duree*1000);
+        afficherMessage("Envoi impulsion de "+QString::number(duree)+" sec au pin "+QString::number(pin));
+    }
+    else if(arduino){
+        afficherMessage("Arduino non connecte : "+arduino->getDerniereErreurMessage());
+    }
+    else
+        afficherMessage((string)"Aucun arduino connecte");
+}
+
+void FenetrePrincipale::on_connecterArduino_clicked()
+{
+    connecterArduino();
+}
+
+void FenetrePrincipale::on_deconnecterArduino_clicked()
+{
+    deconnecterArduino();
+}
+
+
+
+
