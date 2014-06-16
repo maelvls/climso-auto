@@ -35,6 +35,7 @@ private:
     void afficherMessage(string err);
     int cameraConnectee();
     void essaiAffichageImage();
+    void afficherImage(Image* img);
 };
 
 #endif // FENETREPRINCIPALE_H

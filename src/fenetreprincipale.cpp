@@ -53,9 +53,15 @@ void FenetrePrincipale::capturerImage() {
         afficherMessage("Impossible de lire capturer l'image : "+cam->GetErrorString());
         return;
     }
-    if(img) delete img;
+    if(img)
+    	delete img;
     img = Image::depuisSBIGImg(*img_sbig);
+    delete img_sbig;
+    afficherImage(img);
+    delete img;
+}
 
+void FenetrePrincipale::afficherImage(Image* img) {
     unsigned char *img_uchar = img->versUchar();
 
     // Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
@@ -67,34 +73,11 @@ void FenetrePrincipale::capturerImage() {
 
     QImage img_affichee_petite = img_affichee->scaled(ui->imageCamera->width(),ui->imageCamera->height(),Qt::KeepAspectRatio);
     ui->imageCamera->setPixmap(QPixmap::fromImage(img_affichee_petite,Qt::AutoColor));
+    delete img_affichee_petite;
 }
 
-
-
-
-
-
-void FenetrePrincipale::essaiAffichageImage() {
-    img = Image::tracerFormeSoleil(300); // > 90 -> deformations car passe au dessus de 100x100
-    img->versTiff("/home/admin/git/climso-auto/images-de-correlation/test.tif");
-
-    unsigned char *img_uchar = img->versUchar();
-
-    // Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
-    if(img_affichee) delete img_affichee;
-    // NOTE: Il faut absolument mettre le parameter int bytesPerLine, sinon l'image sera déformée
-    img_affichee = new QImage(img_uchar, img->getColonnes(), img->getLignes(),img->getColonnes(), QImage::Format_Indexed8);
-    QVector<QRgb> my_table;
-    for(int i = 0; i < 256; i++) my_table.push_back(qRgb(i,i,i));
-    img_affichee->setColorTable(my_table);
-
-    //QImage img_affichee_petite = img_affichee->scaled(300,200,Qt::KeepAspectRatio);
-    Q_ASSERT(img_affichee->save("/home/admin/git/climso-auto/images-de-correlation/test.tiff"));
-    ui->imageCamera->setPixmap(QPixmap::fromImage(*img_affichee));
-
-}
 void FenetrePrincipale::afficherMessage(string err) {
-    ui->textEdit->append(QString::fromStdString(err));
+    ui->messages->append(QString::fromStdString(err));
 }
 
 void FenetrePrincipale::on_connecterCamera_clicked() {
@@ -112,4 +95,10 @@ void FenetrePrincipale::on_capturerImage_clicked() {
 
 int FenetrePrincipale::cameraConnectee() {
     return cam && cam->CheckLink();
+}
+
+void guidageAuto() {
+	// On utilise les variables globales x_consigne et y_consigne pour influer sur le thread de boucle
+	QThread q = new QThread();
+	q->
 }

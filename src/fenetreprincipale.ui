@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>518</width>
+    <width>752</width>
     <height>502</height>
    </rect>
   </property>
@@ -14,53 +14,43 @@
    <string>Capturer image</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QTextEdit" name="textEdit">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>371</width>
-      <height>101</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QPushButton" name="connecterCamera">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>390</x>
       <y>10</y>
-      <width>101</width>
+      <width>141</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Connecter</string>
+     <string>Connecter caméra</string>
     </property>
    </widget>
    <widget class="QPushButton" name="deconnecterCamera">
     <property name="geometry">
      <rect>
-      <x>410</x>
+      <x>390</x>
       <y>40</y>
-      <width>101</width>
+      <width>141</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Deconnecter</string>
+     <string>Deconnecter caméra</string>
     </property>
    </widget>
    <widget class="QPushButton" name="capturerImage">
     <property name="geometry">
      <rect>
-      <x>410</x>
-      <y>70</y>
-      <width>101</width>
-      <height>41</height>
+      <x>390</x>
+      <y>90</y>
+      <width>141</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Capturer</string>
+     <string>Capturer image</string>
     </property>
    </widget>
    <widget class="QLabel" name="imageCamera">
@@ -77,6 +67,114 @@
     </property>
     <property name="text">
      <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="connecterArduino">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>10</y>
+      <width>141</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Connecter arduino</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deconnecterArduino">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>40</y>
+      <width>141</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Deconnecter arduino</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="statutCamera">
+    <property name="geometry">
+     <rect>
+      <x>390</x>
+      <y>70</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="statutArduino">
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>70</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="consigneX">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>70</y>
+      <width>69</width>
+      <height>24</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>75</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Horizontale</string>
+    </property>
+   </widget>
+   <widget class="QDoubleSpinBox" name="consigneY">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>100</y>
+      <width>69</width>
+      <height>24</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>100</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Verticale</string>
+    </property>
+   </widget>
+   <widget class="QTextBrowser" name="messages">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>371</width>
+      <height>101</height>
+     </rect>
     </property>
    </widget>
   </widget>

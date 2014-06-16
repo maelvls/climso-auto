@@ -4,9 +4,11 @@
 AC_PREREQ([2.69])
 AC_INIT([climso-auto], [1.0], [mael.valais@irap.omp.eu])
 
+# Vérifie que le ./configure agira bien sur les fichiers du projet ; simple test
+AC_CONFIG_SRCDIR([src/image.cpp])
 
-AC_CONFIG_SRCDIR([config.h.in])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([config.h:config.h.in])
+# Dossier contenant les scripts de configuration à utiliser par l'utilisateur
 AC_CONFIG_AUX_DIR([config])
 
 # Les fichiers où sont stockées mes macros .m4 :
@@ -15,14 +17,14 @@ m4_include([m4/autotroll.m4])
 # Je devrais utiliser AC_CONFIG_MACRO_DIR() mais
 # ça ne marche pas (car pas libtoolize?)
 
+# Initiation du script d'automake
+# foreign pour ne pas obliger à avoir INSTALL, README, NEWS...
+# subdir-objects permet de garder les .o dans leurs dossiers respectifs
 AM_INIT_AUTOMAKE([foreign subdir-objects])
-# foreign pour ne pas creer INSTALL, README, NEWS...
-#   subdir-objects pour ne pas faire du Makefile.am recursif,
-#   du coup plus besoin de src/Makefile.am
 
-# Vérifie si la librairie Qt est présente
+# Vérifie si la librairie Qt est présente en utilisant qmake (grâce à autotroll.m4)
+# et configure divers variables ($QT_LIBS etc) - voir dans autotroll.m4
 AT_WITH_QT
-
 
 # Checks for programs.
 AC_PROG_CXX
@@ -63,9 +65,8 @@ AC_FUNC_MALLOC
 AC_FUNC_MKTIME
 AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
 
-
-
-AC_CONFIG_FILES(Makefile src/Makefile)
+# Fichiers Makefile à configurer ; ici, on en utilise qu'un seul mais en général, on
+# en utilise pour chaque sous-dossier source (on aurait pu mettre src/Makefile).
+# A chaque emplacement où on ajoute un Makefile, il faut avoir un Makefile.am.
+AC_CONFIG_FILES(Makefile:Makefile.in) 
 AC_OUTPUT
-AC_MSG_RESULT([-> LIBS : $LIBS /// $QT_LIBS /// $QTDIR])
-

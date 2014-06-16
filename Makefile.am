@@ -22,22 +22,25 @@ include autotroll.mk
 # Pour que aclocal puisse trouver les fichiers .m4
 ACLOCAL_AMFLAGS = -I m4
 
-
+# Nom des executables à compiler
 bin_PROGRAMS=main_qt
 
+# Fichiers source (.c, .cpp, .h ou tout autre fichier utile aux étapes de compilation)
 main_qt_SOURCES=\
 	src/cmd_arduino.c\
 	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
 	src/exceptions.cpp  src/image.cpp\
 	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
-	src/main_qt_gui.cpp
-include_HEADERS=\
+	src/main_qt_gui.cpp\
+	\
 	src/cmd_arduino.h\
 	src/interpol.h\
-	src/csbigcam.h src/csbigimg.h src/diametre_soleil.h\
+	src/diametre_soleil.h\
 	src/exceptions.h src/image.h\
-	src/fenetreprincipale.h src/fenetreprincipale_ui.h
+	src/fenetreprincipale.h src/fenetreprincipale_ui.h\
+	src/csbigcam.h src/csbigimg.h\
+	src/sbigudrv.h src/lpardrv.h
   	
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
 CXXFLAGS=-g
@@ -49,3 +52,8 @@ main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 # Fichiers qui devront être compilés par uic ou moc avant la compilation
 # Voir CONCERNANT Qt au dessus
 BUILT_SOURCES=src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h
+
+
+# NOTE sur $(srcdir) et $(includedir)
+# il faudrait théoriquement préfixer tous les fichiers source par $(srcdir)
+# et tous les fichiers header par $(includedir)
