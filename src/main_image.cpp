@@ -26,6 +26,118 @@ using namespace std;
 void boucleDeGuidage(); // Prototype fonction
 int main(int argc, char **argv) {
 	boucleDeGuidage();
+    signal(SIGINT, signalHandler);
+    signal(SIGABRT, signalHandler);
+
+	int fd_arduino = initialiserArduino();
+	
+	/*
+	 * Création de l'image ayant la forme du soleil puis laplacien
+	 */
+	Image *ref = Image::dessinerMasqueDeSoleil(200);
+	Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+
+	int larg_img_cam, haut_img_cam;
+	double l_max_initial,c_max_initial;
+	double l_max, c_max;
+
+	/*
+	 * Connexion à la caméra
+	 */
+	CSBIGImg *obj_sbig = new CSBIGImg;
+	CSBIGCam *cam = initialiserCamera();
+
+	/*
+	 * Prise de vue, corrélation et interpolation pour trouver le centre du Soleil
+	 */
+	while (cam->GrabImage(obj_sbig, SBDF_DARK_ALSO) != CE_NO_ERROR) {
+        cerr << "Erreur avec la camera lors de la capture d'une image : " << cam->GetErrorString() << endl;
+        delete cam; cam = initialiserCamera();
+    }
+	obj_sbig->AutoBackgroundAndRange();
+    Image *obj_no_bin = Image::depuisSBIGImg(*obj_sbig);
+	Image *obj = obj_no_bin->reduire(2);
+    Image *obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+    Image *correl = obj_lapl->correlation_lk(*ref_lapl, 0.70);
+	correl->maxParInterpolation(&l_max_initial, &c_max_initial);
+
+#if DEBUG
+    obj->versTiff(emplacement+"obj_t0.tif");
+	correl->versTiff(emplacement+"correl_t0.tif");
+	obj_lapl->versTiff(emplacement+"obj_lapl_t0.tif");
+    ref_lapl->versTiff(emplacement+"ref_lapl_t0.tif");
+	ref->versTiff(emplacement+"ref_t0.tif");
+#endif
+    
+    delete obj_sbig;
+    delete obj;
+	delete correl;
+	delete obj_lapl;
+	delete obj_no_bin;
+
+	cout << fixed << showpoint << setprecision(2);
+	cout << "La première prise de vue indique le Soleil à la position (x= "
+			<<c_max_initial<< ", y=" <<l_max_initial<<")" << endl;
+
+
+	do {
+		sleep(5); // attendre N secondes
+
+		obj_sbig = new CSBIGImg();
+		while (cam->GrabImage(obj_sbig, SBDF_DARK_ALSO) != CE_NO_ERROR) {
+			cerr << "Erreur avec la camera lors de la capture d'une image : " << cam->GetErrorString() << endl;
+	        delete cam; cam = initialiserCamera();
+		}
+		obj_sbig->AutoBackgroundAndRange();
+		obj_no_bin = Image::depuisSBIGImg(*obj_sbig);
+		obj = obj_no_bin->reduire(2); // Binning 2x2 logiciel
+		obj_lapl = obj->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+		correl = obj_lapl->correlation_lk(*ref_lapl, 0.70);
+		correl->maxParInterpolation(&l_max, &c_max);
+
+#if DEBUG
+		obj->versTiff(emplacement+"obj.tif");
+		correl->versTiff(emplacement+"correl.tif");
+		obj_lapl->versTiff(emplacement+"obj_lapl.tif");
+#endif
+
+		delete obj_sbig; 	// On devrait éviter de créer autant d'objet à chaque itération
+		delete obj;			// Mais bon, re-coder tout est pénible
+		delete correl;
+		delete obj_lapl;
+		delete obj_no_bin;
+		/*
+		 * Calcul du décalage x,y entre la position initiale
+		 */
+		double l_decal = l_max - l_max_initial;
+		double c_decal = c_max - c_max_initial;
+
+
+		cout << "La prise de vue indique le Soleil à la position (x= "
+				<< c_max << ", y=" <<l_max<<")" << endl;
+		cout << "Le décalage avec l'image d'origine est de (x= "
+				<< c_decal << ", y=" <<l_decal<<")" << endl;
+
+
+		while(arduinoEnvoyerCmd((l_decal<0)?PIN_SUD:PIN_NORD,
+				((l_decal<0)?l_decal*(-1):l_decal)*IMPULSION_PIXEL_V,
+				fd_arduino) == ARDUINO_ERR) {
+			cerr << "Erreur de communication avec Arduino" << endl;
+			fd_arduino = initialiserArduino();
+		}
+		while(arduinoEnvoyerCmd((c_decal<0)?PIN_OUEST:PIN_EST,
+				((c_decal<0)?c_decal*(-1):c_decal)*IMPULSION_PIXEL_H,
+				fd_arduino) == ARDUINO_ERR) {
+			cerr << "Erreur de communication avec Arduino" << endl;
+			fd_arduino = initialiserArduino();
+		}
+	} while(true);
+
+	// Extinction du lien avec la caméra
+	if (cam->CloseDevice() != CE_NO_ERROR) {
+        cerr << "Erreur avec la camera : " << cam->GetErrorString() << endl;
+        exit(1);
+    }
 	return 0;
 }
 
@@ -125,6 +237,12 @@ void boucleDeGuidage() {
 	Image *ref = Image::tracerFormeSoleil(228);
 	//Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
 	Image *ref_lapl = ref->convoluerParDerivee();
+	/*
+	 * Création de l'image ayant la forme du soleil puis laplacien
+	 */
+	Image *ref = Image::dessinerMasqueDeSoleil(200);
+	Image *ref_lapl = ref->convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+
 	int larg_img_cam, haut_img_cam;
 	double l_max_initial,c_max_initial;
 	double l_max, c_max;

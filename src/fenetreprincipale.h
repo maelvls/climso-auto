@@ -43,11 +43,8 @@ private:
     void capturerImage();
     int cameraConnectee();
     void essaiAffichageImage();
+    void afficherImage(Image* img);
 
-    void connecterArduino();
-    void deconnecterArduino();
-    void envoyerImpulsion(int pin, int duree);
-    void afficherMessage(QString err);
 };
 
 #endif // FENETREPRINCIPALE_H
