@@ -1,21 +1,59 @@
 # Makefile.am par Mael Valais - 2014
 # Nécessaire à automake
 
+# Ce fichier contient les noms des fichiers qui permettent la compilation Autotools
+
+# Les fichiers Makefile.am (vides) dans tous les sous-dossiers sont obligatoires mais
+# j'ai décidé de tout mettre dans celui-ci pour simplifier (grâce à subdir-objects dans 
+# configure.ac)
+
+# CONCERNANT Qt (à travers autotroll.m4 et autotroll.mk) : 
+# - include autotroll.mk permet d'ajouter les règles implicites pour compiler 
+#		les .ui en _ui.h, les .moc en .moc.cpp...
+# - BUILT_SOURCES= contient tous les fichiers .ui ou .moc ou .rcc qui devront être
+# 		compilés par les outils uic, moc ou rcc. Si on met mainwindow_ui.h dans
+#		prog_SOURCES par exemple, il faudra qu'on écrive : 
+#		BUILT_SOURCES=mainwindow_ui.h
+
+# Appel au makefile pour les moc, uic, rcc 
+# provenant de autotroll
+include autotroll.mk
+
+# Pour que aclocal puisse trouver les fichiers .m4
+ACLOCAL_AMFLAGS = -I m4
+
+# Nom des executables à compiler
+bin_PROGRAMS=main_qt
+
+# Fichiers source (.c, .cpp, .h ou tout autre fichier utile aux étapes de compilation)
+main_qt_SOURCES=\
+	src/cmd_arduino.c\
+	src/interpol.c\
+	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
+	src/exceptions.cpp  src/image.cpp\
+	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
+	src/main_qt_gui.cpp\
+	\
+	src/cmd_arduino.h\
+	src/interpol.h\
+	src/diametre_soleil.h\
+	src/exceptions.h src/image.h\
+	src/fenetreprincipale.h src/fenetreprincipale_ui.h\
+	src/csbigcam.h src/csbigimg.h\
+	src/sbigudrv.h src/lpardrv.h
+  	
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
 CXXFLAGS=-g
-bin_PROGRAMS=classe_image_test lk_test
+main_qt_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
+main_qt_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS) -DDEBUG
+main_qt_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
+main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 
-classe_image_test_SOURCES=\
-	src/main_image.cpp\
-	src/cmd_arduino.c\
-	src/convol.c src/crea_tiff_3.c src/fcts_LK3.c src/interpol.c\
-	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
-  	src/exceptions.cpp  src/image.cpp\
-  	src/image.h
-lk_test_SOURCES=\
-	src/main_position.c\
-	src/cmd_arduino.c\
-	src/convol.c src/crea_tiff_3.c src/fcts_LK3.c src/interpol.c\
-	src/diametre_soleil.c
-#classe_image_test_LDFLAGS = 
-classe_image_test_CPPFLAGS =-DDEBUG
+# Fichiers qui devront être compilés par uic ou moc avant la compilation
+# Voir CONCERNANT Qt au dessus
+BUILT_SOURCES=src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h
+
+
+# NOTE sur $(srcdir) et $(includedir)
+# il faudrait théoriquement préfixer tous les fichiers source par $(srcdir)
+# et tous les fichiers header par $(includedir)
