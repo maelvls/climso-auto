@@ -1,3 +1,7 @@
 ------------ Qt et les Meta Object 
 Pour fonctionner, la compilation Qt requiert d'avoir tous les .moc correspondants à tous les .cpp contenant une classe Qt.
 On ajoutera alors dans Makefile.am dans "BUILT_OBJECTS" le .moc.cpp pour être sûr que l'objet soit construit ; on ajoutera aussi le .moc dans la liste des _SOURCES.
+
+
+------------ Ne pas bloquer la fenêtre principale : QThread
+Pour ne pas bloquer la fenêtre principale lors du lancement de la boucle de guidage, il a fallu créer une classe n'ayant que des slots et signaux (guidage.h).
