@@ -87,17 +87,20 @@ Arduino::~Arduino() {
     Principe : On concatène le numéro du pin et la duree et on envoie
 */
 int Arduino::EnvoyerCmd(int pin, int duree) {
-	int derniereErreur = NO_ERR;
-	char commande [30];
-	sprintf(commande,"%d,%d",pin,duree);
-	int donneesEcrites = write(fd,commande,strlen(commande)+1);
-		strlen(commande)+1;
-	if(donneesEcrites < strlen(commande)+1) {
+	char cmd_c_str[100];
+	sprintf(cmd_c_str,"%d,%d",pin,duree);
+	return EnvoyerCmd(string(cmd_c_str));
+}
+
+int Arduino::EnvoyerCmd(string cmd) {
+	int donneesEcrites = write(fd,cmd.c_str(),cmd.length()+1);
+	if(donneesEcrites < cmd.length()+1) {
 		derniereErreur = ERR_ECRITURE_FICHIER;
 	}
 	else derniereErreur = NO_ERR;
 	return derniereErreur;
 }
+
 
 /**
  * Lit les messages envoyés par arduino (maximum 300 caractères)
@@ -154,7 +157,7 @@ string Arduino::getDerniereErreurMessage() {
  */
 Arduino* Arduino::initialiserDepuisListeDePossibilites(
 		string liste_paths_possibles) {
-	Arduino* ard;
+	Arduino* ard = NULL;
 	int err = NO_ERR;
 	char liste[300], *token;
 	strcpy(liste,liste_paths_possibles.c_str());
@@ -169,4 +172,17 @@ Arduino* Arduino::initialiserDepuisListeDePossibilites(
 
 int Arduino::getErreur() {
     return derniereErreur;
+}
+
+
+bool Arduino::verifierConnexion() {
+	if(EnvoyerCmd("ok")==NO_ERR) {
+		string rep;
+		if(RecevoirReponse(rep)==NO_ERR) {
+			if(rep.compare("ok")==0) {
+				return true;
+			}
+		}
+	}
+	return false;
 }

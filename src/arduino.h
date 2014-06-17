@@ -26,12 +26,14 @@ public:
     Arduino(string dev_path);
 	~Arduino();
 	int EnvoyerCmd(int pin, int duree);
+	int EnvoyerCmd(string cmd);
     int RecevoirReponse(string &chaine);
 	int Initialiser();
 	string getDerniereErreurMessage();
 	static Arduino* initialiserDepuisListeDePossibilites(string liste_paths_possibles);
     int getErreur();
     string getPath() {return path;}
+    bool verifierConnexion();
 };
 
 #endif /* ARDUINO_H_ */
