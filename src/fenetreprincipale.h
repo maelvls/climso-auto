@@ -17,24 +17,11 @@ class FenetrePrincipale : public QMainWindow
 {   Q_OBJECT
 private:
     Ui::FenetrePrincipale *ui;
-    CSBIGCam *cam;
-    Arduino* arduino;
-    Image* img;
-    CSBIGImg *img_sbig;
     QImage *img_affichee;
-    QThread *threadGuidage;
+    QThread threadGuidage;
+    Guidage* guidage;
 
-    void connecterCamera();
-    void deconnecterCamera();
-    void capturerImage();
-    int cameraConnectee();
-    void essaiAffichageImage();
-    void afficherImage(Image* img);
 
-    void connecterArduino();
-    void deconnecterArduino();
-    void envoyerImpulsion(int pin, int duree);
-    void guidageAuto();
 public:
     explicit FenetrePrincipale(QWidget *parent = 0);
     ~FenetrePrincipale();
@@ -49,9 +36,15 @@ private slots:
     void on_stopperGuidage_clicked();
 public slots:
 	void afficherMessage(QString msg);
+    void afficherImage(Image* img);
     void guidageTermine();
 signals:
-	void envoyerMessage(QString msg);
+	void lancerGuidage();
+	void connecterCamera();
+	void deconnecterCamera();
+	void capturerImage();
+	void connecterArduino(QString);
+	void deconnecterArduino();
 };
 
 #endif // FENETREPRINCIPALE_H
