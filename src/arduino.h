@@ -8,6 +8,7 @@
 #ifndef ARDUINO_H_
 #define ARDUINO_H_
 #include <string>
+#include <iostream>
 using namespace std;
 
 #define NO_ERR					0

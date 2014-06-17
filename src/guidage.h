@@ -34,7 +34,6 @@ private:
 
 	QTimer timerVerificationConnexions;
 
-	void verifierLesConnexions();
 
 public:
 	Guidage();
@@ -54,6 +53,8 @@ private slots:
 	void guidageSuivant();
     bool cameraConnectee();
     bool arduinoConnecte();
+
+	void verifierLesConnexions();
 
 signals:
 	void image(Image *img);

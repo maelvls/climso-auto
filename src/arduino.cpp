@@ -175,10 +175,12 @@ int Arduino::getErreur() {
 }
 
 
-bool Arduino::verifierConnexion() {
-	if(EnvoyerCmd("ok")==NO_ERR) {
-		string rep;
-		if(RecevoirReponse(rep)==NO_ERR) {
+bool Arduino::verifierConnexion() { // FIXME
+	int err;
+	string rep;
+	if((err=EnvoyerCmd("ok"))==NO_ERR) {
+		if((err=RecevoirReponse(rep))==NO_ERR) {
+			cerr << rep;
 			if(rep.compare("ok")==0) {
 				return true;
 			}
