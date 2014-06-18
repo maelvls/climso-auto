@@ -17,9 +17,11 @@ class FenetrePrincipale : public QMainWindow
 {   Q_OBJECT
 private:
     Ui::FenetrePrincipale *ui;
-    QImage *img_affichee;
     QThread threadGuidage;
     Guidage* guidage;
+
+    QPalette paletteOk;
+    QPalette palettePasOk;
 
 
 public:
@@ -38,13 +40,18 @@ public slots:
 	void afficherMessage(QString msg);
     void afficherImage(Image* img);
     void guidageTermine();
+    void statutCamera(bool etat);
+    void statutArduino(bool etat);
+    void afficherConsigne(double l, double c);
 signals:
-	void lancerGuidage();
+	void lancerGuidage(bool);
 	void connecterCamera();
 	void deconnecterCamera();
-	void capturerImage();
+	void demanderImage();
 	void connecterArduino(QString);
 	void deconnecterArduino();
+	void consigneLigne(double l);
+	void consigneColonne(double c);
 };
 
 #endif // FENETREPRINCIPALE_H

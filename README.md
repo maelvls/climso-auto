@@ -5,6 +5,7 @@ Notes sur le format de ce fichier : .md permet de mettre en forme son texte avec
 # Résumé
 Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool.
 
+Caméra qui clignote toutes les secondes : une prise de vue est en cours.
 ## Notes
 ### Problème avec la connexion Arduino
 ### Problème avec la connexion SBIG

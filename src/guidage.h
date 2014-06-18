@@ -22,32 +22,36 @@
 class Guidage : public QObject {
 	Q_OBJECT
 private:
-	QTimer timer;
+	QTimer timerCorrection;
+	QTimer timerEchantillon;
 	QThread threadDuGuidage;
-	double consigne_x;
-	double consigne_y;
+
 	CSBIGCam* cam;
 	CSBIGImg* img_sbig;
 	Image* img;
 	Arduino* arduino;
-	int duree;
+	double consigne_l;
+	double consigne_c;
+	Image* ref_lapl;
 
 	QTimer timerVerificationConnexions;
 
+	void capturerImage();
 
 public:
 	Guidage();
 public slots:
 // guidage
-	void lancerGuidage();
+	void lancerGuidage(bool);
 // camera
     void connecterCamera();
     void deconnecterCamera();
-	void capturerImage();
+	void demanderImage();
 // arduino
     void connecterArduino(QString nom);
     void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
+	void initialiserDiametre(int diametre);
 
 private slots:
 	void guidageSuivant();
@@ -56,11 +60,18 @@ private slots:
 
 	void verifierLesConnexions();
 
+	//void changerDureeEchantillonage(int dureems);
+	//void changerDureeCorrection(int dureems);
+	void consigneLigne(double l);
+	void consigneColonne(double c);
+
 signals:
 	void image(Image *img);
 	void message(QString msg);
 	void etatArduino(bool);
 	void etatCamera(bool);
+	void consigne(double l, double c);
+	void signalBruit(double ratio);
 };
 
 #endif /* GUIDAGE_H_ */

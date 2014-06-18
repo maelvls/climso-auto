@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>752</width>
+    <width>715</width>
     <height>502</height>
    </rect>
   </property>
@@ -69,32 +69,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="connecterArduino">
-    <property name="geometry">
-     <rect>
-      <x>580</x>
-      <y>60</y>
-      <width>141</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Connecter arduino</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="deconnecterArduino">
-    <property name="geometry">
-     <rect>
-      <x>580</x>
-      <y>110</y>
-      <width>141</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Deconnecter arduino</string>
-    </property>
-   </widget>
    <widget class="QLabel" name="statutCamera">
     <property name="geometry">
      <rect>
@@ -108,63 +82,56 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="statutArduino">
+   <widget class="QDoubleSpinBox" name="consigne_l">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>90</y>
-      <width>141</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="consigneX">
-    <property name="geometry">
-     <rect>
-      <x>670</x>
-      <y>140</y>
-      <width>69</width>
+      <x>610</x>
+      <y>160</y>
+      <width>101</width>
       <height>24</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>10000.000000000000000</double>
     </property>
    </widget>
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>145</y>
+      <x>520</x>
+      <y>130</y>
       <width>81</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Horizontale</string>
+     <string>Consigne X</string>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="consigneY">
+   <widget class="QDoubleSpinBox" name="consigne_c">
     <property name="geometry">
      <rect>
-      <x>670</x>
-      <y>170</y>
-      <width>69</width>
+      <x>610</x>
+      <y>130</y>
+      <width>101</width>
       <height>24</height>
      </rect>
+    </property>
+    <property name="maximum">
+     <double>10000.000000000000000</double>
     </property>
    </widget>
    <widget class="QLabel" name="label_2">
     <property name="geometry">
      <rect>
-      <x>550</x>
-      <y>170</y>
+      <x>520</x>
+      <y>160</y>
       <width>81</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>Verticale</string>
+     <string>Consigne Y</string>
     </property>
    </widget>
    <widget class="QTextBrowser" name="messages">
@@ -180,37 +147,131 @@
    <widget class="QLineEdit" name="nomFichierArduino">
     <property name="geometry">
      <rect>
-      <x>580</x>
-      <y>10</y>
-      <width>131</width>
-      <height>31</height>
+      <x>560</x>
+      <y>90</y>
+      <width>141</width>
+      <height>21</height>
      </rect>
     </property>
    </widget>
    <widget class="QPushButton" name="lancerGuidage">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>220</y>
-      <width>121</width>
-      <height>31</height>
+      <x>550</x>
+      <y>290</y>
+      <width>131</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>lancer guidage</string>
+     <string>Lancer guidage</string>
     </property>
    </widget>
    <widget class="QPushButton" name="stopperGuidage">
     <property name="geometry">
      <rect>
-      <x>600</x>
-      <y>260</y>
-      <width>121</width>
-      <height>31</height>
+      <x>550</x>
+      <y>320</y>
+      <width>131</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="text">
-     <string>stopper guidage</string>
+     <string>Stopper guidage</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>450</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Diametre soleil</string>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="diametreSoleil">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>450</y>
+      <width>71</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="minimum">
+     <number>200</number>
+    </property>
+    <property name="maximum">
+     <number>600</number>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="connecterArduino">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>10</y>
+      <width>141</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Connecter arduino</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="deconnecterArduino">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>40</y>
+      <width>141</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Deconnecter arduino</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="statutArduino">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>70</y>
+      <width>141</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_4">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>210</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Signal/Bruit :</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ratioSignalBruit">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>210</y>
+      <width>81</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
     </property>
    </widget>
   </widget>
