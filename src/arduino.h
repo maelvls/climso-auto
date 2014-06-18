@@ -27,9 +27,12 @@ public:
     Arduino(string dev_path);
 	~Arduino();
 	int EnvoyerCmd(int pin, int duree);
-	int EnvoyerCmd(string cmd);
+	int EnvoyerCmd(char* cmd);
+	int EnvoyerCmd(char* cmd, int longCmd);
     int RecevoirReponse(string &chaine);
 	int Initialiser();
+	int Flush();
+	int LireReponse(char* buf, int longMaxBuf, char carDeFin, int timeout);
 	string getDerniereErreurMessage();
 	static Arduino* initialiserDepuisListeDePossibilites(string liste_paths_possibles);
     int getErreur();

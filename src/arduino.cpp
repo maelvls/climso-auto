@@ -89,18 +89,26 @@ Arduino::~Arduino() {
 int Arduino::EnvoyerCmd(int pin, int duree) {
 	char cmd_c_str[100];
 	sprintf(cmd_c_str,"%d,%d",pin,duree);
-	return EnvoyerCmd(string(cmd_c_str));
+	return EnvoyerCmd(cmd_c_str);
 }
 
-int Arduino::EnvoyerCmd(string cmd) {
-	int donneesEcrites = write(fd,cmd.c_str(),cmd.length()+1);
-	if(donneesEcrites < cmd.length()+1) {
+/**
+ * Envoie la chaine au sens "C" (c'est à dire finissant par \0)
+ * @param cmd Une chaine C
+ * @return NO_ERR si pas d'erreur, un code d'erreur ERR_ sinon
+ */
+int Arduino::EnvoyerCmd(char* cmd) {
+	return EnvoyerCmd(cmd,strlen(cmd)+1);
+}
+
+int Arduino::EnvoyerCmd(char* cmd, int longCmd) {
+	int donneesEcrites = write(fd,cmd,longCmd);
+	if(donneesEcrites < longCmd) {
 		derniereErreur = ERR_ECRITURE_FICHIER;
 	}
 	else derniereErreur = NO_ERR;
 	return derniereErreur;
 }
-
 
 /**
  * Lit les messages envoyés par arduino (maximum 300 caractères)
@@ -129,6 +137,51 @@ int Arduino::RecevoirReponse(string &chaine) {
 	}
 	return derniereErreur;
 }
+
+/**
+ *
+ * @param buf Un tableau de char alloué par l'utilisateur
+ * @param longMaxBuf La longueur max du tableau de char "buf"
+ * @param carDeFin \0 par exemple
+ * @param timeout Le temps après lequel l'essai de lecture s'arrête, en ms
+ * @return NO_ERR si pas d'erreur, une erreur sinon (voir ERR_...)
+ * @author 2006-2013, Tod E. Kurt, http://todbot.com/blog/ (arduino-serial-lib)
+ */
+int Arduino::LireReponse(char* buf, int longMaxBuf, char carDeFin, int timeout) {
+    char curChar[1]; // read expects an array, so we give it a 1-byte array
+    int i=0;
+    do {
+        int n = read(fd, curChar, 1); // read a char at a time
+        if( n==-1) {
+        	return ERR_LECTURE_FICHIER; // couldn't read
+        }
+        if( n==0 ) {
+            usleep(1000); // wait 1 msec try again
+            timeout--;
+            continue;
+        }
+
+        //printf("serialport_read_until: i=%d, n=%d temp='%c' (%d)\n",i,n,curChar[0],curChar[0]); // debug
+
+        buf[i] = curChar[0];
+        i++;
+    } while(curChar[0] != carDeFin && i < longMaxBuf && timeout>0 );
+
+    buf[i] = '\0'; // null terminate the string
+    return NO_ERR;
+}
+
+/**
+ * Nettoie les eventuelles donnees du buffer entrant
+ * @author 2006-2013, Tod E. Kurt, http://todbot.com/blog/ (arduino-serial-lib)
+ * @return
+ */
+int Arduino::Flush()
+{
+    sleep(2); //required to make flush work, for some reason
+    return tcflush(fd, TCIOFLUSH);
+}
+
 
 string Arduino::getDerniereErreurMessage() {
     switch (derniereErreur) {
@@ -174,14 +227,18 @@ int Arduino::getErreur() {
     return derniereErreur;
 }
 
-
+#define ENQ 	5
+#define ACK		6
 bool Arduino::verifierConnexion() { // FIXME
 	int err;
-	string rep;
-	if((err=EnvoyerCmd("ok"))==NO_ERR) {
-		if((err=RecevoirReponse(rep))==NO_ERR) {
-			cerr << rep;
-			if(rep.compare("ok")==0) {
+	char enquiry[2];
+	char ack[2];
+	sprintf(enquiry,"%c",ENQ);
+	if((err=EnvoyerCmd(enquiry))==NO_ERR) {
+		err = LireReponse(ack,2,'\0',1000);
+		//cout << "Reponse : '" << ack << "'";
+		if(err==NO_ERR) {
+			if(ack[0] == ACK) {
 				return true;
 			}
 		}
