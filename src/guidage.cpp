@@ -14,7 +14,7 @@
 #define	PIN_EST				10
 #define PIN_OUEST			9
 
-string emplacement = "images-de-correlation/test-qt/";
+string emplacement = "";
 
 Guidage::Guidage() {
 	QObject::connect(&timerCorrection,SIGNAL(timeout()),this,SLOT(guidageSuivant()));
@@ -58,10 +58,10 @@ void Guidage::lancerGuidage(bool lancer) {
 	emit signalBruit(ratio);
 
 #if DEBUG
-	obj->versTiff(emplacement+"obj_t0.tif");
-	correl->versTiff(emplacement+"correl_t0.tif");
-	obj_lapl->versTiff(emplacement+"obj_lapl_t0.tif");
-	ref_lapl->versTiff(emplacement+"ref_lapl_t0.tif");
+	obj->versTiff(emplacement+"t0_obj.tif");
+	correl->versTiff(emplacement+"t0_correl.tif");
+	obj_lapl->versTiff(emplacement+"t0_obj_lapl.tif");
+	ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
 #endif
 
 	delete correl;
@@ -228,8 +228,8 @@ void Guidage::initialiserDiametre(int diametre) {
 	ref_lapl = ref->convoluerParDerivee();
 
 #if DEBUG
-	ref->versTiff(emplacement+"ref_t0.tif");
-	ref_lapl->versTiff(emplacement+"ref_lapl_t0.tif");
+	ref->versTiff(emplacement+"t0_ref.tif");
+	ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
 #endif
 
 	delete ref;
