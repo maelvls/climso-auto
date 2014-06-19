@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 #include <QThread>
+#include <QPainter>
 #include "csbigcam.h"
 #include "csbigimg.h"
 #include "image.h"
@@ -38,7 +39,6 @@ private slots:
     void on_stopperGuidage_clicked();
 public slots:
 	void afficherMessage(QString msg);
-    void afficherImage(Image* img);
     void guidageTermine();
     void statutCamera(bool etat);
     void statutArduino(bool etat);

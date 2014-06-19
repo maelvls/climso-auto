@@ -19,7 +19,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     guidage->moveToThread(&threadGuidage);
     // Liens entre fenetreprincipale et guidage
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
-    QObject::connect(guidage,SIGNAL(image(Image*)),this,SLOT(afficherImage(Image*)));
+    QObject::connect(guidage,SIGNAL(image(Image*)),ui->imageCamera,SLOT(afficherImage(Image*)));
 
     QObject::connect(this,SIGNAL(lancerGuidage(bool)),guidage,SLOT(lancerGuidage(bool)));
 
@@ -51,26 +51,12 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     afficherMessage("Bienvenue");
 
     threadGuidage.start();
+
+
 }
 
 FenetrePrincipale::~FenetrePrincipale() {
     delete ui;
-}
-
-
-
-void FenetrePrincipale::afficherImage(Image* img) {
-    unsigned char *img_uchar = img->versUchar();
-
-    // Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
-    QImage* img_affichee = new QImage(img_uchar, img->getColonnes(), img->getLignes(),img->getColonnes(), QImage::Format_Indexed8);
-    for(int i=0;i<256;++i) {
-        img_affichee->setColor(i, qRgb(i,i,i));
-    }
-
-    QImage img_affichee_petite = img_affichee->scaled(ui->imageCamera->width(),ui->imageCamera->height(),Qt::KeepAspectRatio);
-    ui->imageCamera->setPixmap(QPixmap::fromImage(img_affichee_petite,Qt::AutoColor));
-    delete img_affichee;
 }
 
 void FenetrePrincipale::afficherMessage(QString msg) {
@@ -135,4 +121,3 @@ void FenetrePrincipale::afficherConsigne(double l, double c) {
 	ui->consigne_l->setValue(l);
 	ui->consigne_c->setValue(c);
 }
-

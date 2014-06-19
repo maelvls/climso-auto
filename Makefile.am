@@ -34,6 +34,7 @@ main_qt_SOURCES=\
 	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
 	src/main_qt_gui.cpp\
 	src/guidage.cpp src/guidage.moc.cpp\
+	src/widgetimage.cpp src/widgetimage.moc.cpp \
 	\
 	src/arduino.h\
 	src/interpol.h\
@@ -42,7 +43,8 @@ main_qt_SOURCES=\
 	src/fenetreprincipale.h src/fenetreprincipale_ui.h\
 	src/csbigcam.h src/csbigimg.h\
 	src/sbigudrv.h src/lpardrv.h\
-	src/guidage.h
+	src/guidage.h\
+	src/widgetimage.h
   	
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
 CXXFLAGS=-g
@@ -53,7 +55,9 @@ main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 
 # Fichiers qui devront être compilés par uic ou moc avant la compilation
 # Voir CONCERNANT Qt au dessus
-BUILT_SOURCES=src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h src/guidage.moc.cpp
+BUILT_SOURCES=\
+	src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h\
+	src/guidage.moc.cpp src/widgetimage.moc.cpp
 
 
 # NOTE sur $(srcdir) et $(includedir)
