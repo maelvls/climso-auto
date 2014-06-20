@@ -28,7 +28,7 @@ bin_PROGRAMS=main_qt
 # Fichiers source (.c, .cpp, .h ou tout autre fichier utile aux étapes de compilation)
 main_qt_SOURCES=\
 	src/arduino.cpp\
-	src/interpol.c\
+	src/interpol.c src/convol.c src/fcts_LK3.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
 	src/exceptions.cpp  src/image.cpp\
 	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
@@ -37,7 +37,7 @@ main_qt_SOURCES=\
 	src/widgetimage.cpp src/widgetimage.moc.cpp \
 	\
 	src/arduino.h\
-	src/interpol.h\
+	src/interpol.h src/convol.h src/fcts_LK3.h\
 	src/diametre_soleil.h\
 	src/exceptions.h src/image.h\
 	src/fenetreprincipale.h src/fenetreprincipale_ui.h\
