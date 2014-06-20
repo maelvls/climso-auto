@@ -406,6 +406,32 @@ Image* Image::correlation_rapide_centree(Image& reference, float seuil_ref) {
 	return img_centree;
 }
 
+Image* Image::correlation(Image& reference, float seuil_ref) {
+	double** obj = this->versTableauDeDouble();
+	double** ref = reference.versTableauDeDouble();
+	double** res = new double*[this->lignes];
+	for(int l=0; l<this->lignes;l++)
+		res[l] = new double[this->colonnes];
+
+	calc_convol(obj,ref,res,colonnes,lignes,reference.colonnes,reference.lignes,seuil_ref*INTENSITE_MAX);
+
+	for(int l=0; l<reference.lignes;l++)
+		delete [] ref[l];
+	delete [] ref;
+	for(int l=0; l<this->lignes;l++)
+		delete [] obj[l];
+	delete [] obj;
+
+	Image* img_resultat = Image::depuisTableauDouble(res,lignes,colonnes);
+	img_resultat->versTiff("t0_essai_correl.tif");
+
+	for(int l=0; l<this->lignes;l++)
+		delete [] res[l];
+	delete [] res;
+
+	return img_resultat;
+}
+
 /**
  * Affiche sur la sortie standard l'image en terme d'intensité (pour débug)
  */

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include "fcts_LK3.h"
-#include "crea_tiff_3.h"
+//#include "crea_tiff_3.h"
 #include "convol.h"
 
 typedef enum { false, true } bool;

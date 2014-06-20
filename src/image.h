@@ -38,6 +38,7 @@
 #define __climso_auto__picture__
 
 #define INCLUDE_INTERPOL	1	// Fonctions contenues dans interpol.c
+#define INCLUDE_CONVOL		1   // Fonction de calcul de correlation
 
 #define INCLUDE_TIFF		1 	// Si 1, alors -L/usr/local/lib et -ltiff
 #define INCLUDE_SBIGCAM		1
@@ -72,6 +73,9 @@ using namespace std;
 #if INCLUDE_INTERPOL
 	#include "interpol.h"
 #endif
+#if INCLUDE_CONVOL
+	#include "convol.h"
+#endif
 
 #define NOMBRE_BITS_PAR_SAMPLE		16 // Taille arbitraire (uint16_t)
 #define NOMBRE_SAMPLES_PAR_PIXEL	1  // Car c'est des niveaux de gris
@@ -104,11 +108,16 @@ public:
     Image* reduire(int facteur_binning);
     void minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max);
     void maxPixel(int *l, int *c);
-    Image* correlation_simple(Image& p, float seuil_ref);
     void tracerDonut(int l_centre, int c_centre, double freq_min, double marge_int, double freq_max, double marge_ext);
     static Image* tracerFormeSoleil(int diametre);
+
+    // Correlations ecrites par Mael Valais (pour apprendre..)
+    Image* correlation_simple(Image& p, float seuil_ref);
     Image* correlation_rapide(Image& reference, float seuil_ref);
     Image* correlation_rapide_centree(Image& reference, float seuil_ref);
+    // Correlation optimisée de Laurent Koechlin
+    Image* correlation(Image& reference, float seuil_ref);
+
     Image* convoluer(const int *noyau, int taille);
     Image* convoluerParDerivee();
     Image* deriveeCarre();

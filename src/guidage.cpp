@@ -55,12 +55,13 @@ void Guidage::guidageInitial() {
 
 	initialiserDiametre(diametre);
 
-	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.70);
+	Image *correl = obj_lapl->correlation(*ref_lapl, 0.70);
 	correl->maxParInterpolation(&consigne_l, &consigne_c);
 	emit consigne(consigne_l,consigne_c);
 
 	emit image(img);
 	emit cercle(consigne_c/correl->getColonnes(),consigne_l/correl->getLignes(),((float)diametre)/correl->getColonnes());
+	correl->versTiff(emplacement+"t0_correl.tif");
 
 	double ratio = correl->calculerHauteurRelativeAutour(consigne_l,consigne_c);
 	emit signalBruit(ratio);
@@ -90,7 +91,7 @@ void Guidage::guidageSuivant() {
 	capturerImage(); // obtention de img de l'image deja binee
 
 	Image* obj_lapl = img->convoluerParDerivee();//convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
-	Image* correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.70);
+	Image* correl = obj_lapl->correlation(*ref_lapl, 0.70);
 	double position_l, position_c;
 	correl->maxParInterpolation(&position_l, &position_c);
 
