@@ -11,9 +11,9 @@
 #ifndef GUIDAGE_H_
 #define GUIDAGE_H_
 
-#include <QtCore/qobject.h>
-#include <Qt/qtimer.h>
-#include <Qt/qthread.h>
+#include <QtCore/QObject>
+#include <QtCore/QTimer>
+#include <QtCore/QThread>
 #include "image.h"
 #include "arduino.h"
 #include "csbigcam.h"

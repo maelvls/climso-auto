@@ -14,8 +14,8 @@
 #ifndef WIDGETIMAGE_H_
 #define WIDGETIMAGE_H_
 
-#include <QtGui/qlabel.h>
-#include <QtGui/qpainter.h>
+#include <QtGui/QLabel>
+#include <QtGui/QPainter>
 #include "image.h"
 
 class WidgetImage: public QLabel {

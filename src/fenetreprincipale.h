@@ -1,9 +1,9 @@
 #ifndef FENETREPRINCIPALE_H
 #define FENETREPRINCIPALE_H
 
-#include <QMainWindow>
-#include <QThread>
-#include <QPainter>
+#include <QtGui/QMainWindow>
+#include <QtCore/QThread>
+#include <QtGui/QPainter>
 #include "csbigcam.h"
 #include "csbigimg.h"
 #include "image.h"
