@@ -108,6 +108,7 @@ public:
     void tracerDonut(int l_centre, int c_centre, double freq_min, double marge_int, double freq_max, double marge_ext);
     static Image* tracerFormeSoleil(int diametre);
     Image* correlation_rapide(Image& reference, float seuil_ref);
+    Image* correlation_rapide_centree(Image& reference, float seuil_ref);
     Image* convoluer(const int *noyau, int taille);
     Image* convoluerParDerivee();
     Image* deriveeCarre();

@@ -36,6 +36,15 @@ Image::Image(Image& src) {
     copier(src);
 }
 
+
+Image::Image(Image& src, int ligne_0, int col_0, int hauteur, int largeur) {
+    lignes = hauteur;
+    colonnes = largeur;
+    img = new MonDouble[lignes*colonnes];
+    this->copier(src,ligne_0,col_0,hauteur,largeur);
+}
+
+
 Image::~Image() {
     if(img != NULL)
         delete [] img;
@@ -208,7 +217,8 @@ unsigned char* Image::versUchar() {
 
 /**
  * Copie une image src dans l'image receveuse avec le décalage
- * à partir d'en haut à gauche
+ * à partir d'en haut à gauche. Cela permet de prendre une partie
+ * de l'image src et la mettre dans l'image receuveuse
  * @param src
  * @param l_decal
  * @param c_decal
@@ -219,12 +229,14 @@ void Image::copier(Image& src, int l_decal, int c_decal, int hauteur, int largeu
     int haut_cpy = min(hauteur,src.lignes);
     int larg_cpy = min(largeur, src.colonnes);
     
-	int l_deb = max(0,0+l_decal), c_deb = max(0, 0+c_decal);
-	int l_fin = min(this->lignes, haut_cpy+l_decal), c_fin = min(this->colonnes, larg_cpy+c_decal);
+	int l_deb = max(0,0+l_decal);
+	int c_deb = max(0, 0+c_decal);
+	int l_fin = min(src.lignes, haut_cpy+l_decal);
+	int c_fin = min(src.colonnes, larg_cpy+c_decal);
     
 	for (int l = l_deb; l < l_fin; ++l) {
 		for (int c = c_deb; c < c_fin; ++c) {
-			setPix(l,c,src.getPix(l+l_decal,c+c_decal));
+			setPix(l-l_decal,c-c_decal,src.getPix(l,c));
 		}
 	}
 }
@@ -235,7 +247,7 @@ void Image::copier(Image& src) {
 void Image::init(int val) {
 	for (int l = 0; l < lignes; ++l) {
 		for (int c = 0; c < colonnes; ++c) {
-			setPix(l,c,0);
+			setPix(l,c,val);
 		}
 	}
 }
@@ -384,6 +396,14 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
 	delete ref;
 	convol->normaliser();
 	return convol;
+}
+
+Image* Image::correlation_rapide_centree(Image& reference, float seuil_ref) {
+	Image* img = correlation_rapide(reference,seuil_ref);
+	Image* img_centree = new Image(*img,reference.lignes/2,reference.colonnes/2,img->lignes,img->colonnes);
+	img_centree->versTiff("t_obj_centre.tif");
+	delete img;
+	return img_centree;
 }
 
 /**
@@ -717,4 +737,3 @@ Image* Image::convoluerParDerivee() {
 	}
 	return img;
 }
-
