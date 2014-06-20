@@ -29,6 +29,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(this,SIGNAL(deconnecterCamera()),guidage,SLOT(deconnecterCamera()));
     QObject::connect(this,SIGNAL(demanderImage()),guidage,SLOT(demanderImage()));
 
+    QObject::connect(this,SIGNAL(consigneModification(int,int)),guidage,SLOT(consigneModifier(int,int)));
+
 
     QObject::connect(guidage,SIGNAL(etatCamera(bool)),this,SLOT(statutCamera(bool)));
     QObject::connect(guidage,SIGNAL(etatArduino(bool)),this,SLOT(statutArduino(bool)));
@@ -36,15 +38,17 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),guidage,SLOT(initialiserDiametre(int)));
 
 
-    QObject::connect(guidage,SIGNAL(consigne(double,double)),this,SLOT(afficherConsigne(double,double)));
-    QObject::connect(ui->consigne_l,SIGNAL(valueChanged(double)),guidage,SLOT(consigneLigne(double)));
-    QObject::connect(ui->consigne_c,SIGNAL(valueChanged(double)),guidage,SLOT(consigneColonne(double)));
+    //QObject::connect(guidage,SIGNAL(consigne(double,double)),this,SLOT(afficherConsigne(double,double)));
 
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
 
 
     // Liens entre fenetreprincipale et le thread guidage
     QObject::connect(&threadGuidage,SIGNAL(finished()),this,SLOT(guidageTermine()));
+
+    QObject::connect(guidage,SIGNAL(cercle(float,float,float)),ui->imageCamera,SLOT(afficherCercle(float,float,float)));
+
+
 
     ui->diametreSoleil->setValue(200);
     ui->nomFichierArduino->setText(DEV_DEFAULT);
@@ -117,7 +121,15 @@ void FenetrePrincipale::statutArduino(bool etat) {
 	}
 }
 
-void FenetrePrincipale::afficherConsigne(double l, double c) {
-	ui->consigne_l->setValue(l);
-	ui->consigne_c->setValue(c);
+void FenetrePrincipale::on_consigneHaut_clicked() {
+	emit consigneModification(-1,0);
+}
+void FenetrePrincipale::on_consigneBas_clicked() {
+	emit consigneModification(1,0);
+}
+void FenetrePrincipale::on_consigneDroite_clicked() {
+	emit consigneModification(0,1);
+}
+void FenetrePrincipale::on_consigneGauche_clicked() {
+	emit consigneModification(0,-1);
 }

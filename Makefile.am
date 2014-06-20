@@ -45,9 +45,11 @@ main_qt_SOURCES=\
 	src/sbigudrv.h src/lpardrv.h\
 	src/guidage.h\
 	src/widgetimage.h
-  	
+
+# -Ox correspond au mode d'optimisation. -O2 est une bonne optimisation.
+# -O0 désactive l'optimisation  	
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
-CXXFLAGS=-g
+CXXFLAGS=-g -O2
 main_qt_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
 main_qt_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS) -DDEBUG
 main_qt_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)

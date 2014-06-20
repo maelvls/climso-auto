@@ -400,7 +400,7 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
 
 Image* Image::correlation_rapide_centree(Image& reference, float seuil_ref) {
 	Image* img = correlation_rapide(reference,seuil_ref);
-	Image* img_centree = new Image(*img,reference.lignes/2,reference.colonnes/2,img->lignes,img->colonnes);
+	Image* img_centree = new Image(*img,reference.lignes/2,reference.colonnes/2,img->lignes-(reference.lignes-1),img->colonnes - (reference.colonnes-1));
 	img_centree->versTiff("t_obj_centre.tif");
 	delete img;
 	return img_centree;

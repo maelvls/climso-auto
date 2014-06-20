@@ -31,7 +31,7 @@ public:
 public slots:
 	void afficherImage(Image* img);
 	void afficherPointeur(int x, int y);
-	void afficherCercle(int x, int y, int diametre);
+	void afficherCercle(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 };
 
 #endif /* WIDGETIMAGE_H_ */

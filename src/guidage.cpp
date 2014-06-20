@@ -27,15 +27,22 @@ Guidage::Guidage() {
 	img_sbig = NULL;
 	arduino = NULL;
 	ref_lapl = NULL;
-
+	diametre = 200;
 }
 
 void Guidage::lancerGuidage(bool lancer) {
 	if(not lancer) { // Cas où on stoppe le guidage
 		timerCorrection.stop();
-		emit message("Timer de guidage arrete");
+		//emit message("Guidage arrete");
 		return;
 	}
+	else {
+		timerCorrection.stop(); // Au cas où
+		guidageInitial();
+	}
+}
+
+void Guidage::guidageInitial() {
 	// traitement premiere image
 	if(!arduinoConnecte() || !cameraConnectee()) {
 		emit message("Verifiez les connexions avec la camera et l'arduino");
@@ -43,22 +50,23 @@ void Guidage::lancerGuidage(bool lancer) {
 	}
 
 	capturerImage(); // img est obtenu
-	emit image(img);
 
-	Image *obj = img->reduire(2);
-	Image *obj_lapl = obj->convoluerParDerivee();
+	Image *obj_lapl = img->convoluerParDerivee();
 
-	initialiserDiametre(200);
+	initialiserDiametre(diametre);
 
-	Image *correl = obj_lapl->correlation_rapide(*ref_lapl, 0.70);
+	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.70);
 	correl->maxParInterpolation(&consigne_l, &consigne_c);
 	emit consigne(consigne_l,consigne_c);
+
+	emit image(img);
+	emit cercle(consigne_c/correl->getColonnes(),consigne_l/correl->getLignes(),((float)diametre)/correl->getColonnes());
 
 	double ratio = correl->calculerHauteurRelativeAutour(consigne_l,consigne_c);
 	emit signalBruit(ratio);
 
 #if DEBUG
-	obj->versTiff(emplacement+"t0_obj.tif");
+	img->versTiff(emplacement+"t0_obj.tif");
 	correl->versTiff(emplacement+"t0_correl.tif");
 	obj_lapl->versTiff(emplacement+"t0_obj_lapl.tif");
 	ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
@@ -66,13 +74,11 @@ void Guidage::lancerGuidage(bool lancer) {
 
 	delete correl;
 	delete obj_lapl;
-	delete obj;
 
 	emit message("Position initiale"
 			" (x= "+QString::number(consigne_c)+
 			", y="+QString::number(consigne_l)+")");
 	timerCorrection.start();
-
 }
 void Guidage::guidageSuivant() {
 	if(!arduinoConnecte() || !cameraConnectee()) {
@@ -81,24 +87,26 @@ void Guidage::guidageSuivant() {
 		return;
 	}
 	// traitement image suivante
-	capturerImage(); // obtention de img
-	emit image(img);
+	capturerImage(); // obtention de img de l'image deja binee
 
-	Image* obj = img->reduire(2); // Binning 2x2 logiciel
-	Image* obj_lapl = obj->convoluerParDerivee();//convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
-	Image* correl = obj_lapl->correlation_rapide(*ref_lapl, 0.70);
+	Image* obj_lapl = img->convoluerParDerivee();//convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
+	Image* correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.70);
 	double position_l, position_c;
 	correl->maxParInterpolation(&position_l, &position_c);
+
+	emit image(img);
+	//emit cercle(position_c/correl->getColonnes(),position_l/correl->getLignes(),((float)diametre)/correl->getColonnes());
+	emit cercle(consigne_c/correl->getColonnes(),consigne_l/correl->getLignes(),((float)diametre)/correl->getColonnes());
+
 	double ratio = correl->calculerHauteurRelativeAutour(position_l,position_c);
 	emit signalBruit(ratio);
 
 #if DEBUG
-	obj->versTiff(emplacement+"t_obj.tif");
+	img->versTiff(emplacement+"t_obj.tif");
 	correl->versTiff(emplacement+"t_correl.tif");
 	obj_lapl->versTiff(emplacement+"t_obj_lapl.tif");
 #endif
 
-	delete obj;			// Mais bon, re-coder tout est pénible
 	delete correl;
 	delete obj_lapl;
 	//
@@ -206,14 +214,18 @@ void Guidage::capturerImage() {
         emit message("Impossible de lire capturer l'image : "+QString::fromStdString(cam->GetErrorString()));
         return;
     }
-    if(img) delete img; // On supprime la derniere image
-    img = Image::depuisSBIGImg(*img_sbig);
+    Image* img_temp = Image::depuisSBIGImg(*img_sbig);
     delete img_sbig; // On supprime l'image CSBIGImg
+
+    if(img) delete img; // On supprime la derniere image
+    img = img_temp->reduire(2);
+	delete img_temp;
     img_sbig = NULL;
 }
 void Guidage::demanderImage() {
 	capturerImage();
-    emit image(img);
+    if(img)
+    	emit image(img);
 }
 
 void Guidage::verifierLesConnexions() {
@@ -234,12 +246,19 @@ void Guidage::initialiserDiametre(int diametre) {
 
 	delete ref;
 
+
+	this->diametre = diametre;
+	if(img) {
+		emit image(img);
+		emit cercle(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes());
+	}
 }
 
-void Guidage::consigneLigne(double l) {
-	consigne_l = l;
-}
-
-void Guidage::consigneColonne(double c) {
-	consigne_c = c;
+void Guidage::consigneModifier(int deltaLigne, int deltaColonne) {
+	if(!img) return; // FIXME: verifier qu'il est possible de modifier la consigne
+	// FIXME: verifier que la consigne modifiee est valide
+	consigne_l = consigne_l + deltaLigne;
+	consigne_c = consigne_c + deltaColonne;
+	emit image(img);
+	emit cercle(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes());
 }

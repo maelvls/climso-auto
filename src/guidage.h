@@ -25,7 +25,6 @@ private:
 	QTimer timerCorrection;
 	QTimer timerEchantillon;
 	QThread threadDuGuidage;
-
 	CSBIGCam* cam;
 	CSBIGImg* img_sbig;
 	Image* img;
@@ -33,9 +32,8 @@ private:
 	double consigne_l;
 	double consigne_c;
 	Image* ref_lapl;
-
+	int diametre; // diametre
 	QTimer timerVerificationConnexions;
-
 	void capturerImage();
 
 public:
@@ -55,18 +53,16 @@ public slots:
 
 private slots:
 	void guidageSuivant();
+	void guidageInitial();
     bool cameraConnectee();
     bool arduinoConnecte();
-
 	void verifierLesConnexions();
-
 	//void changerDureeEchantillonage(int dureems);
 	//void changerDureeCorrection(int dureems);
-	void consigneLigne(double l);
-	void consigneColonne(double c);
-
+	void consigneModifier(int deltaLigne, int deltaColonne);
 signals:
 	void image(Image *img);
+	void cercle(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 	void message(QString msg);
 	void etatArduino(bool);
 	void etatCamera(bool);

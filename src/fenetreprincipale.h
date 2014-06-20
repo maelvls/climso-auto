@@ -37,12 +37,16 @@ private slots:
     void on_deconnecterArduino_clicked();
     void on_lancerGuidage_clicked();
     void on_stopperGuidage_clicked();
+    void on_consigneHaut_clicked();
+    void on_consigneBas_clicked();
+    void on_consigneDroite_clicked();
+    void on_consigneGauche_clicked();
 public slots:
 	void afficherMessage(QString msg);
     void guidageTermine();
     void statutCamera(bool etat);
     void statutArduino(bool etat);
-    void afficherConsigne(double l, double c);
+    //void afficherConsigne(double l, double c);
 signals:
 	void lancerGuidage(bool);
 	void connecterCamera();
@@ -52,6 +56,7 @@ signals:
 	void deconnecterArduino();
 	void consigneLigne(double l);
 	void consigneColonne(double c);
+	void consigneModification(int,int);
 };
 
 #endif // FENETREPRINCIPALE_H

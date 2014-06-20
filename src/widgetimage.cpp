@@ -6,6 +6,7 @@
  */
 
 #include "widgetimage.h"
+#include <iostream>
 
 /*
 void WidgetImage::paintEvent(QPaintEvent *e) // redéfinition de paintEvent()
@@ -38,16 +39,20 @@ void WidgetImage::afficherImage(Image* img) {
 	// FIXME il faut delete temp
 
 	this->setPixmap(rawImage); // On affiche
-
-	afficherCercle(180,110,100);
 }
 
 void WidgetImage::afficherPointeur(int x, int y) {
 }
 
-void WidgetImage::afficherCercle(int x, int y, int diametre) {
+void WidgetImage::afficherCercle(float x_pourcent, float y_pourcent, float diametre_pourcent_x) {
 	QPainter p(&rawImage);
 	p.setPen(Qt::yellow);
-	p.drawEllipse(x,y,diametre,diametre);
-	this->setPixmap(rawImage);
+
+	int position_x = rawImage.width() * x_pourcent;
+	int position_y = rawImage.height() * y_pourcent;
+	int diametre = rawImage.width() * diametre_pourcent_x;
+	QPoint centre(position_x,position_y);
+
+	p.drawEllipse(centre,diametre/2,diametre/2);
+	this->setPixmap(rawImage); // On affiche
 }

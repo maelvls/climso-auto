@@ -82,58 +82,6 @@
      <string/>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="consigne_l">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>160</y>
-      <width>101</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <double>10000.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>130</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Consigne X</string>
-    </property>
-   </widget>
-   <widget class="QDoubleSpinBox" name="consigne_c">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>130</y>
-      <width>101</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="maximum">
-     <double>10000.000000000000000</double>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>520</x>
-      <y>160</y>
-      <width>81</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Consigne Y</string>
-    </property>
-   </widget>
    <widget class="QTextBrowser" name="messages">
     <property name="geometry">
      <rect>
@@ -203,7 +151,7 @@
      </rect>
     </property>
     <property name="minimum">
-     <number>200</number>
+     <number>100</number>
     </property>
     <property name="maximum">
      <number>600</number>
@@ -251,8 +199,8 @@
    <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>210</y>
+      <x>530</x>
+      <y>240</y>
       <width>81</width>
       <height>21</height>
      </rect>
@@ -264,14 +212,66 @@
    <widget class="QLabel" name="ratioSignalBruit">
     <property name="geometry">
      <rect>
-      <x>610</x>
-      <y>210</y>
+      <x>620</x>
+      <y>240</y>
       <width>81</width>
       <height>21</height>
      </rect>
     </property>
     <property name="text">
      <string>0</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="consigneHaut">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>130</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>H</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="consigneDroite">
+    <property name="geometry">
+     <rect>
+      <x>640</x>
+      <y>160</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>D</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="consigneGauche">
+    <property name="geometry">
+     <rect>
+      <x>560</x>
+      <y>160</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>G</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="consigneBas">
+    <property name="geometry">
+     <rect>
+      <x>600</x>
+      <y>190</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>B</string>
     </property>
    </widget>
   </widget>
