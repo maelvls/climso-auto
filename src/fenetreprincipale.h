@@ -44,6 +44,7 @@ private slots:
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();
     void on_consigneGauche_clicked();
+    void closeEvent(QCloseEvent *event);
 public slots:
 	void afficherMessage(QString msg);
     void guidageTermine();

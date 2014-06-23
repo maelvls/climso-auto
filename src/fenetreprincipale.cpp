@@ -5,11 +5,11 @@
 #define DEV_DEFAULT "/dev/ttyACM0"
 
 
-
 FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::FenetrePrincipale)
 {
+
     ui->setupUi(this);
 
     paletteOk.setColor(QPalette::WindowText, Qt::green);
@@ -47,8 +47,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     QObject::connect(ui->lancerConnexionsAuto,SIGNAL(clicked()), guidage, SLOT(lancerConnexions()));
     QObject::connect(guidage,SIGNAL(etatConnexionsAuto(bool)), this, SLOT(statutConnexionsAuto(bool)));
-
-
 
     ui->diametreSoleil->setValue(200);
     ui->nomFichierArduino->setText(DEV_DEFAULT);
@@ -163,6 +161,13 @@ void FenetrePrincipale::signalHandler(int signal)
         	break;
         default: printf("APPLICATION EXITING => "); break;
     }
+}
+
+void FenetrePrincipale::closeEvent(QCloseEvent* event) {
+	emit deconnecterArduino();
+	emit deconnecterCamera();
+	cout << "Guidage termine" << endl;
+}
 
 void FenetrePrincipale::statutGuidage(bool statut) {
 	if(statut) {
@@ -173,9 +178,4 @@ void FenetrePrincipale::statutGuidage(bool statut) {
 		ui->statutGuidage->setPalette(palettePasOk);
 		ui->statutGuidage->setText("Arret");
 	}
-}
-
-void FenetrePrincipale::handleSigTerm() {
-	emit deconnecterArduino();
-	emit deconnecterCamera();
 }
