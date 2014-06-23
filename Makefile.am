@@ -44,7 +44,9 @@ main_qt_SOURCES=\
 	src/csbigcam.h src/csbigimg.h\
 	src/sbigudrv.h src/lpardrv.h\
 	src/guidage.h\
-	src/widgetimage.h
+	src/widgetimage.h\
+	\
+	src/fenetreprincipale.ui
 
 # -Ox correspond au mode d'optimisation. -O2 est une bonne optimisation.
 # -O0 désactive l'optimisation  	
@@ -61,6 +63,10 @@ BUILT_SOURCES=\
 	src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h\
 	src/guidage.moc.cpp src/widgetimage.moc.cpp
 
+# Règle perso car la règle présente dans autotroll.mk (%ui_.h: %.ui) ne marche pas
+# pour produire du src/ui_blabla.h (car il faut deux wildcards, genre %ui_%.h)
+#src/ui_%.h: src/%.ui
+#	$(UIC) $< -o $@
 
 # NOTE sur $(srcdir) et $(includedir)
 # il faudrait théoriquement préfixer tous les fichiers source par $(srcdir)
