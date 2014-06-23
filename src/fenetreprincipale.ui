@@ -206,7 +206,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Signal/Bruit :</string>
+     <string>Bruit/signal</string>
     </property>
    </widget>
    <widget class="QLabel" name="ratioSignalBruit">
@@ -274,11 +274,11 @@
      <string>B</string>
     </property>
    </widget>
-   <widget class="QLabel" name="etatGuidage">
+   <widget class="QLabel" name="statutGuidage">
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>420</y>
+      <y>410</y>
       <width>131</width>
       <height>16</height>
      </rect>
@@ -287,11 +287,11 @@
      <string/>
     </property>
    </widget>
-   <widget class="QLabel" name="etatConnexionsAuto">
+   <widget class="QLabel" name="statutConnexionsAuto">
     <property name="geometry">
      <rect>
       <x>540</x>
-      <y>170</y>
+      <y>140</y>
       <width>161</width>
       <height>16</height>
      </rect>
@@ -310,20 +310,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>Lancer connexions auto</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="stopperConnexionsAuto">
-    <property name="geometry">
-     <rect>
-      <x>540</x>
-      <y>140</y>
-      <width>161</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stopper connexions auto</string>
+     <string>On/Off connexion auto</string>
     </property>
    </widget>
   </widget>
@@ -337,5 +324,22 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>label_3</sender>
+   <signal>linkActivated(QString)</signal>
+   <receiver>label_3</receiver>
+   <slot>setFocus()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>570</x>
+     <y>460</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>570</x>
+     <y>460</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>
