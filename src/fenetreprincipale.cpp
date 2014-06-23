@@ -52,10 +52,13 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     ui->diametreSoleil->setValue(200);
     ui->nomFichierArduino->setText(DEV_DEFAULT);
-    afficherMessage("Bienvenue");
 
+
+    afficherMessage("Bienvenue");
     threadGuidage.start();
 
+    emit connecterArduino(DEV_DEFAULT);
+    emit connecterCamera();
 
 }
 

@@ -19,7 +19,9 @@ string emplacement = "";
 Guidage::Guidage() {
 	QObject::connect(&timerCorrection,SIGNAL(timeout()),this,SLOT(guidageSuivant()));
 	QObject::connect(&timerVerificationConnexions,SIGNAL(timeout()),this,SLOT(verifierLesConnexions()));
-	timerVerificationConnexions.start(100);
+	timerVerificationConnexions.setInterval(1000);
+	timerVerificationConnexions.start(); // lancer les connexions au démarrage
+
 	timerCorrection.setInterval(5000);
 	consigne_c = consigne_l = 0;
 	cam = NULL;
@@ -28,6 +30,7 @@ Guidage::Guidage() {
 	arduino = NULL;
 	ref_lapl = NULL;
 	diametre = 200;
+	fichier_arduino = "";
 }
 
 void Guidage::lancerGuidage(bool lancer) {
@@ -35,10 +38,19 @@ void Guidage::lancerGuidage(bool lancer) {
 		timerCorrection.stop();
 		//emit message("Guidage arrete");
 		return;
-	}
-	else {
-		timerCorrection.stop(); // Au cas où
+	} else {
+		if(timerCorrection.isActive()) { // Si guidage déjà en cours
+			timerCorrection.stop();
+		}
 		guidageInitial();
+	}
+}
+
+void Guidage::lancerConnexions(bool lancer) {
+	if(not lancer) { // Cas où on stoppe le guidage
+		timerVerificationConnexions.stop();
+	} else {
+		timerVerificationConnexions.start();
 	}
 }
 
@@ -55,7 +67,7 @@ void Guidage::guidageInitial() {
 
 	initialiserDiametre(diametre);
 
-	Image *correl = obj_lapl->correlation(*ref_lapl, 0.70);
+	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.70);
 	correl->maxParInterpolation(&consigne_l, &consigne_c);
 	emit consigne(consigne_l,consigne_c);
 
@@ -91,7 +103,7 @@ void Guidage::guidageSuivant() {
 	capturerImage(); // obtention de img de l'image deja binee
 
 	Image* obj_lapl = img->convoluerParDerivee();//convoluer(NOYAU_LAPLACIEN_TAB, NOYAU_LAPLACIEN_TAILLE);
-	Image* correl = obj_lapl->correlation(*ref_lapl, 0.70);
+	Image* correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.70);
 	double position_l, position_c;
 	correl->maxParInterpolation(&position_l, &position_c);
 
@@ -133,8 +145,12 @@ void Guidage::guidageSuivant() {
 }
 
 void Guidage::connecterArduino(QString nom) {
-	if(nom.length()==0)
-		emit message("Le nom est vide. Essayez /dev/ttyACM0 par exemple");
+	if(nom.length()==0) {
+		emit message("Le nom est vide");
+		return;
+	}
+	else
+		fichier_arduino = nom;
 	if(arduino != NULL)
 		delete arduino;
 	arduino = new Arduino(nom.toStdString());
@@ -142,7 +158,7 @@ void Guidage::connecterArduino(QString nom) {
 		emit message(QString::fromStdString(arduino->getDerniereErreurMessage()));
 	}
 	else
-		emit message("L'arduino est connecte a travers le fichier " + QString::fromStdString(arduino->getPath()));
+		emit message("Arduino connecte (" + QString::fromStdString(arduino->getPath())+")");
 }
 void Guidage::deconnecterArduino() {
 	if(arduino != NULL) {
@@ -230,9 +246,21 @@ void Guidage::demanderImage() {
 }
 
 void Guidage::verifierLesConnexions() {
-	emit etatCamera(cameraConnectee());
-	emit etatArduino(arduinoConnecte());
-	timerVerificationConnexions.start(1000);
+	if(!cameraConnectee()) {
+		emit etatCamera(false);
+		connecterCamera();
+	}
+	else {
+		emit etatCamera(true);
+	}
+		if(!arduinoConnecte()) {
+		emit etatArduino(false);
+		connecterArduino(fichier_arduino);
+	}
+	else {
+		emit etatArduino(true);
+	}
+	timerVerificationConnexions.start();
 }
 
 void Guidage::initialiserDiametre(int diametre) {

@@ -29,6 +29,8 @@ private:
 	CSBIGImg* img_sbig;
 	Image* img;
 	Arduino* arduino;
+	QString fichier_arduino;
+
 	double consigne_l;
 	double consigne_c;
 	Image* ref_lapl;
@@ -50,6 +52,8 @@ public slots:
     void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
 	void initialiserDiametre(int diametre);
+
+	void lancerConnexions(bool lancer);
 
 private slots:
 	void guidageSuivant();
