@@ -37,9 +37,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),guidage,SLOT(initialiserDiametre(int)));
 
-
-    //QObject::connect(guidage,SIGNAL(consigne(double,double)),this,SLOT(afficherConsigne(double,double)));
-
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
 
 
@@ -47,6 +44,9 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(&threadGuidage,SIGNAL(finished()),this,SLOT(guidageTermine()));
 
     QObject::connect(guidage,SIGNAL(cercle(float,float,float)),ui->imageCamera,SLOT(afficherCercle(float,float,float)));
+
+    QObject::connect(ui->lancerConnexionsAuto,SIGNAL(clicked()), guidage, SLOT(lancerConnexions()));
+    QObject::connect(guidage,SIGNAL(etatConnexionsAuto(bool)), this, SLOT(statutConnexionsAuto(bool)));
 
 
 
@@ -135,4 +135,47 @@ void FenetrePrincipale::on_consigneDroite_clicked() {
 }
 void FenetrePrincipale::on_consigneGauche_clicked() {
 	emit consigneModification(0,-1);
+}
+
+void FenetrePrincipale::statutConnexionsAuto(bool statut) {
+	if(statut) {
+		ui->statutConnexionsAuto->setPalette(paletteOk);
+		ui->statutConnexionsAuto->setText("Connexion auto");
+	}
+	else {
+		ui->statutConnexionsAuto->setPalette(palettePasOk);
+		ui->statutConnexionsAuto->setText("Connexion pas auto");
+	}
+}
+
+void FenetrePrincipale::signalHandler(int signal)
+{
+    switch(signal){
+        case SIGINT:
+        case SIGKILL:
+        case SIGQUIT:
+        case SIGSTOP:
+        case SIGTERM:
+        case SIGSEGV:
+        	cout << "Guidage arrete" << endl;
+        	emit deconnecterCamera();
+        	emit deconnecterArduino();
+        	break;
+        default: printf("APPLICATION EXITING => "); break;
+    }
+
+void FenetrePrincipale::statutGuidage(bool statut) {
+	if(statut) {
+		ui->statutGuidage->setPalette(paletteOk);
+		ui->statutGuidage->setText("Marche");
+	}
+	else {
+		ui->statutGuidage->setPalette(palettePasOk);
+		ui->statutGuidage->setText("Arret");
+	}
+}
+
+void FenetrePrincipale::handleSigTerm() {
+	emit deconnecterArduino();
+	emit deconnecterCamera();
 }

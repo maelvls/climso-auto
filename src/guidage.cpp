@@ -20,7 +20,6 @@ Guidage::Guidage() {
 	QObject::connect(&timerCorrection,SIGNAL(timeout()),this,SLOT(guidageSuivant()));
 	QObject::connect(&timerVerificationConnexions,SIGNAL(timeout()),this,SLOT(verifierLesConnexions()));
 	timerVerificationConnexions.setInterval(1000);
-	timerVerificationConnexions.start(); // lancer les connexions au démarrage
 
 	timerCorrection.setInterval(5000);
 	consigne_c = consigne_l = 0;
@@ -31,26 +30,49 @@ Guidage::Guidage() {
 	ref_lapl = NULL;
 	diametre = 200;
 	fichier_arduino = "";
+	lancerConnexions(); // lancer les connexions au démarrage
 }
+
+void Guidage::lancerConnexions() {
+	if(timerVerificationConnexions.isActive()) { // Connexion auto en cours
+		timerVerificationConnexions.stop(); // alors on arrete
+		emit etatConnexionsAuto(false);
+	} else {
+		timerVerificationConnexions.start(); // sinon on lance
+		emit etatConnexionsAuto(true);
+	}
+}
+
+void Guidage::verifierLesConnexions() {
+	if(!cameraConnectee()) {
+		emit etatCamera(false);
+		connecterCamera();
+	} else {
+		emit etatCamera(true);
+	}
+
+	if(!arduinoConnecte()) {
+		emit etatArduino(false);
+		connecterArduino(fichier_arduino);
+	} else {
+		emit etatArduino(true);
+	}
+	timerVerificationConnexions.start();
+}
+
 
 void Guidage::lancerGuidage(bool lancer) {
 	if(not lancer) { // Cas où on stoppe le guidage
 		timerCorrection.stop();
 		//emit message("Guidage arrete");
+		emit etatGuidage(false);
 		return;
 	} else {
 		if(timerCorrection.isActive()) { // Si guidage déjà en cours
 			timerCorrection.stop();
 		}
+		emit etatGuidage(true);
 		guidageInitial();
-	}
-}
-
-void Guidage::lancerConnexions(bool lancer) {
-	if(not lancer) { // Cas où on stoppe le guidage
-		timerVerificationConnexions.stop();
-	} else {
-		timerVerificationConnexions.start();
 	}
 }
 
@@ -243,24 +265,6 @@ void Guidage::demanderImage() {
 	capturerImage();
     if(img)
     	emit image(img);
-}
-
-void Guidage::verifierLesConnexions() {
-	if(!cameraConnectee()) {
-		emit etatCamera(false);
-		connecterCamera();
-	}
-	else {
-		emit etatCamera(true);
-	}
-		if(!arduinoConnecte()) {
-		emit etatArduino(false);
-		connecterArduino(fichier_arduino);
-	}
-	else {
-		emit etatArduino(true);
-	}
-	timerVerificationConnexions.start();
 }
 
 void Guidage::initialiserDiametre(int diametre) {

@@ -10,6 +10,8 @@
 #include "arduino.h"
 #include "guidage.h"
 
+#include <signal.h>
+
 namespace Ui {
 class FenetrePrincipale;
 }
@@ -24,6 +26,7 @@ private:
     QPalette paletteOk;
     QPalette palettePasOk;
 
+    void signalHandler(int signal);
 
 public:
     explicit FenetrePrincipale(QWidget *parent = 0);
@@ -46,7 +49,10 @@ public slots:
     void guidageTermine();
     void statutCamera(bool etat);
     void statutArduino(bool etat);
+    void statutConnexionsAuto(bool statut);
+    void statutGuidage(bool statut);
     //void afficherConsigne(double l, double c);
+
 signals:
 	void lancerGuidage(bool);
 	void connecterCamera();

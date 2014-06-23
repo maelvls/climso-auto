@@ -53,7 +53,7 @@ public slots:
 	void envoyerCmd(int pin, int duree);
 	void initialiserDiametre(int diametre);
 
-	void lancerConnexions(bool lancer);
+	void lancerConnexions();
 
 private slots:
 	void guidageSuivant();
@@ -70,6 +70,8 @@ signals:
 	void message(QString msg);
 	void etatArduino(bool);
 	void etatCamera(bool);
+	void etatConnexionsAuto(bool);
+	void etatGuidage(bool);
 	void consigne(double l, double c);
 	void signalBruit(double ratio);
 };
