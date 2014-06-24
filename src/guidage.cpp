@@ -7,12 +7,15 @@
 
 #include "guidage.h"
 
-#define IMPULSION_PIXEL_H	25 //ms
-#define IMPULSION_PIXEL_V	25 //ms
+#define IMPULSION_PIXEL_H	400 //ms
+#define IMPULSION_PIXEL_V	800 //ms (2px pour 1sec)
 #define PIN_NORD			12
 #define	PIN_SUD				11
 #define	PIN_EST				10
 #define PIN_OUEST			9
+#define ORIENTATION_NORD_SUD 	-1 // 1 quand le nord correspond au nord, -1 sinon
+#define ORIENTATION_EST_OUEST	-1 // 1 quand l'est correspond à l'est, -1 sinon
+#define SEUIL_BRUIT_SIGNAL		0.50
 
 string emplacement = "";
 
@@ -156,11 +159,15 @@ void Guidage::guidageSuivant() {
 			", decalage (x= "+QString::number(l_decal)+
 			", y="+QString::number(c_decal)+")");
 
+	if(ratio > SEUIL_BRUIT_SIGNAL) {
+		lancerGuidage(false);
+		emit message("Trop de nuages ou soleil disparu : arret");
+		return;
+	}
 
-
-	envoyerCmd((l_decal<0)?PIN_SUD:PIN_NORD,
+	envoyerCmd((l_decal*ORIENTATION_NORD_SUD<0)?PIN_SUD:PIN_NORD,
 			((l_decal<0)?l_decal*(-1):l_decal)*IMPULSION_PIXEL_V);
-	envoyerCmd((c_decal<0)?PIN_OUEST:PIN_EST,
+	envoyerCmd((c_decal*ORIENTATION_EST_OUEST<0)?PIN_OUEST:PIN_EST,
 			((c_decal<0)?c_decal*(-1):c_decal)*IMPULSION_PIXEL_H);
 
 	timerCorrection.start();
