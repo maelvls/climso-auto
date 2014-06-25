@@ -8,7 +8,9 @@
 #include "csbigimg.h"
 #include "image.h"
 #include "arduino.h"
+
 #include "guidage.h"
+#include "capture.h"
 
 #include <signal.h>
 
@@ -22,6 +24,8 @@ private:
     Ui::FenetrePrincipale *ui;
     QThread threadGuidage;
     Guidage* guidage;
+    QThread threadCapture;
+    Capture* capture;
 
     QPalette paletteOk;
     QPalette palettePasOk;
@@ -47,15 +51,13 @@ private slots:
     void closeEvent(QCloseEvent *event);
 public slots:
 	void afficherMessage(QString msg);
-    void guidageTermine();
     void statutCamera(bool etat);
     void statutArduino(bool etat);
-    void statutConnexionsAuto(bool statut);
     void statutGuidage(bool statut);
-    //void afficherConsigne(double l, double c);
 
 signals:
-	void lancerGuidage(bool);
+	void lancerGuidage();
+	void stopperGuidage();
 	void connecterCamera();
 	void deconnecterCamera();
 	void demanderImage();

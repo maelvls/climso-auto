@@ -303,14 +303,14 @@
    <widget class="QPushButton" name="lancerConnexionsAuto">
     <property name="geometry">
      <rect>
-      <x>540</x>
-      <y>120</y>
-      <width>161</width>
-      <height>21</height>
+      <x>560</x>
+      <y>170</y>
+      <width>111</width>
+      <height>31</height>
      </rect>
     </property>
     <property name="text">
-     <string>On/Off connexion auto</string>
+     <string>Pos. courante</string>
     </property>
    </widget>
   </widget>

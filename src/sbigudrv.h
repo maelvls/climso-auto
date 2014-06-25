@@ -306,8 +306,10 @@ ABG_STATE7;
 
 typedef unsigned short MY_LOGICAL;
 
-#define FALSE 0
-#define TRUE 	1
+#if not defined(TRUE) && not defined(FALSE)
+#define FALSE	0
+#define TRUE	1
+#endif
 
 typedef enum
 {

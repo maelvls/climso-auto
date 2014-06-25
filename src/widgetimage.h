@@ -20,18 +20,16 @@
 
 class WidgetImage: public QLabel {
 	Q_OBJECT
-
 	QPixmap rawImage;
-    //void paintEvent(QPaintEvent *e);
 private:
 
 public:
 	WidgetImage(QWidget *parent = 0);
 	virtual ~WidgetImage();
 public slots:
-	void afficherImage(Image* img);
-	void afficherPointeur(int x, int y);
-	void afficherCercle(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
+	void afficherImageSoleil(Image* img);
+	void afficherRepereCourant(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
+	void afficherRepereConsigne(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 };
 
 #endif /* WIDGETIMAGE_H_ */

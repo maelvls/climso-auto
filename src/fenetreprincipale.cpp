@@ -17,47 +17,39 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     guidage = new Guidage;
     guidage->moveToThread(&threadGuidage);
+    capture = new Capture;
+    capture->moveToThread(&threadCapture);
+
     // Liens entre fenetreprincipale et guidage
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
-    QObject::connect(guidage,SIGNAL(image(Image*)),ui->imageCamera,SLOT(afficherImage(Image*)));
-
-    QObject::connect(this,SIGNAL(lancerGuidage(bool)),guidage,SLOT(lancerGuidage(bool)));
-
-    QObject::connect(this,SIGNAL(connecterArduino(QString)),guidage,SLOT(connecterArduino(QString)));
-    QObject::connect(this,SIGNAL(deconnecterArduino()),guidage,SLOT(deconnecterArduino()));
-    QObject::connect(this,SIGNAL(connecterCamera()),guidage,SLOT(connecterCamera()));
-    QObject::connect(this,SIGNAL(deconnecterCamera()),guidage,SLOT(deconnecterCamera()));
-    QObject::connect(this,SIGNAL(demanderImage()),guidage,SLOT(demanderImage()));
-
-    QObject::connect(this,SIGNAL(consigneModification(int,int)),guidage,SLOT(consigneModifier(int,int)));
-
-
-    QObject::connect(guidage,SIGNAL(etatCamera(bool)),this,SLOT(statutCamera(bool)));
     QObject::connect(guidage,SIGNAL(etatArduino(bool)),this,SLOT(statutArduino(bool)));
+    QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
+    QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
+    QObject::connect(this,SIGNAL(consigneModification(int,int)),guidage,SLOT(consigneModifier(int,int)));
+    QObject::connect(this,SIGNAL(deconnecterArduino()),guidage,SLOT(deconnecterArduino()));
 
-    QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),guidage,SLOT(initialiserDiametre(int)));
+    // Liens entre fenetreprincipale et capture
+    QObject::connect(capture,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
+    QObject::connect(capture,SIGNAL(etatCamera(bool)),this,SLOT(statutCamera(bool)));
+    QObject::connect(this,SIGNAL(deconnecterCamera()),capture,SLOT(deconnecterCamera()));
 
-    QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
+    // Liens entre capture et guidage
+    QObject::connect(capture,SIGNAL(position(double,double,int,int,int)),guidage, SLOT(modifierPosition(double, double,int,int,int)));
+    QObject::connect(capture,SIGNAL(stopperGuidage()),guidage, SLOT(stopperGuidage()));
+    QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
 
+    // Liens avec imageCamera (le widget)
+    QObject::connect(capture,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
+    QObject::connect(capture,SIGNAL(repereSoleil(float,float,float)),ui->imageCamera,SLOT(afficherRepereCourant(float,float,float)));
+    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float)));
 
-    // Liens entre fenetreprincipale et le thread guidage
-    QObject::connect(&threadGuidage,SIGNAL(finished()),this,SLOT(guidageTermine()));
-
-    QObject::connect(guidage,SIGNAL(cercle(float,float,float)),ui->imageCamera,SLOT(afficherCercle(float,float,float)));
-
-    QObject::connect(ui->lancerConnexionsAuto,SIGNAL(clicked()), guidage, SLOT(lancerConnexions()));
-    QObject::connect(guidage,SIGNAL(etatConnexionsAuto(bool)), this, SLOT(statutConnexionsAuto(bool)));
 
     ui->diametreSoleil->setValue(200);
     ui->nomFichierArduino->setText(DEV_DEFAULT);
 
-
-    afficherMessage("Bienvenue");
     threadGuidage.start();
 
     emit connecterArduino(DEV_DEFAULT);
-    emit connecterCamera();
-
 }
 
 FenetrePrincipale::~FenetrePrincipale() {
@@ -89,15 +81,11 @@ void FenetrePrincipale::on_deconnecterArduino_clicked() {
 }
 
 void FenetrePrincipale::on_lancerGuidage_clicked() {
-    emit lancerGuidage(true);
+    emit lancerGuidage();
 }
 
 void FenetrePrincipale::on_stopperGuidage_clicked() {
-	emit lancerGuidage(false);
-}
-
-void FenetrePrincipale::guidageTermine() {
-	afficherMessage("Le guidage est termine");
+	emit stopperGuidage();
 }
 
 void FenetrePrincipale::statutCamera(bool etat) {
@@ -135,17 +123,6 @@ void FenetrePrincipale::on_consigneGauche_clicked() {
 	emit consigneModification(0,-1);
 }
 
-void FenetrePrincipale::statutConnexionsAuto(bool statut) {
-	if(statut) {
-		ui->statutConnexionsAuto->setPalette(paletteOk);
-		ui->statutConnexionsAuto->setText("Connexion auto");
-	}
-	else {
-		ui->statutConnexionsAuto->setPalette(palettePasOk);
-		ui->statutConnexionsAuto->setText("Connexion pas auto");
-	}
-}
-
 void FenetrePrincipale::signalHandler(int signal)
 {
     switch(signal){
@@ -164,6 +141,7 @@ void FenetrePrincipale::signalHandler(int signal)
 }
 
 void FenetrePrincipale::closeEvent(QCloseEvent* event) {
+	event = NULL;
 	emit deconnecterArduino();
 	emit deconnecterCamera();
 	cout << "Guidage termine" << endl;

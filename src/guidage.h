@@ -14,66 +14,47 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QThread>
-#include "image.h"
 #include "arduino.h"
-#include "csbigcam.h"
-#include "csbigimg.h"
+#include "image.h"
+
+
 
 class Guidage : public QObject {
 	Q_OBJECT
 private:
 	QTimer timerCorrection;
-	QTimer timerEchantillon;
+	QTimer timerVerificationConnexions;
 	QThread threadDuGuidage;
-	CSBIGCam* cam;
-	CSBIGImg* img_sbig;
-	Image* img;
 	Arduino* arduino;
 	QString fichier_arduino;
+	double consigne_l, consigne_c;
+	double position_l, position_c;
+	int l_max, c_max; // Pour l'affichage
+	int diametre; // Pour l'affichage
 
-	double consigne_l;
-	double consigne_c;
-	Image* ref_lapl;
-	int diametre; // diametre
-	QTimer timerVerificationConnexions;
 	void capturerImage();
-
+    bool arduinoConnecte();
 public:
 	Guidage();
 public slots:
 // guidage
-	void lancerGuidage(bool);
-// camera
-    void connecterCamera();
-    void deconnecterCamera();
-	void demanderImage();
+	void lancerGuidage();
+	void stopperGuidage();
 // arduino
     void connecterArduino(QString nom);
     void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
-	void initialiserDiametre(int diametre);
-
-	void lancerConnexions();
-
 private slots:
 	void guidageSuivant();
 	void guidageInitial();
-    bool cameraConnectee();
-    bool arduinoConnecte();
-	void verifierLesConnexions();
-	//void changerDureeEchantillonage(int dureems);
-	//void changerDureeCorrection(int dureems);
+	void connexionAuto();
+	void modifierPosition(double l, double c, int l_max, int c_max, int diametre);
 	void consigneModifier(int deltaLigne, int deltaColonne);
 signals:
-	void image(Image *img);
-	void cercle(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
+	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 	void message(QString msg);
 	void etatArduino(bool);
-	void etatCamera(bool);
-	void etatConnexionsAuto(bool);
 	void etatGuidage(bool);
-	void consigne(double l, double c);
-	void signalBruit(double ratio);
 };
 
 #endif /* GUIDAGE_H_ */
