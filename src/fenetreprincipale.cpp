@@ -32,11 +32,11 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(capture,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
     QObject::connect(capture,SIGNAL(etatCamera(bool)),this,SLOT(statutCamera(bool)));
     QObject::connect(this,SIGNAL(deconnecterCamera()),capture,SLOT(deconnecterCamera()));
+    QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
 
     // Liens entre capture et guidage
     QObject::connect(capture,SIGNAL(position(double,double,int,int,int)),guidage, SLOT(modifierPosition(double, double,int,int,int)));
     QObject::connect(capture,SIGNAL(stopperGuidage()),guidage, SLOT(stopperGuidage()));
-    QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
 
     // Liens avec imageCamera (le widget)
     QObject::connect(capture,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
@@ -48,6 +48,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     ui->nomFichierArduino->setText(DEV_DEFAULT);
 
     threadGuidage.start();
+    threadCapture.start();
 
     emit connecterArduino(DEV_DEFAULT);
 }
@@ -141,9 +142,10 @@ void FenetrePrincipale::signalHandler(int signal)
 }
 
 void FenetrePrincipale::closeEvent(QCloseEvent* event) {
-	event = NULL;
 	emit deconnecterArduino();
 	emit deconnecterCamera();
+	threadCapture.exit();
+	threadGuidage.exit();
 	cout << "Guidage termine" << endl;
 }
 

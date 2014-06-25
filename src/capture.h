@@ -10,6 +10,8 @@
 
 #include <QtCore/qobject.h>
 #include <QtCore/QTimer>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QTime>
 
 #include "csbigcam.h"
 #include "csbigimg.h"
@@ -26,6 +28,7 @@ private:
 	QTimer timerConnexion;
 	QTimer timerCapture;
 	CSBIGCam* cam;
+	//CSBIGImg* img_sbig;
 	Image* img;
 	Image* ref_lapl;// laplacien de la ref de l'image du soleil
 	int diametre; 	// diametre du soleil en pixels

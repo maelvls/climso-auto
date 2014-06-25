@@ -17,18 +17,23 @@
 #define ORIENTATION_EST_OUEST	-1 // 1 quand l'est correspond à l'est, -1 sinon
 #define SEUIL_BRUIT_SIGNAL		0.50
 
+#define FICHIER_ARDUINO_DEFAUT "/dev/ttyACM0"
+
 string emplacement_capture = "";
 
 Guidage::Guidage() {
-	QObject::connect(&timerCorrection,SIGNAL(timeout()),this,SLOT(guidageSuivant()));
-	QObject::connect(&timerVerificationConnexions,SIGNAL(timeout()),this,SLOT(connexionAuto()));
+
 	timerVerificationConnexions.setInterval(1000);
 	timerCorrection.setInterval(5000);
 	consigne_c = consigne_l = 0;
 	c_max = l_max = 0;
 	position_c = position_l = 0;
 	arduino = NULL;
-	fichier_arduino = "";
+	fichier_arduino = FICHIER_ARDUINO_DEFAUT;
+
+	QObject::connect(&timerCorrection,SIGNAL(timeout()),this,SLOT(guidageSuivant()));
+	QObject::connect(&timerVerificationConnexions,SIGNAL(timeout()),this,SLOT(connexionAuto()));
+
 	connexionAuto(); // lancer les connexions au démarrage
 	timerVerificationConnexions.start();
 }

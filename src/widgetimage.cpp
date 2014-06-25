@@ -14,7 +14,9 @@ WidgetImage::WidgetImage(QWidget* parent):QLabel(parent) {
 WidgetImage::~WidgetImage() {
 }
 
-void WidgetImage::afficherImageSoleil(Image* img) {
+void WidgetImage::afficherImageSoleil(Image* imgOrig) {
+	Image* img = new Image(*imgOrig);
+	img->normaliser();
 	unsigned char *img_uchar = img->versUchar();
 	this->setAutoFillBackground(true);
 	// Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
@@ -24,9 +26,11 @@ void WidgetImage::afficherImageSoleil(Image* img) {
 	}
 	QImage image = temp->scaled(this->width(),this->height(),Qt::KeepAspectRatio); // FIXME fuite mémoire ???
 	rawImage = QPixmap::fromImage(image,Qt::AutoColor);
-	delete temp;
-	// FIXME il faut delete temp
 	this->setPixmap(rawImage); // On affiche
+
+	delete img;
+	delete temp;
+
 }
 
 void WidgetImage::afficherRepereConsigne(float x_pourcent, float y_pourcent, float diametre_pourcent_x) {

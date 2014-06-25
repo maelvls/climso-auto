@@ -11,10 +11,11 @@
 
 #define DIAMETRE_DEFAUT		200
 #define SEUIL_BRUIT_SIGNAL	0.40
-#define PERIODE_CAPTURE		1000 // en ms
+#define PERIODE_CAPTURE		1500 // en ms
 #define PERIODE_CONNEXION	1000 // en ms
 
 static string emplacement = "";
+QTime t;
 
 Capture::Capture() {
 	timerCapture.setInterval(PERIODE_CAPTURE);
@@ -49,6 +50,7 @@ void Capture::connecterCamera() {
     }
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
+        cam->SetExposureTime(0.01);
         emit message("Camera connectee");
         emit etatCamera(true);
     }
@@ -84,14 +86,13 @@ void Capture::lancerCapture() {
 void Capture::stopperCapture() {
 	timerCapture.stop();
 }
-
 void Capture::capturerImage() {
     if (!cameraConnectee()) {
         emit message("La camera n'est pas connectee");
         return;
     }
     CSBIGImg* img_sbig = new CSBIGImg();
-    if(cam->GrabImage(img_sbig, SBDF_DARK_ALSO) != CE_NO_ERROR) {
+    if(cam->GrabImage(img_sbig, SBDF_LIGHT_ONLY) != CE_NO_ERROR) {
         emit message("Impossible de lire capturer l'image : "+QString::fromStdString(cam->GetErrorString()));
         return;
     }
@@ -103,6 +104,7 @@ void Capture::capturerImage() {
 	delete img_temp;
 	// ENVOI DES RESULTATS
 	emit imageSoleil(img);
+    //QCoreApplication::processEvents();
 }
 
 void Capture::trouverPosition() {
@@ -134,11 +136,17 @@ void Capture::trouverPosition() {
 
 	delete correl;
 	delete obj_lapl;
+    //QCoreApplication::processEvents();
 }
 
 void Capture::captureEtPosition() {
+	t.start();
 	capturerImage();
+    cout << "Temps ecoulé : " << t.elapsed() << "ms" <<endl;
+
 	trouverPosition();
+    cout << "Temps ecoulé 2 : " << t.elapsed() << "ms" <<endl;
+
 }
 
 void Capture::modifierDiametre(int diametre) {
