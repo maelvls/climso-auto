@@ -35,6 +35,7 @@ main_qt_SOURCES=\
 	src/main_qt_gui.cpp\
 	src/guidage.cpp src/guidage.moc.cpp\
 	src/widgetimage.cpp src/widgetimage.moc.cpp \
+	src/capture.cpp src/capture.moc.cpp\
 	\
 	src/arduino.h\
 	src/interpol.h src/convol.h src/fcts_LK3.h\
@@ -45,6 +46,7 @@ main_qt_SOURCES=\
 	src/sbigudrv.h src/lpardrv.h\
 	src/guidage.h\
 	src/widgetimage.h\
+	src/capture.h\
 	\
 	src/fenetreprincipale.ui
 
@@ -61,7 +63,8 @@ main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 # Voir CONCERNANT Qt au dessus
 BUILT_SOURCES=\
 	src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h\
-	src/guidage.moc.cpp src/widgetimage.moc.cpp
+	src/guidage.moc.cpp src/widgetimage.moc.cpp\
+	src/capture.moc.cpp
 
 # Règle perso car la règle présente dans autotroll.mk (%ui_.h: %.ui) ne marche pas
 # pour produire du src/ui_blabla.h (car il faut deux wildcards, genre %ui_%.h)
