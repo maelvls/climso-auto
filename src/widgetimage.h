@@ -28,8 +28,8 @@ public:
 	virtual ~WidgetImage();
 public slots:
 	void afficherImageSoleil(Image* img);
-	void afficherRepereCourant(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
-	void afficherRepereConsigne(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
+	void afficherRepere(float pourcent_x, float pourcent_y, float diametre_pourcent_x, QColor);
+
 };
 
 #endif /* WIDGETIMAGE_H_ */

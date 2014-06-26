@@ -17,10 +17,10 @@
 #include "csbigimg.h"
 #include "image.h"
 
-
-/*
- * Si bruit/signal > 0.4 on n'affiche plus la correlation
- */
+#define CONNEXION_CAMERA_OK		1
+#define CONNEXION_CAMERA_PAS_OK	2
+#define CONNEXION_CAMERA_AUTO_OFF	4
+#define CONNEXION_CAMERA_AUTO_ON	8
 
 class Capture: public QObject {
 	Q_OBJECT
@@ -46,21 +46,20 @@ public slots:
 	void lancerCapture();
 	void stopperCapture();
 	void connecterCamera();
+	void connecterCameraAuto();
 	void deconnecterCamera();
+	void deconnecterCameraAuto();
 	void capturerImage();
 	void trouverPosition();
 private slots:
 	void connexionAuto();
 	void captureEtPosition();
 signals:
-	void imageSoleil(Image*);
-	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 	void messageCamera(PAR_ERROR, QString);
 	void message(QString);
-	void signalBruit(double);
 	void stopperGuidage();
-	void etatCamera(bool);
-	void position(double l, double c, int l_max, int c_max, int diametre);
+	void etatCamera(int);
+	void resultats(Image* img, double l, double c, int diametre, double bruitsignal);
 };
 
 #endif /* CAPTURE_H_ */

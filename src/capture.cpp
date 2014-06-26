@@ -10,15 +10,13 @@
 #include "capture.h"
 
 #define DIAMETRE_DEFAUT		200
-#define SEUIL_BRUIT_SIGNAL	0.40
-#define PERIODE_CAPTURE		1500 // en ms
+#define PERIODE_ENTRE_CAPTURES 1000 // en ms
 #define PERIODE_CONNEXION	1000 // en ms
 
 static string emplacement = "";
 QTime t;
 
 Capture::Capture() {
-	timerCapture.setInterval(PERIODE_CAPTURE);
 	timerConnexion.setInterval(PERIODE_CONNEXION);
 	cam = NULL;
 	img = NULL;
@@ -27,9 +25,8 @@ Capture::Capture() {
 	diametre = 0;
 	QObject::connect(&timerConnexion,SIGNAL(timeout()),this,SLOT(connexionAuto()));
 	QObject::connect(&timerCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
-	timerConnexion.start();
-	timerCapture.start();
-	connecterCamera();
+	timerCapture.start(PERIODE_ENTRE_CAPTURES);
+	connecterCameraAuto();
 }
 
 Capture::~Capture() {
@@ -42,18 +39,23 @@ void Capture::connecterCamera() {
     cam = new CSBIGCam(DEV_USB); // Creation du device USB
     if ((err = cam->GetError()) != CE_NO_ERROR) {
         emit message("Erreur avec la camera lors de la creation de l'objet camera : "+QString::fromStdString(cam->GetErrorString()));
-        emit etatCamera(false);
+        emit etatCamera(CONNEXION_CAMERA_PAS_OK);
     }
     else if ((err=cam->EstablishLink()) != CE_NO_ERROR) { // Connexion à la camera
         emit message("Erreur avec la camera lors de l'etablissement du lien: "+QString::fromStdString(cam->GetErrorString()));
-        emit etatCamera(false);
+        emit etatCamera(CONNEXION_CAMERA_PAS_OK);
     }
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
         cam->SetExposureTime(0.01);
         emit message("Camera connectee");
-        emit etatCamera(true);
+        emit etatCamera(CONNEXION_CAMERA_OK);
     }
+}
+
+void Capture::connecterCameraAuto() {
+	connecterCamera();
+	timerConnexion.start();
 }
 
 void Capture::deconnecterCamera() {
@@ -61,10 +63,17 @@ void Capture::deconnecterCamera() {
         cam->CloseDevice();
         emit message("Camera deconnectee");
         delete cam; cam = NULL;
+        emit etatCamera(CONNEXION_CAMERA_PAS_OK);
     }
     else {
         emit message("Aucune camera n'est connectee");
     }
+}
+
+void Capture::deconnecterCameraAuto() {
+	timerConnexion.stop();
+	QCoreApplication::flush();
+	deconnecterCamera();
 }
 
 bool Capture::cameraConnectee() {
@@ -73,10 +82,11 @@ bool Capture::cameraConnectee() {
 
 void Capture::connexionAuto() {
 	if(!cameraConnectee()) {
-		emit etatCamera(false);
+		emit etatCamera(CONNEXION_CAMERA_PAS_OK);
+		emit stopperGuidage();
 		connecterCamera();
 	} else {
-		emit etatCamera(true);
+		emit etatCamera(CONNEXION_CAMERA_OK);
 	}
 }
 
@@ -102,9 +112,6 @@ void Capture::capturerImage() {
     if(img) delete img; // On supprime la derniere image
     img = img_temp->reduire(2);
 	delete img_temp;
-	// ENVOI DES RESULTATS
-	emit imageSoleil(img);
-    //QCoreApplication::processEvents();
 }
 
 void Capture::trouverPosition() {
@@ -116,16 +123,9 @@ void Capture::trouverPosition() {
 	Image *obj_lapl = img->convoluerParDerivee();
 	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.80);
 	correl->maxParInterpolation(&position_l, &position_c);
-	double ratio = correl->calculerHauteurRelativeAutour(position_l,position_c);
-
+	double bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
 	// ENVOI DES RESULTATS
-	emit signalBruit(ratio);
-	if(ratio < SEUIL_BRUIT_SIGNAL) {
-		emit repereSoleil(position_c/correl->getColonnes(),position_l/correl->getLignes(),((float)diametre)/correl->getColonnes());
-		emit position(position_l,position_c,correl->getLignes(),correl->getColonnes(),diametre);
-	} else {
-		emit stopperGuidage();
-	}
+    emit resultats(img,position_l,position_c,diametre,bruitsignal);
 
 #if DEBUG
 	img->versTiff(emplacement+"t0_obj.tif");
@@ -136,17 +136,17 @@ void Capture::trouverPosition() {
 
 	delete correl;
 	delete obj_lapl;
-    //QCoreApplication::processEvents();
 }
 
+
 void Capture::captureEtPosition() {
-	t.start();
+	//QCoreApplication::processEvents();
+	//t.start();
 	capturerImage();
-    cout << "Temps ecoulé : " << t.elapsed() << "ms" <<endl;
-
+    //cout << "Temps ecoulé : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
-    cout << "Temps ecoulé 2 : " << t.elapsed() << "ms" <<endl;
-
+    //cout << "Temps ecoulé 2 : " << t.elapsed() << "ms" <<endl;
+	timerCapture.start(PERIODE_ENTRE_CAPTURES);
 }
 
 void Capture::modifierDiametre(int diametre) {
@@ -161,8 +161,4 @@ void Capture::modifierDiametre(int diametre) {
 
 	delete ref;
 	this->diametre = diametre;
-	if(position_c > 0 && position_l > 0) {
-		emit repereSoleil(position_c/img->getColonnes(),position_l/img->getLignes(),((float)diametre)/img->getColonnes());
-	}
 }
-

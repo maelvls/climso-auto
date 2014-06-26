@@ -33,24 +33,15 @@ void WidgetImage::afficherImageSoleil(Image* imgOrig) {
 
 }
 
-void WidgetImage::afficherRepereConsigne(float x_pourcent, float y_pourcent, float diametre_pourcent_x) {
+void WidgetImage::afficherRepere(float x_pourcent, float y_pourcent, float diametre_pourcent_x,QColor couleur) {
 	QPainter p(&rawImage);
-	p.setPen(Qt::yellow);
+	p.setPen(couleur);
 	int position_x = rawImage.width() * x_pourcent;
 	int position_y = rawImage.height() * y_pourcent;
 	int diametre = rawImage.width() * diametre_pourcent_x;
 	QPoint centre(position_x,position_y);
 	p.drawEllipse(centre,diametre/2,diametre/2);
-	this->setPixmap(rawImage); // On affiche
-}
-
-void WidgetImage::afficherRepereCourant(float x_pourcent, float y_pourcent, float diametre_pourcent_x) {
-	QPainter p(&rawImage);
-	p.setPen(Qt::gray);
-	int position_x = rawImage.width() * x_pourcent;
-	int position_y = rawImage.height() * y_pourcent;
-	int diametre = rawImage.width() * diametre_pourcent_x;
-	QPoint centre(position_x,position_y);
-	p.drawEllipse(centre,diametre/2,diametre/2);
+	p.drawLine(position_x-10,position_y,position_x+10,position_y);
+	p.drawLine(position_x,position_y-10,position_x,position_y+10);
 	this->setPixmap(rawImage); // On affiche
 }

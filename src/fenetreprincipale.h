@@ -4,6 +4,7 @@
 #include <QtGui/QMainWindow>
 #include <QtCore/QThread>
 #include <QtGui/QPainter>
+#include <QtGui/QKeyEvent>
 #include "csbigcam.h"
 #include "csbigimg.h"
 #include "image.h"
@@ -48,10 +49,12 @@ private slots:
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();
     void on_consigneGauche_clicked();
+
     void closeEvent(QCloseEvent *event);
+    void keyPressEvent(QKeyEvent* event);
 public slots:
 	void afficherMessage(QString msg);
-    void statutCamera(bool etat);
+    void statutCamera(int etat);
     void statutArduino(bool etat);
     void statutGuidage(bool statut);
 
@@ -65,7 +68,7 @@ signals:
 	void deconnecterArduino();
 	void consigneLigne(double l);
 	void consigneColonne(double c);
-	void consigneModification(int,int);
+	void modificationConsigne(int,int);
 };
 
 #endif // FENETREPRINCIPALE_H
