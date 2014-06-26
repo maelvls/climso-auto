@@ -14,10 +14,16 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QThread>
+#include <QtGui/QColor>
+#include <QtCore/QFileInfo>
+#include <QDir>
 #include "arduino.h"
 #include "image.h"
 
-
+#define CONNEXION_ARDUINO_OK		1
+#define CONNEXION_ARDUINO_PAS_OK	2
+#define CONNEXION_ARDUINO_AUTO_OFF	4
+#define CONNEXION_ARDUINO_AUTO_ON	8
 
 class Guidage : public QObject {
 	Q_OBJECT
@@ -29,13 +35,14 @@ private:
 	QString fichier_arduino;
 	double consigne_l, consigne_c;
 	double position_l, position_c;
-	int l_max, c_max; // Pour l'affichage
 	int diametre; // Pour l'affichage
+	Image* img;
 
 	void capturerImage();
     bool arduinoConnecte();
 public:
 	Guidage();
+    static QStringList chercherFichiersArduino();
 public slots:
 // guidage
 	void lancerGuidage();
@@ -45,16 +52,19 @@ public slots:
     void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
 private slots:
-	void guidageSuivant();
-	void guidageInitial();
+	void guidageAuto();
+	void initialiserConsigne();
 	void connexionAuto();
-	void modifierPosition(double l, double c, int l_max, int c_max, int diametre);
-	void consigneModifier(int deltaLigne, int deltaColonne);
+	void traiterResultatsCapture(Image* img, double l, double c, int diametre, double bruitsignal);
+	void modifierConsigne(int deltaLigne, int deltaColonne);
 signals:
 	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 	void message(QString msg);
 	void etatArduino(bool);
 	void etatGuidage(bool);
+	void imageSoleil(Image*);
+	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x, QColor couleur);
+	void signalBruit(double);
 };
 
 #endif /* GUIDAGE_H_ */
