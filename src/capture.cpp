@@ -96,15 +96,15 @@ void Capture::lancerCapture() {
 void Capture::stopperCapture() {
 	timerCapture.stop();
 }
-void Capture::capturerImage() {
+bool Capture::capturerImage() {
     if (!cameraConnectee()) {
         emit message("La camera n'est pas connectee");
-        return;
+        return false;
     }
     CSBIGImg* img_sbig = new CSBIGImg();
     if(cam->GrabImage(img_sbig, SBDF_LIGHT_ONLY) != CE_NO_ERROR) {
         emit message("Impossible de lire capturer l'image : "+QString::fromStdString(cam->GetErrorString()));
-        return;
+        return false;
     }
     Image* img_temp = Image::depuisSBIGImg(*img_sbig);
     delete img_sbig; // On supprime l'image CSBIGImg
@@ -112,6 +112,7 @@ void Capture::capturerImage() {
     if(img) delete img; // On supprime la derniere image
     img = img_temp->reduire(2);
 	delete img_temp;
+	return true;
 }
 
 void Capture::trouverPosition() {
@@ -142,10 +143,11 @@ void Capture::trouverPosition() {
 void Capture::captureEtPosition() {
 	//QCoreApplication::processEvents();
 	//t.start();
-	capturerImage();
+	if(capturerImage()) {
     //cout << "Temps ecoulé : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
     //cout << "Temps ecoulé 2 : " << t.elapsed() << "ms" <<endl;
+	}
 	timerCapture.start(PERIODE_ENTRE_CAPTURES);
 }
 

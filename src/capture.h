@@ -49,7 +49,7 @@ public slots:
 	void connecterCameraAuto();
 	void deconnecterCamera();
 	void deconnecterCameraAuto();
-	void capturerImage();
+	bool capturerImage();
 	void trouverPosition();
 private slots:
 	void connexionAuto();
