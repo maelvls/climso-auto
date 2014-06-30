@@ -10,8 +10,9 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     ui(new Ui::FenetrePrincipale)
 {
     ui->setupUi(this);
-    paletteOk.setColor(QPalette::WindowText, Qt::green);
-    palettePasOk.setColor(QPalette::WindowText, Qt::red);
+    paletteTexteVert.setColor(QPalette::WindowText, Qt::green);
+    paletteTexteRouge.setColor(QPalette::WindowText, Qt::red);
+    paletteTexteJaune.setColor(QPalette::WindowText, Qt::yellow);
 
     guidage = new Guidage;
     guidage->moveToThread(&threadGuidage);
@@ -20,7 +21,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     // Liens entre fenetreprincipale et guidage
     QObject::connect(this,SIGNAL(deconnecterArduino()),guidage,SLOT(deconnecterArduino()));
-    QObject::connect(guidage,SIGNAL(etatArduino(bool)),this,SLOT(statutArduino(bool)));
+    QObject::connect(guidage,SIGNAL(etatArduino(int)),this,SLOT(statutArduino(int)));
     QObject::connect(guidage,SIGNAL(etatGuidage(bool)),this,SLOT(statutGuidage(bool)));
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
@@ -50,6 +51,9 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     threadGuidage.start();
     threadCapture.start();
+
+    ui->messages->installEventFilter(this);
+    ui->consigneDroite->installEventFilter(this);
 
 }
 
@@ -91,23 +95,28 @@ void FenetrePrincipale::on_stopperGuidage_clicked() {
 
 void FenetrePrincipale::statutCamera(int etat) {
 	if(etat & CONNEXION_CAMERA_OK) {
-		ui->statutCamera->setPalette(paletteOk);
+		ui->statutCamera->setPalette(paletteTexteVert);
 		ui->statutCamera->setText("Camera OK");
 	}
 	else if(etat & CONNEXION_CAMERA_PAS_OK){
-		ui->statutCamera->setPalette(palettePasOk);
+		ui->statutCamera->setPalette(paletteTexteRouge);
 		ui->statutCamera->setText("Camera PAS OK");
 	}
 }
 
-void FenetrePrincipale::statutArduino(bool etat) {
-	if(etat) {
-		ui->statutArduino->setPalette(paletteOk);
-		ui->statutArduino->setText("Arduino OK");
-	}
-	else {
-		ui->statutArduino->setPalette(palettePasOk);
-		ui->statutArduino->setText("Arduino PAS OK");
+void FenetrePrincipale::statutArduino(int etat) {
+	switch(etat) {
+		case ARDUINO_CONNEXION_ON:
+			ui->statutArduino->setPalette(paletteTexteVert);
+			ui->statutArduino->setText("Arduino connecte");
+			break;
+		case ARDUINO_CONNEXION_OFF:
+			ui->statutArduino->setPalette(paletteTexteJaune);
+			ui->statutArduino->setText("Arduino deconnecte");
+			break;
+		case ARDUINO_FICHIER_INTROUV:
+			ui->statutArduino->setPalette(paletteTexteRouge);
+			ui->statutArduino->setText("Arduino introuvable");
 	}
 }
 
@@ -151,11 +160,11 @@ void FenetrePrincipale::closeEvent(QCloseEvent* event) {
 
 void FenetrePrincipale::statutGuidage(bool statut) {
 	if(statut) {
-		ui->statutGuidage->setPalette(paletteOk);
+		ui->statutGuidage->setPalette(paletteTexteVert);
 		ui->statutGuidage->setText("Marche");
 	}
 	else {
-		ui->statutGuidage->setPalette(palettePasOk);
+		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arret");
 	}
 }
@@ -175,4 +184,37 @@ void FenetrePrincipale::keyPressEvent(QKeyEvent* event) {
 			emit modificationConsigne(0,-1);
 			break;
 	}
+}
+
+
+
+bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
+ {
+     if (obj == ui->capturerImage
+    		 || obj ==  ui->centralWidget
+    		 || obj ==  ui->connecterArduino
+    		 || obj ==  ui->consigneBas
+    		 || obj ==  ui->consigneDroite
+    		 || obj ==  ui->consigneGauche
+    		 || obj ==  ui->consigneHaut
+    		 || obj ==  ui->deconnecterArduino
+    		 || obj ==  ui->deconnecterCamera
+    		 || obj ==  ui->diametreSoleil
+    		 || obj ==  ui->imageCamera
+    		 || obj ==  ui->initialiserConsigne
+    		 || obj ==  ui->lancerGuidage
+    		 || obj ==  ui->messages
+    		 || obj ==  ui->nomFichierArduino
+    		 ) {
+         if (event->type() == QEvent::KeyPress) {
+             QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+             cout << "Touche clavier: " << keyEvent->key() <<endl;
+             return true;
+         } else {
+             return false;
+         }
+     } else {
+         //passer l'événement à la classe parent
+         return QMainWindow::eventFilter(obj, event);
+     }
 }

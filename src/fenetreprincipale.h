@@ -28,8 +28,9 @@ private:
     QThread threadCapture;
     Capture* capture;
 
-    QPalette paletteOk;
-    QPalette palettePasOk;
+    QPalette paletteTexteVert;
+    QPalette paletteTexteRouge;
+    QPalette paletteTexteJaune;
 
     void signalHandler(int signal);
 
@@ -52,10 +53,12 @@ private slots:
 
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
+
 public slots:
 	void afficherMessage(QString msg);
     void statutCamera(int etat);
-    void statutArduino(bool etat);
+    void statutArduino(int etat);
     void statutGuidage(bool statut);
 
 signals:
