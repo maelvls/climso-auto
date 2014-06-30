@@ -45,8 +45,14 @@ Guidage::Guidage() {
 void Guidage::connexionAuto() {
 	if(!arduinoConnecte()) {
 		emit etatArduino(false);
-		connecterArduino(chercherFichiersArduino().first());
-		stopperGuidage();
+		QStringList l = chercherFichiersArduino();
+		if(l.length() > 0) {
+			connecterArduino(l.first());
+		}
+		else {
+			emit message("Aucun arduino ne semble avoir ete branche");
+		}
+		stopperGuidage(); // car il y a eu un arrêt de guidage
 	} else {
 		emit etatArduino(true);
 	}
