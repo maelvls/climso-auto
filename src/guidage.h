@@ -20,10 +20,13 @@
 #include "arduino.h"
 #include "image.h"
 
-#define CONNEXION_ARDUINO_OK		1
-#define CONNEXION_ARDUINO_PAS_OK	2
-#define CONNEXION_ARDUINO_AUTO_OFF	4
-#define CONNEXION_ARDUINO_AUTO_ON	8
+// Du moins pire au pire
+#define ARDUINO_CONNEXION_ON		0
+#define ARDUINO_CONNEXION_OFF		1
+#define ARDUINO_FICHIER_INTROUV		2
+
+#define ARDUINO_CONNEXION_AUTO_ON		0
+#define ARDUINO_CONNEXION_AUTO_OFF		1
 
 class Guidage : public QObject {
 	Q_OBJECT
@@ -60,7 +63,7 @@ private slots:
 signals:
 	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 	void message(QString msg);
-	void etatArduino(bool);
+	void etatArduino(int);
 	void etatGuidage(bool);
 	void imageSoleil(Image*);
 	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x, QColor couleur);

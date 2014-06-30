@@ -44,17 +44,17 @@ Guidage::Guidage() {
 
 void Guidage::connexionAuto() {
 	if(!arduinoConnecte()) {
-		emit etatArduino(false);
+		emit etatArduino(ARDUINO_CONNEXION_AUTO_OFF);
 		QStringList l = chercherFichiersArduino();
 		if(l.length() > 0) {
 			connecterArduino(l.first());
 		}
 		else {
-			emit message("Aucun arduino ne semble avoir ete branche");
+			emit etatArduino(ARDUINO_FICHIER_INTROUV);
 		}
 		stopperGuidage(); // car il y a eu un arrêt de guidage
 	} else {
-		emit etatArduino(true);
+		emit etatArduino(ARDUINO_CONNEXION_AUTO_ON);
 	}
 }
 
@@ -78,7 +78,7 @@ void Guidage::stopperGuidage() {
 
 void Guidage::initialiserConsigne() {
 	if(position_c == 0 || position_l == 0) {
-		emit message("Impossible de guider, la position n'a pas ete initialisee");
+		emit message("Impossible d'initialiser la consigne, aucune position enregistree");
 		return;
 	}
 	consigne_c = position_c;
