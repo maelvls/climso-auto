@@ -30,6 +30,11 @@ Capture::Capture() {
 }
 
 Capture::~Capture() {
+	deconnecterCamera();
+//	if(cam) delete cam; cam=NULL;
+//	if(img) delete img; img=NULL;
+//	if(ref_lapl) delete ref_lapl; ref_lapl = NULL;
+	cout << "Caméra deconnectée" <<endl;
 }
 
 void Capture::connecterCamera() {

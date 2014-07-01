@@ -41,6 +41,13 @@ Guidage::Guidage() {
 	timerVerificationConnexions.start();
 }
 
+Guidage::~Guidage() {
+	deconnecterArduino();
+//	if(arduino) delete arduino; arduino=NULL;
+//	if(img) delete img; img=NULL;
+	cout << "Arduino déconnecté" << endl;
+}
+
 
 void Guidage::connexionAuto() {
 	if(!arduinoConnecte()) {
@@ -192,6 +199,8 @@ void Guidage::modifierConsigne(int deltaLigne, int deltaColonne) {
 }
 
 QStringList Guidage::chercherFichiersArduino() {
+	// FIXME: il faut pouvoir distinguer le cas de fichier inexistant et le cas
+	// du fichier dont les droits de lecture sont insuffisants !
 	QStringList filtre;
 	filtre << "ttyACM*" << "tty.USB*" << "ttyUSB*" << "tty.usbmodem*";
 	QDir dir("/dev");

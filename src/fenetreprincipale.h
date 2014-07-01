@@ -72,6 +72,7 @@ signals:
 	void consigneLigne(double l);
 	void consigneColonne(double c);
 	void modificationConsigne(int,int);
+	void quitter();
 };
 
 #endif // FENETREPRINCIPALE_H

@@ -33,7 +33,6 @@ class Guidage : public QObject {
 private:
 	QTimer timerCorrection;
 	QTimer timerVerificationConnexions;
-	QThread threadDuGuidage;
 	Arduino* arduino;
 	QString fichier_arduino;
 	double consigne_l, consigne_c;
@@ -45,6 +44,7 @@ private:
     bool arduinoConnecte();
 public:
 	Guidage();
+	~Guidage();
     static QStringList chercherFichiersArduino();
 public slots:
 // guidage

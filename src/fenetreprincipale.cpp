@@ -29,12 +29,15 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(this,SIGNAL(modificationConsigne(int,int)),guidage,SLOT(modifierConsigne(int,int)));
     QObject::connect(ui->initialiserConsigne,SIGNAL(clicked()),guidage,SLOT(initialiserConsigne()));
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
+    QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
+
 
     // Liens entre fenetreprincipale et capture
     QObject::connect(capture,SIGNAL(etatCamera(int)),this,SLOT(statutCamera(int)));
     QObject::connect(this,SIGNAL(connecterCamera()),capture,SLOT(connecterCameraAuto()));
     QObject::connect(this,SIGNAL(deconnecterCamera()),capture,SLOT(deconnecterCameraAuto()));
     QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
+    QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
 
 
     // Liens entre capture et guidage
@@ -52,8 +55,25 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     threadGuidage.start();
     threadCapture.start();
 
+
+    // Pour capturer les touches directionnelles du clavier pour controler la consigne
     ui->messages->installEventFilter(this);
     ui->consigneDroite->installEventFilter(this);
+    ui->centralWidget->installEventFilter(this);
+	ui->centralWidget->installEventFilter(this);
+	ui->connecterArduino->installEventFilter(this);
+	ui->consigneBas->installEventFilter(this);
+	ui->consigneDroite->installEventFilter(this);
+	ui->consigneGauche->installEventFilter(this);
+	ui->consigneHaut->installEventFilter(this);
+	ui->deconnecterArduino->installEventFilter(this);
+	ui->deconnecterCamera->installEventFilter(this);
+	ui->diametreSoleil->installEventFilter(this);
+	ui->imageCamera->installEventFilter(this);
+	ui->initialiserConsigne->installEventFilter(this);
+	ui->lancerGuidage->installEventFilter(this);
+	ui->messages->installEventFilter(this);
+	ui->nomFichierArduino->installEventFilter(this);
 
 }
 
@@ -133,29 +153,15 @@ void FenetrePrincipale::on_consigneGauche_clicked() {
 	emit modificationConsigne(0,-1);
 }
 
-void FenetrePrincipale::signalHandler(int signal)
-{
-    switch(signal){
-        case SIGINT:
-        case SIGKILL:
-        case SIGQUIT:
-        case SIGSTOP:
-        case SIGTERM:
-        case SIGSEGV:
-        	cout << "Guidage arrete" << endl;
-        	emit deconnecterCamera();
-        	emit deconnecterArduino();
-        	break;
-        default: printf("APPLICATION EXITING => "); break;
-    }
-}
 
 void FenetrePrincipale::closeEvent(QCloseEvent* event) {
-	emit deconnecterArduino();
-	emit deconnecterCamera();
-	capture->deleteLater();
-	guidage->deleteLater();
-	cout << "Guidage termine" << endl;
+	threadCapture.quit(); // termine la boucle d'event de l'objet QThread
+	threadGuidage.quit();
+	threadGuidage.wait(); // Attend que le QThread soit terminé
+	threadCapture.wait();
+	cout << "Application terminée" << endl;
+	// FIXME: quant on quitte comme ça, deleteLater() n'a pas le temps
+	// de supprimer l'objet
 }
 
 void FenetrePrincipale::statutGuidage(bool statut) {
@@ -187,7 +193,7 @@ void FenetrePrincipale::keyPressEvent(QKeyEvent* event) {
 }
 
 
-
+// Pour capturer les touches directionnelles du clavier pour controler la consigne
 bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
  {
      if (obj == ui->capturerImage
@@ -208,7 +214,7 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
     		 ) {
          if (event->type() == QEvent::KeyPress) {
              QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-             cout << "Touche clavier: " << keyEvent->key() <<endl;
+             keyPressEvent(keyEvent);
              return true;
          } else {
              return false;
