@@ -39,11 +39,6 @@ public:
     ~FenetrePrincipale();
 
 private slots:
-    void on_connecterCamera_clicked();
-    void on_deconnecterCamera_clicked();
-    void on_capturerImage_clicked();
-    void on_connecterArduino_clicked();
-    void on_deconnecterArduino_clicked();
     void on_lancerGuidage_clicked();
     void on_stopperGuidage_clicked();
     void on_consigneHaut_clicked();

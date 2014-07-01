@@ -43,7 +43,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // Liens entre capture et guidage
     QObject::connect(capture,SIGNAL(resultats(Image*,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(Image*,double,double,int,double)));
     QObject::connect(capture,SIGNAL(stopperGuidage()),guidage, SLOT(stopperGuidage()));
-    QObject::connect(ui->nomFichierArduino,SIGNAL(textChanged(QString)),guidage, SLOT(connecterArduino(QString)));
 
     // Liens avec imageCamera (le widget)
     QObject::connect(guidage,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
@@ -61,19 +60,15 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     ui->consigneDroite->installEventFilter(this);
     ui->centralWidget->installEventFilter(this);
 	ui->centralWidget->installEventFilter(this);
-	ui->connecterArduino->installEventFilter(this);
 	ui->consigneBas->installEventFilter(this);
 	ui->consigneDroite->installEventFilter(this);
 	ui->consigneGauche->installEventFilter(this);
 	ui->consigneHaut->installEventFilter(this);
-	ui->deconnecterArduino->installEventFilter(this);
-	ui->deconnecterCamera->installEventFilter(this);
 	ui->diametreSoleil->installEventFilter(this);
 	ui->imageCamera->installEventFilter(this);
 	ui->initialiserConsigne->installEventFilter(this);
 	ui->lancerGuidage->installEventFilter(this);
 	ui->messages->installEventFilter(this);
-	ui->nomFichierArduino->installEventFilter(this);
 
 }
 
@@ -83,26 +78,6 @@ FenetrePrincipale::~FenetrePrincipale() {
 
 void FenetrePrincipale::afficherMessage(QString msg) {
     ui->messages->append(msg);
-}
-
-void FenetrePrincipale::on_connecterCamera_clicked() {
-    emit connecterCamera();
-}
-
-void FenetrePrincipale::on_deconnecterCamera_clicked() {
-    emit deconnecterCamera();
-}
-
-void FenetrePrincipale::on_capturerImage_clicked() {
-    emit demanderImage();
-}
-
-void FenetrePrincipale::on_connecterArduino_clicked() {
-    emit connecterArduino(ui->nomFichierArduino->text());
-}
-
-void FenetrePrincipale::on_deconnecterArduino_clicked() {
-    emit deconnecterArduino();
 }
 
 void FenetrePrincipale::on_lancerGuidage_clicked() {
@@ -196,21 +171,16 @@ void FenetrePrincipale::keyPressEvent(QKeyEvent* event) {
 // Pour capturer les touches directionnelles du clavier pour controler la consigne
 bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
  {
-     if (obj == ui->capturerImage
-    		 || obj ==  ui->centralWidget
-    		 || obj ==  ui->connecterArduino
+     if (		obj ==  ui->centralWidget
     		 || obj ==  ui->consigneBas
     		 || obj ==  ui->consigneDroite
     		 || obj ==  ui->consigneGauche
     		 || obj ==  ui->consigneHaut
-    		 || obj ==  ui->deconnecterArduino
-    		 || obj ==  ui->deconnecterCamera
     		 || obj ==  ui->diametreSoleil
     		 || obj ==  ui->imageCamera
     		 || obj ==  ui->initialiserConsigne
     		 || obj ==  ui->lancerGuidage
     		 || obj ==  ui->messages
-    		 || obj ==  ui->nomFichierArduino
     		 ) {
          if (event->type() == QEvent::KeyPress) {
              QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
