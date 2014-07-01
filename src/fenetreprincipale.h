@@ -28,6 +28,8 @@ private:
     QThread threadCapture;
     Capture* capture;
 
+    int modeVitesse;
+
     QPalette paletteTexteVert;
     QPalette paletteTexteRouge;
     QPalette paletteTexteJaune;
@@ -49,6 +51,7 @@ private slots:
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent* event);
     bool eventFilter(QObject *obj, QEvent *event);
+    void modifierVitesseDeplacement();
 
 public slots:
 	void afficherMessage(QString msg);
@@ -66,7 +69,7 @@ signals:
 	void deconnecterArduino();
 	void consigneLigne(double l);
 	void consigneColonne(double c);
-	void modificationConsigne(int,int);
+	void modificationConsigne(int,int,int modeVitesse);
 	void quitter();
 };
 

@@ -8,26 +8,6 @@
 #include "guidage.h"
 #include <QtCore/qmath.h>
 
-#define IMPULSION_PIXEL_H	400 //ms
-#define IMPULSION_PIXEL_V	800 //ms (2px pour 1sec)
-#define PIN_NORD			12
-#define	PIN_SUD				11
-#define	PIN_EST				10
-#define PIN_OUEST			9
-#define ORIENTATION_NORD_SUD 		-1 // 1 quand le nord correspond au nord, -1 sinon
-#define ORIENTATION_EST_OUEST		-1 // 1 quand l'est correspond à l'est, -1 sinon
-#define SEUIL_BRUIT_SIGNAL			0.50
-#define PERIODE_ENTRE_GUIDAGES		5000 // en ms
-#define PERIODE_ENTRE_CONNEXIONS	1000
-#define SEUIL_DECALAGE_PIXELS		1.0
-// FIXME: si temps envoi arduino > timer, pbm (on limite ce temps à un peu au dessous de celui du timer)
-
-#define POSITION_OK				Qt::green //QColor(qRgb(255,145,164))//QColor(qRgb(44,117,255))
-#define POSITION_NOK			Qt::gray //QColor(qRgb(187,210,225))
-#define CONSIGNE_OK				Qt::green //QColor(qRgb(86,130,3))
-#define CONSIGNE_LOIN			Qt::yellow //QColor(qRgb(230,126,48))
-#define CONSIGNE_DIVERGE		Qt::red
-
 string emplacement_capture = "";
 
 Guidage::Guidage() {
@@ -112,10 +92,23 @@ void Guidage::guidageAuto() {
 		emit message("Aucune position courante");
 		return;
 	}
+	// Calcul de la moyenne de décalage
+	cout << "Taille historique : " << historique_l.length() << endl;
 
+	double moyenne_l=0, moyenne_c=0; int i;
+	for(i = 0; historique_l.length() > 0; i++) {
+		moyenne_l += historique_l.first();
+		cout << i<<"(x=" << historique_c.first() << ", y=" << historique_l.first() <<")"<<endl;
+		moyenne_c += historique_c.first();
+		historique_l.removeFirst();
+		historique_c.removeFirst();
+	}
+	cout << "Taille historique fin : " << historique_l.length() << endl;
+	moyenne_l = moyenne_l/i;
+	moyenne_c = moyenne_c/i;
 	// Calcul du décalage x,y entre la position initiale
-	double l_decal = position_l - consigne_l;
-	double c_decal = position_c - consigne_c;
+	double l_decal = moyenne_l - consigne_l;
+	double c_decal = moyenne_c - consigne_c;
 	// Calcul de la longueur en pixels du décalage
 	decalage = qSqrt(l_decal*l_decal + c_decal*c_decal);
 
@@ -180,6 +173,8 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c, int diamet
 	this->diametre = diametre;
 	position_c = c;
 	position_l = l;
+	historique_l << l;
+	historique_c << c;
 	this->img = img;
 	this->bruitsignal = bruitsignal;
 	emit signalBruit(bruitsignal);
@@ -190,13 +185,13 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c, int diamet
 	afficherImageSoleilEtReperes();
 }
 
-void Guidage::modifierConsigne(int deltaLigne, int deltaColonne) {
+void Guidage::modifierConsigne(int deltaLigne, int deltaColonne,int modeVitesse) {
 	if(consigne_l == 0 || consigne_c == 0 || img == NULL) {
 		emit message("Impossible de modifier la consigne : aucune position");
 		return;
 	}
-	consigne_l = consigne_l + deltaLigne;
-	consigne_c = consigne_c + deltaColonne;
+	consigne_l = consigne_l + deltaLigne*((modeVitesse==VITESSE_LENTE)?INCREMENT_LENT:INCREMENT_RAPIDE);
+	consigne_c = consigne_c + deltaColonne*((modeVitesse==VITESSE_LENTE)?INCREMENT_LENT:INCREMENT_RAPIDE);
 	afficherImageSoleilEtReperes();
 }
 
@@ -222,7 +217,7 @@ void Guidage::afficherImageSoleilEtReperes() {
 	}
 	if(not(consigne_l == 0 || consigne_c == 0)) {
 		if(decalage < SEUIL_DECALAGE_PIXELS) {
-			emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_OK);
+			emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_LOIN);
 		} else if (true){
 			emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_LOIN);
 		} else {
@@ -232,6 +227,6 @@ void Guidage::afficherImageSoleilEtReperes() {
 }
 
 /*
- * Echantillon toutes les 1 secondes,
- * Guidage tous les 5 échantillons
+ * Echantillon toutes les 1 secondes (on garde les positions)
+ * Guidage toutes les 5 secondes avec les échantillons récoltés
  */

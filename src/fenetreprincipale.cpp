@@ -2,8 +2,6 @@
 #include "fenetreprincipale_ui.h"
 #include <QtCore/QTextCodec>
 
-#define DEV_DEFAULT "/dev/ttyACM0"
-
 
 FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QMainWindow(parent),
@@ -28,7 +26,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
     QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
-    QObject::connect(this,SIGNAL(modificationConsigne(int,int)),guidage,SLOT(modifierConsigne(int,int)));
+    QObject::connect(this,SIGNAL(modificationConsigne(int,int,int)),guidage,SLOT(modifierConsigne(int,int,int)));
     QObject::connect(ui->initialiserConsigne,SIGNAL(clicked()),guidage,SLOT(initialiserConsigne()));
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
@@ -46,11 +44,12 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(capture,SIGNAL(resultats(Image*,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(Image*,double,double,int,double)));
     QObject::connect(capture,SIGNAL(stopperGuidage()),guidage, SLOT(stopperGuidage()));
 
-    // Liens avec imageCamera (le widget)
+
+    // Liens entre les éléments de l'interface
+    QObject::connect(ui->vitesseDecalageLent,SIGNAL(toggled(bool)),this,SLOT(modifierVitesseDeplacement()));
     QObject::connect(guidage,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
     QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,QColor)));
     QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,QColor)));
-
 
     ui->diametreSoleil->setValue(200);
 
@@ -72,7 +71,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 	ui->initialiserConsigne->installEventFilter(this);
 	ui->lancerGuidage->installEventFilter(this);
 	ui->messages->installEventFilter(this);
-
+	ui->vitesseDecalageLent->installEventFilter(this);
+	ui->vitesseDecalageRapide->installEventFilter(this);
 }
 
 FenetrePrincipale::~FenetrePrincipale() {
@@ -103,7 +103,6 @@ void FenetrePrincipale::statutCamera(int etat) {
 }
 
 void FenetrePrincipale::statutArduino(int etat) {
-
 	switch(etat) {
 		case ARDUINO_CONNEXION_ON:
 			ui->statutArduino->setPalette(paletteTexteVert);
@@ -120,16 +119,16 @@ void FenetrePrincipale::statutArduino(int etat) {
 }
 
 void FenetrePrincipale::on_consigneHaut_clicked() {
-	emit modificationConsigne(-1,0);
+	emit modificationConsigne(-1,0,modeVitesse);
 }
 void FenetrePrincipale::on_consigneBas_clicked() {
-	emit modificationConsigne(1,0);
+	emit modificationConsigne(1,0,modeVitesse);
 }
 void FenetrePrincipale::on_consigneDroite_clicked() {
-	emit modificationConsigne(0,1);
+	emit modificationConsigne(0,1,modeVitesse);
 }
 void FenetrePrincipale::on_consigneGauche_clicked() {
-	emit modificationConsigne(0,-1);
+	emit modificationConsigne(0,-1,modeVitesse);
 }
 
 
@@ -141,6 +140,14 @@ void FenetrePrincipale::closeEvent(QCloseEvent* event) {
 	cout << "Application terminée" << endl;
 	// FIXME: quant on quitte comme ça, deleteLater() n'a pas le temps
 	// de supprimer l'objet
+}
+
+void FenetrePrincipale::modifierVitesseDeplacement() {
+	if(ui->vitesseDecalageLent->isChecked()) {
+		modeVitesse = VITESSE_LENTE;
+	} else {
+		modeVitesse = VITESSE_RAPIDE;
+	}
 }
 
 void FenetrePrincipale::statutGuidage(bool statut) {
@@ -157,16 +164,16 @@ void FenetrePrincipale::statutGuidage(bool statut) {
 void FenetrePrincipale::keyPressEvent(QKeyEvent* event) {
 	switch(event->key()) {
 		case Qt::Key_Up:
-			emit modificationConsigne(-1,0);
+			emit modificationConsigne(-1,0,modeVitesse);
 			break;
 		case Qt::Key_Down:
-			emit modificationConsigne(1,0);
+			emit modificationConsigne(1,0,modeVitesse);
 			break;
 		case Qt::Key_Right:
-			emit modificationConsigne(0,1);
+			emit modificationConsigne(0,1,modeVitesse);
 			break;
 		case Qt::Key_Left:
-			emit modificationConsigne(0,-1);
+			emit modificationConsigne(0,-1,modeVitesse);
 			break;
 	}
 }
@@ -185,6 +192,8 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
     		 || obj ==  ui->initialiserConsigne
     		 || obj ==  ui->lancerGuidage
     		 || obj ==  ui->messages
+    		 || obj ==  ui->vitesseDecalageRapide
+    		 || obj ==  ui->vitesseDecalageLent
      ) {
     	 if (event->type() == QEvent::KeyPress) {
     		 QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
