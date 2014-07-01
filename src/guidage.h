@@ -34,14 +34,17 @@ private:
 	QTimer timerCorrection;
 	QTimer timerVerificationConnexions;
 	Arduino* arduino;
-	QString fichier_arduino;
+
 	double consigne_l, consigne_c;
 	double position_l, position_c;
+	double decalage;
 	int diametre; // Pour l'affichage
 	Image* img;
+	double bruitsignal;
 
 	void capturerImage();
     bool arduinoConnecte();
+    void afficherImageSoleilEtReperes();
 public:
 	Guidage();
 	~Guidage();
@@ -61,12 +64,12 @@ private slots:
 	void traiterResultatsCapture(Image* img, double l, double c, int diametre, double bruitsignal);
 	void modifierConsigne(int deltaLigne, int deltaColonne);
 signals:
-	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x);
 	void message(QString msg);
 	void etatArduino(int);
 	void etatGuidage(bool);
 	void imageSoleil(Image*);
 	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x, QColor couleur);
+	void repereConsigne(float pourcent_x, float pourcent_y, float diametre_pourcent_x, QColor couleur);
 	void signalBruit(double);
 };
 

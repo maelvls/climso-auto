@@ -1,6 +1,6 @@
 #include "fenetreprincipale.h"
 #include "fenetreprincipale_ui.h"
-
+#include <QtCore/QTextCodec>
 
 #define DEV_DEFAULT "/dev/ttyACM0"
 
@@ -13,6 +13,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     paletteTexteVert.setColor(QPalette::WindowText, Qt::green);
     paletteTexteRouge.setColor(QPalette::WindowText, Qt::red);
     paletteTexteJaune.setColor(QPalette::WindowText, Qt::yellow);
+    // Faire en sorte que les chaines statiques "C-strings" soient considérées comme UTF-8
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
     guidage = new Guidage;
     guidage->moveToThread(&threadGuidage);
@@ -46,7 +48,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     // Liens avec imageCamera (le widget)
     QObject::connect(guidage,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
-    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepere(float,float,float,QColor)));
+    QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,QColor)));
+    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,QColor)));
 
 
     ui->diametreSoleil->setValue(200);
@@ -89,25 +92,26 @@ void FenetrePrincipale::on_stopperGuidage_clicked() {
 }
 
 void FenetrePrincipale::statutCamera(int etat) {
-	if(etat & CONNEXION_CAMERA_OK) {
+	if(etat & CAMERA_CONNEXION_ON) {
 		ui->statutCamera->setPalette(paletteTexteVert);
-		ui->statutCamera->setText("Camera OK");
+		ui->statutCamera->setText("Caméra connectée");
 	}
-	else if(etat & CONNEXION_CAMERA_PAS_OK){
+	else if(etat & CAMERA_CONNEXION_OFF){
 		ui->statutCamera->setPalette(paletteTexteRouge);
-		ui->statutCamera->setText("Camera PAS OK");
+		ui->statutCamera->setText("Caméra déconnectée");
 	}
 }
 
 void FenetrePrincipale::statutArduino(int etat) {
+
 	switch(etat) {
 		case ARDUINO_CONNEXION_ON:
 			ui->statutArduino->setPalette(paletteTexteVert);
-			ui->statutArduino->setText("Arduino connecte");
+			ui->statutArduino->setText("Arduino connecté");
 			break;
 		case ARDUINO_CONNEXION_OFF:
 			ui->statutArduino->setPalette(paletteTexteJaune);
-			ui->statutArduino->setText("Arduino deconnecte");
+			ui->statutArduino->setText("Arduino déconnecté");
 			break;
 		case ARDUINO_FICHIER_INTROUV:
 			ui->statutArduino->setPalette(paletteTexteRouge);
@@ -146,7 +150,7 @@ void FenetrePrincipale::statutGuidage(bool statut) {
 	}
 	else {
 		ui->statutGuidage->setPalette(paletteTexteRouge);
-		ui->statutGuidage->setText("Arret");
+		ui->statutGuidage->setText("Arrêt");
 	}
 }
 
@@ -181,11 +185,20 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
     		 || obj ==  ui->initialiserConsigne
     		 || obj ==  ui->lancerGuidage
     		 || obj ==  ui->messages
-    		 ) {
-         if (event->type() == QEvent::KeyPress) {
-             QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
-             keyPressEvent(keyEvent);
-             return true;
+     ) {
+    	 if (event->type() == QEvent::KeyPress) {
+    		 QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+    		 if(keyEvent->key() == Qt::Key_Up
+    				 || keyEvent->key() == Qt::Key_Right
+    				 || keyEvent->key() == Qt::Key_Left
+    				 || keyEvent->key() == Qt::Key_Down) {
+
+    			 keyPressEvent(keyEvent);
+    			 return true;
+    		 }
+    		 else {
+    			 return false;
+    		 }
          } else {
              return false;
          }

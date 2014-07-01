@@ -6,22 +6,28 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>966</width>
-    <height>661</height>
+    <width>715</width>
+    <height>664</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Capturer image</string>
+   <string>Climso-auto</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="WidgetImage" name="imageCamera">
     <property name="geometry">
      <rect>
-      <x>0</x>
+      <x>10</x>
       <y>10</y>
       <width>701</width>
       <height>531</height>
      </rect>
+    </property>
+    <property name="sizePolicy">
+     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+      <horstretch>0</horstretch>
+      <verstretch>0</verstretch>
+     </sizepolicy>
     </property>
     <property name="autoFillBackground">
      <bool>false</bool>
@@ -33,210 +39,255 @@
    <widget class="QLabel" name="statutCamera">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>20</y>
-      <width>141</width>
-      <height>16</height>
+      <x>200</x>
+      <y>500</y>
+      <width>511</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
     </property>
     <property name="text">
      <string/>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QTextBrowser" name="messages">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>550</y>
-      <width>371</width>
+      <x>0</x>
+      <y>560</y>
+      <width>321</width>
       <height>101</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="lancerGuidage">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>260</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Lancer guidage</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="stopperGuidage">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>290</y>
-      <width>111</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Stopper guidage</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_3">
-    <property name="geometry">
-     <rect>
-      <x>740</x>
-      <y>350</y>
-      <width>101</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Diametre soleil</string>
-    </property>
-   </widget>
-   <widget class="QSpinBox" name="diametreSoleil">
-    <property name="geometry">
-     <rect>
-      <x>850</x>
-      <y>350</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="minimum">
-     <number>100</number>
-    </property>
-    <property name="maximum">
-     <number>600</number>
     </property>
    </widget>
    <widget class="QLabel" name="statutArduino">
     <property name="geometry">
      <rect>
-      <x>750</x>
-      <y>40</y>
-      <width>161</width>
-      <height>16</height>
+      <x>200</x>
+      <y>520</y>
+      <width>511</width>
+      <height>20</height>
      </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::RightToLeft</enum>
     </property>
     <property name="text">
      <string/>
     </property>
-   </widget>
-   <widget class="QLabel" name="label_4">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>220</y>
-      <width>71</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Bruit/signal</string>
+    <property name="alignment">
+     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
-   <widget class="QLabel" name="ratioSignalBruit">
+   <widget class="QWidget" name="croix" native="true">
     <property name="geometry">
      <rect>
-      <x>860</x>
-      <y>220</y>
-      <width>51</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="consigneHaut">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>110</y>
-      <width>31</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>H</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="consigneDroite">
-    <property name="geometry">
-     <rect>
-      <x>860</x>
-      <y>140</y>
-      <width>31</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>D</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="consigneGauche">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>140</y>
-      <width>31</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>G</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="consigneBas">
-    <property name="geometry">
-     <rect>
-      <x>820</x>
-      <y>170</y>
-      <width>31</width>
-      <height>31</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>B</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="statutGuidage">
-    <property name="geometry">
-     <rect>
-      <x>800</x>
-      <y>330</y>
-      <width>81</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QLabel" name="statutConnexionsAuto">
-    <property name="geometry">
-     <rect>
-      <x>750</x>
-      <y>20</y>
-      <width>161</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="initialiserConsigne">
-    <property name="geometry">
-     <rect>
-      <x>780</x>
-      <y>70</y>
+      <x>590</x>
+      <y>550</y>
       <width>111</width>
-      <height>31</height>
+      <height>91</height>
      </rect>
     </property>
-    <property name="text">
-     <string>Pos. courante</string>
+    <widget class="QPushButton" name="initialiserConsigne">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>30</y>
+       <width>51</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Reset</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="consigneGauche">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>G</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="consigneHaut">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>0</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>H</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="consigneBas">
+     <property name="geometry">
+      <rect>
+       <x>40</x>
+       <y>60</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>B</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="consigneDroite">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>30</y>
+       <width>31</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>D</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget" native="true">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>640</y>
+      <width>181</width>
+      <height>21</height>
+     </rect>
     </property>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>101</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Diametre soleil</string>
+     </property>
+    </widget>
+    <widget class="QSpinBox" name="diametreSoleil">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>0</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="minimum">
+      <number>100</number>
+     </property>
+     <property name="maximum">
+      <number>600</number>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget_2" native="true">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>550</y>
+      <width>121</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <widget class="QPushButton" name="lancerGuidage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>121</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Lancer guidage</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="stopperGuidage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>30</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Stopper guidage</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="statutGuidage">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>50</y>
+       <width>121</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="widget_3" native="true">
+    <property name="geometry">
+     <rect>
+      <x>550</x>
+      <y>640</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="autoFillBackground">
+     <bool>true</bool>
+    </property>
+    <widget class="QLabel" name="ratioSignalBruit">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>0</y>
+       <width>81</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>0</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>71</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>true</bool>
+     </property>
+     <property name="text">
+      <string>Bruit/signal</string>
+     </property>
+    </widget>
    </widget>
   </widget>
  </widget>

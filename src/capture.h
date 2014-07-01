@@ -17,10 +17,8 @@
 #include "csbigimg.h"
 #include "image.h"
 
-#define CONNEXION_CAMERA_OK		1
-#define CONNEXION_CAMERA_PAS_OK	2
-#define CONNEXION_CAMERA_AUTO_OFF	4
-#define CONNEXION_CAMERA_AUTO_ON	8
+#define CAMERA_CONNEXION_ON		1
+#define CAMERA_CONNEXION_OFF	2
 
 class Capture: public QObject {
 	Q_OBJECT

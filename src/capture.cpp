@@ -26,7 +26,7 @@ Capture::Capture() {
 	QObject::connect(&timerConnexion,SIGNAL(timeout()),this,SLOT(connexionAuto()));
 	QObject::connect(&timerCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
 	timerCapture.start(PERIODE_ENTRE_CAPTURES);
-	connecterCameraAuto();
+	//connecterCameraAuto();
 }
 
 Capture::~Capture() {
@@ -44,17 +44,17 @@ void Capture::connecterCamera() {
     cam = new CSBIGCam(DEV_USB); // Creation du device USB
     if ((err = cam->GetError()) != CE_NO_ERROR) {
         emit message("Erreur avec la camera lors de la creation de l'objet camera : "+QString::fromStdString(cam->GetErrorString()));
-        emit etatCamera(CONNEXION_CAMERA_PAS_OK);
+        emit etatCamera(CAMERA_CONNEXION_OFF);
     }
     else if ((err=cam->EstablishLink()) != CE_NO_ERROR) { // Connexion à la camera
         emit message("Erreur avec la camera lors de l'etablissement du lien: "+QString::fromStdString(cam->GetErrorString()));
-        emit etatCamera(CONNEXION_CAMERA_PAS_OK);
+        emit etatCamera(CAMERA_CONNEXION_OFF);
     }
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
         cam->SetExposureTime(0.01);
         emit message("Camera connectee");
-        emit etatCamera(CONNEXION_CAMERA_OK);
+        emit etatCamera(CAMERA_CONNEXION_ON);
     }
 }
 
@@ -68,7 +68,7 @@ void Capture::deconnecterCamera() {
         cam->CloseDevice();
         emit message("Camera deconnectee");
         delete cam; cam = NULL;
-        emit etatCamera(CONNEXION_CAMERA_PAS_OK);
+        emit etatCamera(CAMERA_CONNEXION_OFF);
     }
     else {
         emit message("Aucune camera n'est connectee");
@@ -87,11 +87,11 @@ bool Capture::cameraConnectee() {
 
 void Capture::connexionAuto() {
 	if(!cameraConnectee()) {
-		emit etatCamera(CONNEXION_CAMERA_PAS_OK);
+		emit etatCamera(CAMERA_CONNEXION_OFF);
 		emit stopperGuidage();
 		connecterCamera();
 	} else {
-		emit etatCamera(CONNEXION_CAMERA_OK);
+		emit etatCamera(CAMERA_CONNEXION_ON);
 	}
 }
 
@@ -146,6 +146,7 @@ void Capture::trouverPosition() {
 
 
 void Capture::captureEtPosition() {
+	connexionAuto();
 	//QCoreApplication::processEvents();
 	//t.start();
 	if(capturerImage()) {

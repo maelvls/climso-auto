@@ -6,6 +6,7 @@
  */
 
 #include "guidage.h"
+#include <QtCore/qmath.h>
 
 #define IMPULSION_PIXEL_H	400 //ms
 #define IMPULSION_PIXEL_V	800 //ms (2px pour 1sec)
@@ -18,9 +19,14 @@
 #define SEUIL_BRUIT_SIGNAL			0.50
 #define PERIODE_ENTRE_GUIDAGES		5000 // en ms
 #define PERIODE_ENTRE_CONNEXIONS	1000
+#define SEUIL_DECALAGE_PIXELS		1.0
 // FIXME: si temps envoi arduino > timer, pbm (on limite ce temps à un peu au dessous de celui du timer)
 
-#define FICHIER_ARDUINO_DEFAUT "/dev/ttyACM0"
+#define POSITION_OK				Qt::green //QColor(qRgb(255,145,164))//QColor(qRgb(44,117,255))
+#define POSITION_NOK			Qt::gray //QColor(qRgb(187,210,225))
+#define CONSIGNE_OK				Qt::green //QColor(qRgb(86,130,3))
+#define CONSIGNE_LOIN			Qt::yellow //QColor(qRgb(230,126,48))
+#define CONSIGNE_DIVERGE		Qt::red
 
 string emplacement_capture = "";
 
@@ -31,8 +37,9 @@ Guidage::Guidage() {
 	consigne_c = consigne_l = 0;
 	position_c = position_l = 0;
 	arduino = NULL;
-	fichier_arduino = FICHIER_ARDUINO_DEFAUT;
 	img = NULL;
+	bruitsignal = 1;
+	decalage = 1000000;
 
 	QObject::connect(&timerCorrection,SIGNAL(timeout()),this,SLOT(guidageAuto()));
 	QObject::connect(&timerVerificationConnexions,SIGNAL(timeout()),this,SLOT(connexionAuto()));
@@ -105,23 +112,26 @@ void Guidage::guidageAuto() {
 		emit message("Aucune position courante");
 		return;
 	}
-	//
+
 	// Calcul du décalage x,y entre la position initiale
-	//
 	double l_decal = position_l - consigne_l;
 	double c_decal = position_c - consigne_c;
+	// Calcul de la longueur en pixels du décalage
+	decalage = qSqrt(l_decal*l_decal + c_decal*c_decal);
 
-	emit message("Position"
-			" (x= "+QString::number(position_c)+
-			", y="+QString::number(position_l)+") "
-			", decalage (x= "+QString::number(l_decal)+
-			", y="+QString::number(c_decal)+")");
+	emit message("(x= "+QString::number(position_c)+
+				", y="+QString::number(position_l)+") "
+				", (dx= "+QString::number(l_decal)+
+				", dy="+QString::number(c_decal)+")");
 	int l_decal_duree = qAbs(l_decal * IMPULSION_PIXEL_V);
 	int c_decal_duree = qAbs(c_decal * IMPULSION_PIXEL_H);
 	if(l_decal_duree > PERIODE_ENTRE_GUIDAGES-100) // La duree entre deux corrections ne doit pas depasser le timer
 		l_decal_duree = PERIODE_ENTRE_GUIDAGES-100;
 	if(c_decal_duree > PERIODE_ENTRE_GUIDAGES-100)
 		c_decal_duree = PERIODE_ENTRE_GUIDAGES-100;
+
+
+
 	envoyerCmd((l_decal*ORIENTATION_NORD_SUD<0)?PIN_SUD:PIN_NORD, l_decal_duree);
 	envoyerCmd((c_decal*ORIENTATION_EST_OUEST<0)?PIN_OUEST:PIN_EST, c_decal_duree);
 }
@@ -131,8 +141,6 @@ void Guidage::connecterArduino(QString nom) {
 		emit message("Le nom est vide");
 		return;
 	}
-	else
-		fichier_arduino = nom;
 	if(arduino != NULL)
 		delete arduino;
 	arduino = new Arduino(nom.toStdString());
@@ -173,17 +181,13 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c, int diamet
 	position_c = c;
 	position_l = l;
 	this->img = img;
+	this->bruitsignal = bruitsignal;
 	emit signalBruit(bruitsignal);
 	emit imageSoleil(img);
-	if(bruitsignal < SEUIL_BRUIT_SIGNAL) {
-		emit repereSoleil(position_c/img->getColonnes(),position_l/img->getLignes(),((float)diametre)/img->getColonnes(),Qt::green);
-	} else {
-		emit repereSoleil(position_c/img->getColonnes(),position_l/img->getLignes(),((float)diametre)/img->getColonnes(),Qt::gray);
+	if(bruitsignal > SEUIL_BRUIT_SIGNAL) {
 		stopperGuidage();
 	}
-	if(not(consigne_l == 0 || consigne_c == 0)) {
-		emit repereSoleil(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),Qt::yellow);
-	}
+	afficherImageSoleilEtReperes();
 }
 
 void Guidage::modifierConsigne(int deltaLigne, int deltaColonne) {
@@ -193,9 +197,7 @@ void Guidage::modifierConsigne(int deltaLigne, int deltaColonne) {
 	}
 	consigne_l = consigne_l + deltaLigne;
 	consigne_c = consigne_c + deltaColonne;
-	emit imageSoleil(img);
-	emit repereSoleil(position_c/img->getColonnes(),position_l/img->getLignes(),((float)diametre)/img->getColonnes(),Qt::green);
-	emit repereSoleil(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),Qt::yellow);
+	afficherImageSoleilEtReperes();
 }
 
 QStringList Guidage::chercherFichiersArduino() {
@@ -211,3 +213,25 @@ QStringList Guidage::chercherFichiersArduino() {
 	}
 	return resultat;
 }
+void Guidage::afficherImageSoleilEtReperes() {
+	emit imageSoleil(img);
+	if(bruitsignal < SEUIL_BRUIT_SIGNAL) {
+		emit repereSoleil(position_c/img->getColonnes(),position_l/img->getLignes(),((float)diametre)/img->getColonnes(),POSITION_OK);
+	} else {
+		emit repereSoleil(position_c/img->getColonnes(),position_l/img->getLignes(),((float)diametre)/img->getColonnes(),POSITION_NOK);
+	}
+	if(not(consigne_l == 0 || consigne_c == 0)) {
+		if(decalage < SEUIL_DECALAGE_PIXELS) {
+			emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_OK);
+		} else if (true){
+			emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_LOIN);
+		} else {
+			emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_DIVERGE);
+		}
+	}
+}
+
+/*
+ * Echantillon toutes les 1 secondes,
+ * Guidage tous les 5 échantillons
+ */
