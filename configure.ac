@@ -72,3 +72,5 @@ AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
 # A chaque emplacement où on ajoute un Makefile, il faut avoir un Makefile.am.
 AC_CONFIG_FILES(Makefile:Makefile.in) 
 AC_OUTPUT
+
+# ATTENTION: il faut toujours une ligne "vide" à la fin de ce fichier
