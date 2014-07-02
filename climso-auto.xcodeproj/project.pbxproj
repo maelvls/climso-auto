@@ -8,17 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		1C16E22A1917CA8D0062E456 /* SBIGUDrv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */; };
-		1CD3BED71925F64A00CA005D /* cmd_arduino.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEB61925F64A00CA005D /* cmd_arduino.c */; };
-		1CD3BED81925F64A00CA005D /* convol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEB81925F64A00CA005D /* convol.c */; };
-		1CD3BED91925F64A00CA005D /* crea_tiff_3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEBA1925F64A00CA005D /* crea_tiff_3.c */; };
-		1CD3BEDA1925F64A00CA005D /* csbigcam.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEBC1925F64A00CA005D /* csbigcam.cpp */; };
-		1CD3BEDB1925F64A00CA005D /* csbigimg.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEBE1925F64A00CA005D /* csbigimg.cpp */; };
-		1CD3BEDC1925F64A00CA005D /* diametre_soleil.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEC01925F64A00CA005D /* diametre_soleil.c */; };
-		1CD3BEDD1925F64A00CA005D /* exceptions.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEC21925F64A00CA005D /* exceptions.cpp */; };
-		1CD3BEDE1925F64A00CA005D /* fcts_LK3.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEC41925F64A00CA005D /* fcts_LK3.c */; };
-		1CD3BEDF1925F64A00CA005D /* image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEC61925F64A00CA005D /* image.cpp */; };
-		1CD3BEE01925F64A00CA005D /* interpol.c in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BEC81925F64A00CA005D /* interpol.c */; };
-		1CD3BEE81925F8D300CA005D /* main_image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CD3BECE1925F64A00CA005D /* main_image.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -37,37 +26,49 @@
 /* Begin PBXFileReference section */
 		1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SBIGUDrv.framework; path = ../../../../Library/Frameworks/SBIGUDrv.framework; sourceTree = "<group>"; };
 		1C2B15C918F81D760038A475 /* climso-auto */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "climso-auto"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1CBBF5221901438D00680226 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
-		1CD3BEB21925F64A00CA005D /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; name = .DS_Store; path = src/.DS_Store; sourceTree = "<group>"; };
-		1CD3BEB31925F64A00CA005D /* .gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = .gitignore; path = src/.gitignore; sourceTree = "<group>"; };
-		1CD3BEB61925F64A00CA005D /* cmd_arduino.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = cmd_arduino.c; path = src/cmd_arduino.c; sourceTree = "<group>"; };
-		1CD3BEB71925F64A00CA005D /* cmd_arduino.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = cmd_arduino.h; path = src/cmd_arduino.h; sourceTree = "<group>"; };
-		1CD3BEB81925F64A00CA005D /* convol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = convol.c; path = src/convol.c; sourceTree = "<group>"; };
-		1CD3BEB91925F64A00CA005D /* convol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = convol.h; path = src/convol.h; sourceTree = "<group>"; };
-		1CD3BEBA1925F64A00CA005D /* crea_tiff_3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = crea_tiff_3.c; path = src/crea_tiff_3.c; sourceTree = "<group>"; };
-		1CD3BEBB1925F64A00CA005D /* crea_tiff_3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = crea_tiff_3.h; path = src/crea_tiff_3.h; sourceTree = "<group>"; };
-		1CD3BEBC1925F64A00CA005D /* csbigcam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csbigcam.cpp; path = src/csbigcam.cpp; sourceTree = "<group>"; };
-		1CD3BEBD1925F64A00CA005D /* csbigcam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csbigcam.h; path = src/csbigcam.h; sourceTree = "<group>"; };
-		1CD3BEBE1925F64A00CA005D /* csbigimg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = csbigimg.cpp; path = src/csbigimg.cpp; sourceTree = "<group>"; };
-		1CD3BEBF1925F64A00CA005D /* csbigimg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = csbigimg.h; path = src/csbigimg.h; sourceTree = "<group>"; };
-		1CD3BEC01925F64A00CA005D /* diametre_soleil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = diametre_soleil.c; path = src/diametre_soleil.c; sourceTree = "<group>"; };
-		1CD3BEC11925F64A00CA005D /* diametre_soleil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = diametre_soleil.h; path = src/diametre_soleil.h; sourceTree = "<group>"; };
-		1CD3BEC21925F64A00CA005D /* exceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = exceptions.cpp; path = src/exceptions.cpp; sourceTree = "<group>"; };
-		1CD3BEC31925F64A00CA005D /* exceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = exceptions.h; path = src/exceptions.h; sourceTree = "<group>"; };
-		1CD3BEC41925F64A00CA005D /* fcts_LK3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = fcts_LK3.c; path = src/fcts_LK3.c; sourceTree = "<group>"; };
-		1CD3BEC51925F64A00CA005D /* fcts_LK3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fcts_LK3.h; path = src/fcts_LK3.h; sourceTree = "<group>"; };
-		1CD3BEC61925F64A00CA005D /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = image.cpp; path = src/image.cpp; sourceTree = "<group>"; };
-		1CD3BEC71925F64A00CA005D /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = image.h; path = src/image.h; sourceTree = "<group>"; };
-		1CD3BEC81925F64A00CA005D /* interpol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = interpol.c; path = src/interpol.c; sourceTree = "<group>"; };
-		1CD3BEC91925F64A00CA005D /* interpol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = interpol.h; path = src/interpol.h; sourceTree = "<group>"; };
-		1CD3BECA1925F64A00CA005D /* lpardrv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = lpardrv.h; path = src/lpardrv.h; sourceTree = "<group>"; };
-		1CD3BECB1925F64A00CA005D /* main_arduino.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main_arduino.c; path = src/main_arduino.c; sourceTree = "<group>"; };
-		1CD3BECC1925F64A00CA005D /* main_camera.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_camera.cpp; path = src/main_camera.cpp; sourceTree = "<group>"; };
-		1CD3BECE1925F64A00CA005D /* main_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main_image.cpp; path = src/main_image.cpp; sourceTree = "<group>"; };
-		1CD3BECF1925F64A00CA005D /* main_position_test.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main_position_test.c; path = src/main_position_test.c; sourceTree = "<group>"; };
-		1CD3BED01925F64A00CA005D /* main_position.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main_position.c; path = src/main_position.c; sourceTree = "<group>"; };
-		1CD3BED11925F64A00CA005D /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Makefile.am; path = src/Makefile.am; sourceTree = "<group>"; };
-		1CD3BED21925F64A00CA005D /* sbigudrv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = sbigudrv.h; path = src/sbigudrv.h; sourceTree = "<group>"; };
+		1CC3A27B1964691400208644 /* configure.ac */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = configure.ac; sourceTree = "<group>"; };
+		1CC3A27C1964691400208644 /* pour-compiler */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "pour-compiler"; sourceTree = "<group>"; };
+		1CC3A27D1964691400208644 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		1CC3A27E1964691400208644 /* Makefile.am */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.am; sourceTree = "<group>"; };
+		1CC3A27F1964691400208644 /* autotroll.mk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = autotroll.mk; sourceTree = "<group>"; };
+		1CC3A2801964691400208644 /* Makefile.old */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.old; sourceTree = "<group>"; };
+		1CC3A2B51964695000208644 /* arduino.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = arduino.cpp; sourceTree = "<group>"; };
+		1CC3A2B61964695000208644 /* arduino.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arduino.h; sourceTree = "<group>"; };
+		1CC3A2B71964695000208644 /* capture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = capture.cpp; sourceTree = "<group>"; };
+		1CC3A2B81964695000208644 /* capture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = capture.h; sourceTree = "<group>"; };
+		1CC3A2B91964695000208644 /* capture.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = capture.moc.cpp; sourceTree = "<group>"; };
+		1CC3A2BA1964695000208644 /* convol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = convol.c; sourceTree = "<group>"; };
+		1CC3A2BB1964695000208644 /* convol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convol.h; sourceTree = "<group>"; };
+		1CC3A2BC1964695000208644 /* csbigcam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csbigcam.cpp; sourceTree = "<group>"; };
+		1CC3A2BD1964695000208644 /* csbigcam.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = csbigcam.h; sourceTree = "<group>"; };
+		1CC3A2BE1964695000208644 /* csbigimg.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csbigimg.cpp; sourceTree = "<group>"; };
+		1CC3A2BF1964695000208644 /* csbigimg.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = csbigimg.h; sourceTree = "<group>"; };
+		1CC3A2C01964695000208644 /* diametre_soleil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = diametre_soleil.c; sourceTree = "<group>"; };
+		1CC3A2C11964695000208644 /* diametre_soleil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = diametre_soleil.h; sourceTree = "<group>"; };
+		1CC3A2C21964695000208644 /* exceptions.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = exceptions.cpp; sourceTree = "<group>"; };
+		1CC3A2C31964695000208644 /* exceptions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exceptions.h; sourceTree = "<group>"; };
+		1CC3A2C41964695000208644 /* fcts_LK3.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = fcts_LK3.c; sourceTree = "<group>"; };
+		1CC3A2C51964695000208644 /* fcts_LK3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fcts_LK3.h; sourceTree = "<group>"; };
+		1CC3A2C61964695000208644 /* fenetreprincipale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fenetreprincipale.cpp; sourceTree = "<group>"; };
+		1CC3A2C71964695000208644 /* fenetreprincipale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fenetreprincipale.h; sourceTree = "<group>"; };
+		1CC3A2C81964695000208644 /* fenetreprincipale.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fenetreprincipale.moc.cpp; sourceTree = "<group>"; };
+		1CC3A2C91964695000208644 /* fenetreprincipale.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fenetreprincipale.ui; sourceTree = "<group>"; };
+		1CC3A2CA1964695000208644 /* fenetreprincipale_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fenetreprincipale_ui.h; sourceTree = "<group>"; };
+		1CC3A2CB1964695000208644 /* guidage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guidage.cpp; sourceTree = "<group>"; };
+		1CC3A2CC1964695000208644 /* guidage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guidage.h; sourceTree = "<group>"; };
+		1CC3A2CD1964695000208644 /* guidage.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guidage.moc.cpp; sourceTree = "<group>"; };
+		1CC3A2CE1964695000208644 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
+		1CC3A2CF1964695000208644 /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image.h; sourceTree = "<group>"; };
+		1CC3A2D01964695000208644 /* interpol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpol.c; sourceTree = "<group>"; };
+		1CC3A2D11964695000208644 /* interpol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = interpol.h; sourceTree = "<group>"; };
+		1CC3A2D21964695000208644 /* lpardrv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = lpardrv.h; sourceTree = "<group>"; };
+		1CC3A2D31964695000208644 /* main_arduino.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main_arduino.c; sourceTree = "<group>"; };
+		1CC3A2D41964695000208644 /* main_image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_image.cpp; sourceTree = "<group>"; };
+		1CC3A2E81964695000208644 /* main_qt_gui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_qt_gui.cpp; sourceTree = "<group>"; };
+		1CC3A2E91964695000208644 /* sbigudrv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sbigudrv.h; sourceTree = "<group>"; };
+		1CC3A2EA1964695000208644 /* widgetimage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widgetimage.cpp; sourceTree = "<group>"; };
+		1CC3A2EB1964695000208644 /* widgetimage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = widgetimage.h; sourceTree = "<group>"; };
+		1CC3A2EC1964695000208644 /* widgetimage.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widgetimage.moc.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -85,38 +86,14 @@
 		1C2B15C018F81D760038A475 = {
 			isa = PBXGroup;
 			children = (
+				1CC3A27B1964691400208644 /* configure.ac */,
+				1CC3A27C1964691400208644 /* pour-compiler */,
+				1CC3A27D1964691400208644 /* README.md */,
+				1CC3A27E1964691400208644 /* Makefile.am */,
+				1CC3A27F1964691400208644 /* autotroll.mk */,
+				1CC3A2801964691400208644 /* Makefile.old */,
+				1CC3A2831964694F00208644 /* src */,
 				1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */,
-				1CBBF5221901438D00680226 /* README.md */,
-				1CD3BEB21925F64A00CA005D /* .DS_Store */,
-				1CD3BEB31925F64A00CA005D /* .gitignore */,
-				1CD3BEB61925F64A00CA005D /* cmd_arduino.c */,
-				1CD3BEB71925F64A00CA005D /* cmd_arduino.h */,
-				1CD3BEB81925F64A00CA005D /* convol.c */,
-				1CD3BEB91925F64A00CA005D /* convol.h */,
-				1CD3BEBA1925F64A00CA005D /* crea_tiff_3.c */,
-				1CD3BEBB1925F64A00CA005D /* crea_tiff_3.h */,
-				1CD3BEBC1925F64A00CA005D /* csbigcam.cpp */,
-				1CD3BEBD1925F64A00CA005D /* csbigcam.h */,
-				1CD3BEBE1925F64A00CA005D /* csbigimg.cpp */,
-				1CD3BEBF1925F64A00CA005D /* csbigimg.h */,
-				1CD3BEC01925F64A00CA005D /* diametre_soleil.c */,
-				1CD3BEC11925F64A00CA005D /* diametre_soleil.h */,
-				1CD3BEC21925F64A00CA005D /* exceptions.cpp */,
-				1CD3BEC31925F64A00CA005D /* exceptions.h */,
-				1CD3BEC41925F64A00CA005D /* fcts_LK3.c */,
-				1CD3BEC51925F64A00CA005D /* fcts_LK3.h */,
-				1CD3BEC61925F64A00CA005D /* image.cpp */,
-				1CD3BEC71925F64A00CA005D /* image.h */,
-				1CD3BECE1925F64A00CA005D /* main_image.cpp */,
-				1CD3BEC81925F64A00CA005D /* interpol.c */,
-				1CD3BEC91925F64A00CA005D /* interpol.h */,
-				1CD3BECA1925F64A00CA005D /* lpardrv.h */,
-				1CD3BECB1925F64A00CA005D /* main_arduino.c */,
-				1CD3BECC1925F64A00CA005D /* main_camera.cpp */,
-				1CD3BECF1925F64A00CA005D /* main_position_test.c */,
-				1CD3BED01925F64A00CA005D /* main_position.c */,
-				1CD3BED11925F64A00CA005D /* Makefile.am */,
-				1CD3BED21925F64A00CA005D /* sbigudrv.h */,
 				1C2B15CA18F81D760038A475 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -128,6 +105,50 @@
 				1C2B15C918F81D760038A475 /* climso-auto */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		1CC3A2831964694F00208644 /* src */ = {
+			isa = PBXGroup;
+			children = (
+				1CC3A2B51964695000208644 /* arduino.cpp */,
+				1CC3A2B61964695000208644 /* arduino.h */,
+				1CC3A2B71964695000208644 /* capture.cpp */,
+				1CC3A2B81964695000208644 /* capture.h */,
+				1CC3A2B91964695000208644 /* capture.moc.cpp */,
+				1CC3A2BA1964695000208644 /* convol.c */,
+				1CC3A2BB1964695000208644 /* convol.h */,
+				1CC3A2BC1964695000208644 /* csbigcam.cpp */,
+				1CC3A2BD1964695000208644 /* csbigcam.h */,
+				1CC3A2BE1964695000208644 /* csbigimg.cpp */,
+				1CC3A2BF1964695000208644 /* csbigimg.h */,
+				1CC3A2C01964695000208644 /* diametre_soleil.c */,
+				1CC3A2C11964695000208644 /* diametre_soleil.h */,
+				1CC3A2C21964695000208644 /* exceptions.cpp */,
+				1CC3A2C31964695000208644 /* exceptions.h */,
+				1CC3A2C41964695000208644 /* fcts_LK3.c */,
+				1CC3A2C51964695000208644 /* fcts_LK3.h */,
+				1CC3A2C61964695000208644 /* fenetreprincipale.cpp */,
+				1CC3A2C71964695000208644 /* fenetreprincipale.h */,
+				1CC3A2C81964695000208644 /* fenetreprincipale.moc.cpp */,
+				1CC3A2C91964695000208644 /* fenetreprincipale.ui */,
+				1CC3A2CA1964695000208644 /* fenetreprincipale_ui.h */,
+				1CC3A2CB1964695000208644 /* guidage.cpp */,
+				1CC3A2CC1964695000208644 /* guidage.h */,
+				1CC3A2CD1964695000208644 /* guidage.moc.cpp */,
+				1CC3A2CE1964695000208644 /* image.cpp */,
+				1CC3A2CF1964695000208644 /* image.h */,
+				1CC3A2D01964695000208644 /* interpol.c */,
+				1CC3A2D11964695000208644 /* interpol.h */,
+				1CC3A2D21964695000208644 /* lpardrv.h */,
+				1CC3A2D31964695000208644 /* main_arduino.c */,
+				1CC3A2D41964695000208644 /* main_image.cpp */,
+				1CC3A2E81964695000208644 /* main_qt_gui.cpp */,
+				1CC3A2E91964695000208644 /* sbigudrv.h */,
+				1CC3A2EA1964695000208644 /* widgetimage.cpp */,
+				1CC3A2EB1964695000208644 /* widgetimage.h */,
+				1CC3A2EC1964695000208644 /* widgetimage.moc.cpp */,
+			);
+			path = src;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -259,17 +280,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1CD3BEDB1925F64A00CA005D /* csbigimg.cpp in Sources */,
-				1CD3BEE01925F64A00CA005D /* interpol.c in Sources */,
-				1CD3BEDD1925F64A00CA005D /* exceptions.cpp in Sources */,
-				1CD3BED71925F64A00CA005D /* cmd_arduino.c in Sources */,
-				1CD3BEDC1925F64A00CA005D /* diametre_soleil.c in Sources */,
-				1CD3BEDE1925F64A00CA005D /* fcts_LK3.c in Sources */,
-				1CD3BED81925F64A00CA005D /* convol.c in Sources */,
-				1CD3BEDF1925F64A00CA005D /* image.cpp in Sources */,
-				1CD3BEDA1925F64A00CA005D /* csbigcam.cpp in Sources */,
-				1CD3BEE81925F8D300CA005D /* main_image.cpp in Sources */,
-				1CD3BED91925F64A00CA005D /* crea_tiff_3.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
