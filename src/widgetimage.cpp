@@ -2,7 +2,7 @@
  * widgetImage.cpp
  *
  *  Created on: 19 juin 2014
- *      Author: admin
+ *      Author: Maël Valais
  */
 
 #include "widgetimage.h"

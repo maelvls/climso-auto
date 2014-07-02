@@ -2,7 +2,7 @@
  * arduino.h
  *
  *  Created on: 6 juin 2014
- *      Author: admin
+ *      Author: Maël Valais
  */
 
 #ifndef ARDUINO_H_
