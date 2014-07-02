@@ -4,10 +4,17 @@ Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équ
 
 # Le système climso-auto
 Schéma de fonctionnement de l'algorithme de guidage :
-![https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.png](image)
+![Schéma de fonctionnement de l'algorithme de détection du soleil](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.png)
+Le schéma ne présente pas l'interface utilisateur ni les intéractions possibles.
+Il s'agissait du programme de test lors des premières phases du projet.
 
 Schéma du système :
-![https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.png](image)
+![Schéma simplifié du système](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.png)
+
+Les liaisons en rouge sont de l'USB. 
+
+La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallonge USB par UTP.
+
 
 # Pour compiler
 
