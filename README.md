@@ -3,17 +3,17 @@ climso-auto
 Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool.
 
 # Le système climso-auto
-Schéma de fonctionnement de l'algorithme de guidage :
-![Schéma de fonctionnement de l'algorithme de détection du soleil](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.png)
-Le schéma ne présente pas l'interface utilisateur ni les intéractions possibles.
-Il s'agissait du programme de test lors des premières phases du projet.
-
-Schéma du système :
-![Schéma simplifié du système](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.png)
+## Schéma du système climso-auto
+![Schéma simplifié du système](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.jpg)
 
 Les liaisons en rouge sont de l'USB. 
 
 La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallonge USB par UTP.
+
+## Schéma de fonctionnement de l'algorithme de guidage
+![Schéma de fonctionnement de l'algorithme de détection du soleil](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.jpg)
+Le schéma ne présente pas l'interface utilisateur ni les intéractions possibles.
+Il s'agissait du programme de test lors des premières phases du projet.
 
 
 # Pour compiler
