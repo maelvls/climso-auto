@@ -1,8 +1,13 @@
 # configure.ac pour autoconf par Mael Valais - 2014
 # Fichier utilisé pour la génération autoconf
 
-AC_PREREQ([2.69])
-AC_INIT([climso-auto], [1.0], [mael.valais@irap.omp.eu])
+# NOTES sur les versions d'autoconf:
+# Testé sur la version 2.69 (faire autoconf --version)
+# La version 2.61 (et inférieures) semble fonctionner correctement mais le mieux est 
+# de récupérer la dernière version d'autoconf (en espérant que l'ascendance se fasse)
+
+AC_PREREQ([2.61])
+AC_INIT([climso-auto], [1.1], [mael.valais@irap.omp.eu])
 
 # La fonction qui permet de vérifier que (pour un mac) le framework sbigudrv existe
 m4_include([m4/check_framework.m4])
@@ -39,7 +44,7 @@ AC_CHECK_LIB([sbigudrv], [main], [], [
 	MY_CHECK_FRAMEWORK([sbigudrv])
 	AS_IF([test "$my_cv_framework_sbigudrv" = "yes"],[
 		# Le framework existe
-		AC_MSG_RESULT([--> Le framework sbigudrv a bien ete trouve !])
+		AC_MSG_RESULT([--> Le framework sbigudrv a bien ete trouve])
 		],[ # Le framework n'existe pas : erreur
 		AC_MSG_ERROR([--> La librairie -lsbigudrv ou le framework sbigudrv est introuvable])
 		exit
@@ -50,7 +55,7 @@ AC_CHECK_LIB([sbigudrv], [main], [], [
 AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h tiffio.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
-AC_CHECK_HEADER_STDBOOL
+AC_HEADER_STDBOOL # AC_CHECK_HEADER_STDBOOL ne fonctionne pas en 2.61 (vient de la 2.69)
 AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_TYPE_UINT16_T
@@ -67,4 +72,3 @@ AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
 # A chaque emplacement où on ajoute un Makefile, il faut avoir un Makefile.am.
 AC_CONFIG_FILES(Makefile:Makefile.in) 
 AC_OUTPUT
-
