@@ -2,7 +2,7 @@
  * arduino.cpp
  *
  *  Created on: 6 juin 2014
- *      Author: admin
+ *      Author: Maël Valais
  */
 
 #include <cstdio>

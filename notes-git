@@ -1,0 +1,18 @@
+notes-git
+ Created on: 1 juil. 2014
+     Author: Maël Valais
+     
+------------- J'ai pas merge, la branche est trop modifiée
+Il faut faire :
+# git checkout main-qt
+# git merge -s ours master
+# git checkout master
+# git merge main-qt
+Attention, les fichiers de master seront écrasés...
+Source: http://stackoverflow.com/questions/2862590/how-to-replace-master-branch-in-git-entirely-from-another-branch
+------------- Git sans mot de passe en SSH en donnant id_rsa.pub
+Etape 1 : On crée le certificat pour nous-même (id_rsa.pub et id_rsa)
+Source: https://help.github.com/articles/generating-ssh-keys
+Etape 2 :
+# git remote set-url origin git@github.com:mael65/climso-auto.git
+Source: https://help.github.com/articles/changing-a-remote-s-url 

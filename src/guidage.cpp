@@ -2,7 +2,7 @@
  * Guidage.cpp
  *
  *  Created on: 16 juin 2014
- *      Author: admin
+ *      Author: Maël Valais
  */
 
 #include "guidage.h"

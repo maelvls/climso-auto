@@ -2,7 +2,7 @@
  * capture.h
  *
  *  Created on: 24 juin 2014
- *      Author: admin
+ *      Author: Maël Valais
  */
 
 #ifndef CAPTURE_H_
