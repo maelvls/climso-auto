@@ -18,9 +18,12 @@ Fichiers utilisés par cette compilation :
 
 -------- Du côté du développeur (pour préparer la compilation)
 Pour la mise à jour des fichiers de configuration de conmpilation :
-	aclocal
-	automake
-	autoconf
+	autoreconf (ça lance les commandes autoconf, automake, aclocal)
+Si une erreur du type :
+# configure.ac:29: error: required file 'config/config.guess' not found
+lancez la commande
+	automake --add-missing
+	
 Pour rendre le projet "portable" et ne plus nécessiter la suite Autotools :
 	make distcheck (pour savoir si le tarball sera valide)
 	make dist (pour générer le tarball .tar.gz du projet)
