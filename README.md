@@ -1,9 +1,13 @@
 climso-auto
 ===========
-Notes sur le format de ce fichier : .md permet de mettre en forme son texte avec des balises simples du type de "#" ou "_"
-
-# Résumé
 Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool.
+
+# Le système climso-auto
+Schéma de fonctionnement de l'algorithme de guidage :
+![https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.png](image)
+
+Schéma du système :
+![https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.png](image)
 
 # Pour compiler
 
