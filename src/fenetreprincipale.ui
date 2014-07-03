@@ -89,16 +89,16 @@
      <rect>
       <x>590</x>
       <y>550</y>
-      <width>111</width>
+      <width>121</width>
       <height>91</height>
      </rect>
     </property>
     <widget class="QPushButton" name="initialiserConsigne">
      <property name="geometry">
       <rect>
-       <x>30</x>
+       <x>40</x>
        <y>30</y>
-       <width>51</width>
+       <width>41</width>
        <height>31</height>
       </rect>
      </property>
@@ -111,12 +111,12 @@
       <rect>
        <x>0</x>
        <y>30</y>
-       <width>31</width>
+       <width>41</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>G</string>
+      <string>Ouest</string>
      </property>
     </widget>
     <widget class="QPushButton" name="consigneHaut">
@@ -124,12 +124,12 @@
       <rect>
        <x>40</x>
        <y>0</y>
-       <width>31</width>
+       <width>41</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>H</string>
+      <string>Nord</string>
      </property>
     </widget>
     <widget class="QPushButton" name="consigneBas">
@@ -137,12 +137,12 @@
       <rect>
        <x>40</x>
        <y>60</y>
-       <width>31</width>
+       <width>41</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>B</string>
+      <string>Sud</string>
      </property>
     </widget>
     <widget class="QPushButton" name="consigneDroite">
@@ -150,12 +150,12 @@
       <rect>
        <x>80</x>
        <y>30</y>
-       <width>31</width>
+       <width>41</width>
        <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>D</string>
+      <string>Est</string>
      </property>
     </widget>
    </widget>
@@ -202,9 +202,9 @@
     <property name="geometry">
      <rect>
       <x>340</x>
-      <y>550</y>
+      <y>560</y>
       <width>121</width>
-      <height>71</height>
+      <height>61</height>
      </rect>
     </property>
     <widget class="QPushButton" name="lancerGuidage">
@@ -213,18 +213,27 @@
        <x>0</x>
        <y>0</y>
        <width>121</width>
-       <height>31</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
       <string>Lancer guidage</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>false</bool>
+     </property>
+     <property name="flat">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="stopperGuidage">
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>30</y>
+       <y>20</y>
        <width>121</width>
        <height>21</height>
       </rect>
@@ -237,7 +246,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>50</y>
+       <y>40</y>
        <width>121</width>
        <height>21</height>
       </rect>
@@ -263,9 +272,9 @@
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>0</y>
+       <y>1</y>
        <width>81</width>
-       <height>21</height>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
@@ -276,9 +285,9 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
+       <y>1</y>
        <width>71</width>
-       <height>21</height>
+       <height>20</height>
       </rect>
      </property>
      <property name="autoFillBackground">
@@ -293,13 +302,13 @@
     <property name="geometry">
      <rect>
       <x>490</x>
-      <y>550</y>
+      <y>560</y>
       <width>91</width>
-      <height>61</height>
+      <height>71</height>
      </rect>
     </property>
     <property name="title">
-     <string/>
+     <string>Vitesse :</string>
     </property>
     <widget class="QRadioButton" name="vitesseDecalageLent">
      <property name="enabled">
@@ -307,23 +316,23 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>30</y>
+       <x>10</x>
+       <y>40</y>
        <width>71</width>
-       <height>26</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
-      <string>Lent</string>
+      <string>Lente</string>
      </property>
     </widget>
     <widget class="QRadioButton" name="vitesseDecalageRapide">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>0</y>
+       <x>10</x>
+       <y>20</y>
        <width>71</width>
-       <height>26</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
