@@ -159,7 +159,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="choixDiametre" native="true">
     <property name="geometry">
      <rect>
       <x>330</x>
@@ -198,7 +198,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="widget_2" native="true">
+   <widget class="QWidget" name="controleGuidage" native="true">
     <property name="geometry">
      <rect>
       <x>340</x>
@@ -247,7 +247,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="widget_3" native="true">
+   <widget class="QWidget" name="affichageSignalBruit" native="true">
     <property name="geometry">
      <rect>
       <x>550</x>
@@ -289,7 +289,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QGroupBox" name="choixVitesse">
     <property name="geometry">
      <rect>
       <x>490</x>
