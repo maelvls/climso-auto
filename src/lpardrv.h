@@ -8,19 +8,11 @@ lpardrv.h - Local options for pardrv.h
 
 #define  STF_CLASS						/* new stuff related to the STF CCD cameras */
 
-#if APPLE
+#if __APPLE__
  #include <SBIGUDrv/sbigudrv.h>
- #ifdef _DEBUG
-  #define _DEBUG		1
- #endif
 #else
- #include "sbigudrv.h"
+ #include <sbigudrv.h>
 #endif
 
-#if _DEBUG
- #ifdef _DEBUG
-  #define _DEBUG 1
-#endif
-#endif
 
-#endif
+#endif // _LPARDRV_
