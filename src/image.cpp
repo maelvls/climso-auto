@@ -349,6 +349,8 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
 	int larg_convol = obj->colonnes+ref->colonnes-1;
     
 	double temps_calcul = (double)(clock());
+
+
     double nbboucles=0;
 
 	for (int l_ref=0; l_ref < ref->lignes; l_ref++) {

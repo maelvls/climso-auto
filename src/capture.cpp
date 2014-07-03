@@ -9,9 +9,9 @@
 
 #include "capture.h"
 
-#define DIAMETRE_DEFAUT		200
-#define PERIODE_ENTRE_CAPTURES 1000 // en ms
-#define PERIODE_CONNEXION	1000 // en ms
+#define DIAMETRE_DEFAUT			200  // diamètre du soleil par défaut
+#define PERIODE_CONNEXION		1000 // en ms, inutilisé (connexion dans captureEtPosition())
+#define PERIODE_ENTRE_CAPTURES 	1 // en ms
 
 static string emplacement = "";
 QTime t;
@@ -26,7 +26,7 @@ Capture::Capture() {
 	QObject::connect(&timerConnexion,SIGNAL(timeout()),this,SLOT(connexionAuto()));
 	QObject::connect(&timerCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
 	timerCapture.start(PERIODE_ENTRE_CAPTURES);
-	//connecterCameraAuto();
+	//connecterCameraAuto(); XXX La connexion se fait lors de l'appel de captureEtPosition()
 }
 
 Capture::~Capture() {
@@ -52,7 +52,9 @@ void Capture::connecterCamera() {
     }
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
-        cam->SetExposureTime(0.01);
+        cam->SetExposureTime(0.001);
+        cam->SetABGState(ABG_LOW7);
+
         emit message("Camera connectee");
         emit etatCamera(CAMERA_CONNEXION_ON);
     }
@@ -148,11 +150,31 @@ void Capture::trouverPosition() {
 void Capture::captureEtPosition() {
 	connexionAuto();
 	//QCoreApplication::processEvents();
-	//t.start();
+
+
+
+    // --------- XXX ----------
+    struct timeval start, end;
+    long mtime, seconds, useconds;
+    gettimeofday(&start, NULL);
+    // --------- --- ----------
+
+
+	t.start();
+
 	if(capturerImage()) {
-    //cout << "Temps ecoulé : " << t.elapsed() << "ms" <<endl;
+    cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
-    //cout << "Temps ecoulé 2 : " << t.elapsed() << "ms" <<endl;
+    cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
+
+    // --------- XXX ----------
+    gettimeofday(&end, NULL);
+    seconds  = end.tv_sec  - start.tv_sec;
+    useconds = end.tv_usec - start.tv_usec;
+    mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+    printf("Elapsed time: %ld milliseconds\n", mtime);
+    // --------- --- ----------
+
 	}
 	timerCapture.start(PERIODE_ENTRE_CAPTURES);
 }
