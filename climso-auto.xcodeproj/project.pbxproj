@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		1C16E22A1917CA8D0062E456 /* SBIGUDrv.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */; };
+		1CC3A2F11965489000208644 /* capture.moc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3A2ED1965489000208644 /* capture.moc.cpp */; };
+		1CC3A2F21965489000208644 /* fenetreprincipale.moc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3A2EE1965489000208644 /* fenetreprincipale.moc.cpp */; };
+		1CC3A2F31965489000208644 /* guidage.moc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3A2EF1965489000208644 /* guidage.moc.cpp */; };
+		1CC3A2F41965489000208644 /* widgetimage.moc.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1CC3A2F01965489000208644 /* widgetimage.moc.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,7 +40,6 @@
 		1CC3A2B61964695000208644 /* arduino.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = arduino.h; sourceTree = "<group>"; };
 		1CC3A2B71964695000208644 /* capture.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = capture.cpp; sourceTree = "<group>"; };
 		1CC3A2B81964695000208644 /* capture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = capture.h; sourceTree = "<group>"; };
-		1CC3A2B91964695000208644 /* capture.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = capture.moc.cpp; sourceTree = "<group>"; };
 		1CC3A2BA1964695000208644 /* convol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = convol.c; sourceTree = "<group>"; };
 		1CC3A2BB1964695000208644 /* convol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = convol.h; sourceTree = "<group>"; };
 		1CC3A2BC1964695000208644 /* csbigcam.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csbigcam.cpp; sourceTree = "<group>"; };
@@ -51,12 +54,10 @@
 		1CC3A2C51964695000208644 /* fcts_LK3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fcts_LK3.h; sourceTree = "<group>"; };
 		1CC3A2C61964695000208644 /* fenetreprincipale.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fenetreprincipale.cpp; sourceTree = "<group>"; };
 		1CC3A2C71964695000208644 /* fenetreprincipale.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fenetreprincipale.h; sourceTree = "<group>"; };
-		1CC3A2C81964695000208644 /* fenetreprincipale.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fenetreprincipale.moc.cpp; sourceTree = "<group>"; };
 		1CC3A2C91964695000208644 /* fenetreprincipale.ui */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = fenetreprincipale.ui; sourceTree = "<group>"; };
 		1CC3A2CA1964695000208644 /* fenetreprincipale_ui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fenetreprincipale_ui.h; sourceTree = "<group>"; };
 		1CC3A2CB1964695000208644 /* guidage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guidage.cpp; sourceTree = "<group>"; };
 		1CC3A2CC1964695000208644 /* guidage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guidage.h; sourceTree = "<group>"; };
-		1CC3A2CD1964695000208644 /* guidage.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guidage.moc.cpp; sourceTree = "<group>"; };
 		1CC3A2CE1964695000208644 /* image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = image.cpp; sourceTree = "<group>"; };
 		1CC3A2CF1964695000208644 /* image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = image.h; sourceTree = "<group>"; };
 		1CC3A2D01964695000208644 /* interpol.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = interpol.c; sourceTree = "<group>"; };
@@ -68,7 +69,10 @@
 		1CC3A2E91964695000208644 /* sbigudrv.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sbigudrv.h; sourceTree = "<group>"; };
 		1CC3A2EA1964695000208644 /* widgetimage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widgetimage.cpp; sourceTree = "<group>"; };
 		1CC3A2EB1964695000208644 /* widgetimage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = widgetimage.h; sourceTree = "<group>"; };
-		1CC3A2EC1964695000208644 /* widgetimage.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widgetimage.moc.cpp; sourceTree = "<group>"; };
+		1CC3A2ED1965489000208644 /* capture.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = capture.moc.cpp; sourceTree = "<group>"; };
+		1CC3A2EE1965489000208644 /* fenetreprincipale.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fenetreprincipale.moc.cpp; sourceTree = "<group>"; };
+		1CC3A2EF1965489000208644 /* guidage.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guidage.moc.cpp; sourceTree = "<group>"; };
+		1CC3A2F01965489000208644 /* widgetimage.moc.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = widgetimage.moc.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,12 +91,12 @@
 			isa = PBXGroup;
 			children = (
 				1CC3A27B1964691400208644 /* configure.ac */,
+				1CC3A27E1964691400208644 /* Makefile.am */,
+				1CC3A2831964694F00208644 /* src */,
 				1CC3A27C1964691400208644 /* pour-compiler */,
 				1CC3A27D1964691400208644 /* README.md */,
-				1CC3A27E1964691400208644 /* Makefile.am */,
 				1CC3A27F1964691400208644 /* autotroll.mk */,
 				1CC3A2801964691400208644 /* Makefile.old */,
-				1CC3A2831964694F00208644 /* src */,
 				1C16E2291917CA8D0062E456 /* SBIGUDrv.framework */,
 				1C2B15CA18F81D760038A475 /* Products */,
 			);
@@ -114,7 +118,6 @@
 				1CC3A2B61964695000208644 /* arduino.h */,
 				1CC3A2B71964695000208644 /* capture.cpp */,
 				1CC3A2B81964695000208644 /* capture.h */,
-				1CC3A2B91964695000208644 /* capture.moc.cpp */,
 				1CC3A2BA1964695000208644 /* convol.c */,
 				1CC3A2BB1964695000208644 /* convol.h */,
 				1CC3A2BC1964695000208644 /* csbigcam.cpp */,
@@ -129,12 +132,10 @@
 				1CC3A2C51964695000208644 /* fcts_LK3.h */,
 				1CC3A2C61964695000208644 /* fenetreprincipale.cpp */,
 				1CC3A2C71964695000208644 /* fenetreprincipale.h */,
-				1CC3A2C81964695000208644 /* fenetreprincipale.moc.cpp */,
 				1CC3A2C91964695000208644 /* fenetreprincipale.ui */,
 				1CC3A2CA1964695000208644 /* fenetreprincipale_ui.h */,
 				1CC3A2CB1964695000208644 /* guidage.cpp */,
 				1CC3A2CC1964695000208644 /* guidage.h */,
-				1CC3A2CD1964695000208644 /* guidage.moc.cpp */,
 				1CC3A2CE1964695000208644 /* image.cpp */,
 				1CC3A2CF1964695000208644 /* image.h */,
 				1CC3A2D01964695000208644 /* interpol.c */,
@@ -146,7 +147,10 @@
 				1CC3A2E91964695000208644 /* sbigudrv.h */,
 				1CC3A2EA1964695000208644 /* widgetimage.cpp */,
 				1CC3A2EB1964695000208644 /* widgetimage.h */,
-				1CC3A2EC1964695000208644 /* widgetimage.moc.cpp */,
+				1CC3A2ED1965489000208644 /* capture.moc.cpp */,
+				1CC3A2EE1965489000208644 /* fenetreprincipale.moc.cpp */,
+				1CC3A2EF1965489000208644 /* guidage.moc.cpp */,
+				1CC3A2F01965489000208644 /* widgetimage.moc.cpp */,
 			);
 			path = src;
 			sourceTree = "<group>";
@@ -154,20 +158,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXLegacyTarget section */
-		1C0770A019018F220090130D /* Arduino */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = arduino;
-			buildConfigurationList = 1C0770A119018F220090130D /* Build configuration list for PBXLegacyTarget "Arduino" */;
-			buildPhases = (
-			);
-			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "";
-			dependencies = (
-			);
-			name = Arduino;
-			passBuildSettingsInEnvironment = 1;
-			productName = Arduino;
-		};
 		1C0770A419018F4E0090130D /* All */ = {
 			isa = PBXLegacyTarget;
 			buildArgumentsString = all;
@@ -181,48 +171,6 @@
 			name = All;
 			passBuildSettingsInEnvironment = 1;
 			productName = All;
-		};
-		1C0770A819018F580090130D /* Position */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = position;
-			buildConfigurationList = 1C0770A919018F580090130D /* Build configuration list for PBXLegacyTarget "Position" */;
-			buildPhases = (
-			);
-			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "";
-			dependencies = (
-			);
-			name = Position;
-			passBuildSettingsInEnvironment = 1;
-			productName = Position;
-		};
-		1C0770AC19018F610090130D /* Camera */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = camera;
-			buildConfigurationList = 1C0770AD19018F610090130D /* Build configuration list for PBXLegacyTarget "Camera" */;
-			buildPhases = (
-			);
-			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "";
-			dependencies = (
-			);
-			name = Camera;
-			passBuildSettingsInEnvironment = 1;
-			productName = Camera;
-		};
-		1CEC1A9D190556BF0016A024 /* Image */ = {
-			isa = PBXLegacyTarget;
-			buildArgumentsString = image;
-			buildConfigurationList = 1CEC1A9E190556BF0016A024 /* Build configuration list for PBXLegacyTarget "Image" */;
-			buildPhases = (
-			);
-			buildToolPath = /usr/bin/make;
-			buildWorkingDirectory = "";
-			dependencies = (
-			);
-			name = Image;
-			passBuildSettingsInEnvironment = 1;
-			productName = Image;
 		};
 /* End PBXLegacyTarget section */
 
@@ -265,11 +213,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1C0770A019018F220090130D /* Arduino */,
-				1C0770A819018F580090130D /* Position */,
-				1C0770AC19018F610090130D /* Camera */,
 				1C0770A419018F4E0090130D /* All */,
-				1CEC1A9D190556BF0016A024 /* Image */,
 				1C2B15C818F81D760038A475 /* climso-auto */,
 			);
 		};
@@ -280,39 +224,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1CC3A2F41965489000208644 /* widgetimage.moc.cpp in Sources */,
+				1CC3A2F31965489000208644 /* guidage.moc.cpp in Sources */,
+				1CC3A2F11965489000208644 /* capture.moc.cpp in Sources */,
+				1CC3A2F21965489000208644 /* fenetreprincipale.moc.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		1C0770A219018F220090130D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		1C0770A319018F220090130D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = YES;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		1C0770A619018F4E0090130D /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -331,60 +252,6 @@
 			name = Debug;
 		};
 		1C0770A719018F4E0090130D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		1C0770AA19018F580090130D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		1C0770AB19018F580090130D /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
-		1C0770AE19018F610090130D /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		1C0770AF19018F610090130D /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -546,68 +413,14 @@
 			};
 			name = Release;
 		};
-		1CEC1A9F190556BF0016A024 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUGGING_SYMBOLS = YES;
-				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		1CEC1AA0190556BF0016A024 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		1C0770A119018F220090130D /* Build configuration list for PBXLegacyTarget "Arduino" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1C0770A219018F220090130D /* Debug */,
-				1C0770A319018F220090130D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		1C0770A519018F4E0090130D /* Build configuration list for PBXLegacyTarget "All" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				1C0770A619018F4E0090130D /* Debug */,
 				1C0770A719018F4E0090130D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1C0770A919018F580090130D /* Build configuration list for PBXLegacyTarget "Position" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1C0770AA19018F580090130D /* Debug */,
-				1C0770AB19018F580090130D /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1C0770AD19018F610090130D /* Build configuration list for PBXLegacyTarget "Camera" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1C0770AE19018F610090130D /* Debug */,
-				1C0770AF19018F610090130D /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -626,15 +439,6 @@
 			buildConfigurations = (
 				1C2B15D318F81D760038A475 /* Debug */,
 				1C2B15D418F81D760038A475 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		1CEC1A9E190556BF0016A024 /* Build configuration list for PBXLegacyTarget "Image" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				1CEC1A9F190556BF0016A024 /* Debug */,
-				1CEC1AA0190556BF0016A024 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
