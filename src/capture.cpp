@@ -10,8 +10,10 @@
 #include "capture.h"
 
 #define DIAMETRE_DEFAUT			200  // diamètre du soleil par défaut
+#define PERIODE_CAPTURES 		1500 // en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
+#define DUREE_EXPOSITION		100 // en ms
 #define PERIODE_CONNEXION		1000 // en ms, inutilisé (connexion dans captureEtPosition())
-#define PERIODE_ENTRE_CAPTURES 	1 // en ms
+
 
 static string emplacement = "";
 QTime t;
@@ -25,7 +27,8 @@ Capture::Capture() {
 	diametre = 0;
 	QObject::connect(&timerConnexion,SIGNAL(timeout()),this,SLOT(connexionAuto()));
 	QObject::connect(&timerCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
-	timerCapture.start(PERIODE_ENTRE_CAPTURES);
+	captureEtPosition();
+	timerCapture.start(PERIODE_CAPTURES);
 	//connecterCameraAuto(); XXX La connexion se fait lors de l'appel de captureEtPosition()
 }
 
@@ -52,7 +55,7 @@ void Capture::connecterCamera() {
     }
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
-        cam->SetExposureTime(0.001);
+        cam->SetExposureTime(DUREE_EXPOSITION * 0.001);
         cam->SetABGState(ABG_LOW7);
 
         emit message("Camera connectee");
@@ -176,7 +179,6 @@ void Capture::captureEtPosition() {
     // --------- --- ----------
 
 	}
-	timerCapture.start(PERIODE_ENTRE_CAPTURES);
 }
 
 void Capture::modifierDiametre(int diametre) {
