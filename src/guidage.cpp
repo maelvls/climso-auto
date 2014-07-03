@@ -93,17 +93,14 @@ void Guidage::guidageAuto() {
 		return;
 	}
 	// Calcul de la moyenne de décalage
-	cout << "Taille historique : " << historique_l.length() << endl;
 
 	double moyenne_l=0, moyenne_c=0; int i;
 	for(i = 0; historique_l.length() > 0; i++) {
 		moyenne_l += historique_l.first();
-		cout << i<<"(x=" << historique_c.first() << ", y=" << historique_l.first() <<")"<<endl;
 		moyenne_c += historique_c.first();
 		historique_l.removeFirst();
 		historique_c.removeFirst();
 	}
-	cout << "Taille historique fin : " << historique_l.length() << endl;
 	moyenne_l = moyenne_l/i;
 	moyenne_c = moyenne_c/i;
 	// Calcul du décalage x,y entre la position initiale
