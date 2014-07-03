@@ -32,3 +32,13 @@ Concernant le fichier .ui, je ne sais pas comment faire en sorte qu'il soit affi
 
 ------------ Projet Qt et projet Autotools
 Voir dans m4/explications
+
+
+------------ Utilisation de clock() pour calculer le temps écoulé
+clock() ne donne pas le bon temps. Il faut utiliser gettimeofday().
+
+------------ Performances de la caméra
+Pour que la commande CC_START_EXPOSURE2 soit effectuée, même avec un temps d'expo de 1ms, ça met 440ms environ.
+Pour le readout (en fast readout ou pas) ça met 260ms environ (en binning 3x3).
+La corrélation met de 50 à 250ms.
+L'ensemble
