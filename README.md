@@ -12,6 +12,7 @@ La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallong
 
 ## Schéma de fonctionnement de l'algorithme de guidage
 ![Schéma de fonctionnement de l'algorithme de détection du soleil](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.jpg)
+
 Le schéma ne présente pas l'interface utilisateur ni les intéractions possibles.
 Il s'agissait du programme de test lors des premières phases du projet.
 
@@ -32,7 +33,7 @@ Si une erreur du type :
 	
 	configure.ac:29: error: required file 'config/	config.guess' not found
 
-lancez la commande
+lancer la commande
 	
 	automake --add-missing
 	
@@ -114,15 +115,12 @@ Il y a trois groupes de fichiers :
  * `src/csbigcam.cpp` (fourni par le fabriquant)
  * `src/csbigimg.cpp` (fourni par le constructeur)
 
-
  
 * Les fichiers gérant à proprement-dit l'interface
  * `src/main_qt_gui.cpp` (écrit par moi, permet de lancer l'application)
  * `src/fenetreprincipale.cpp` (écrit par moi, gère l'affichage des éléments et lance les deux autres processus légers (threads)
- * `src/fenetreprincipale.moc.cpp` (généré automatiquement par _moc_ à partir de fenetreprincipale.h)
  * `src/widgetimage.cpp` (écrit par moi, gère l'affichage de l'image du soleil dans l'application)
- * `src/widgetimage.moc.cpp` (généré par _moc_ à partir de widgetimage.h)
-
+ * 	`src/fenetreprincipale.ui` (est géré par QtDesigner et permet de dessiner la fenêtre de l'application – est transformé en `fenetreprincipale_ui.h` par _uic_. Pour modifier l'interface, il faut ouvrir fenetreprincipale.ui avec QtDesigner ou QtCreator)
 
 * Les fichiers contrôlant l'interface (avec l'algorithme de guidage, la corrélation...)
  * `src/capture.cpp` (écrit par moi, est placé dans un thread différent, gère la capture de l'image SBIG, la corrélation et le diamètre du soleil. Envoie les résultats à guidage.cpp)
@@ -131,14 +129,11 @@ Il y a trois groupes de fichiers :
  * `src/guidage.moc.cpp` (généré par _moc_
 
 
-* Les fichiers "à côté"
- * 	`src/fenetreprincipale.ui` (généré par QtDesigner et permet de dessiner la fenêtre de l'application – est transformé en `fenetreprincipale_ui.h` par _uic_)
+* Les fichiers "à côté" :
+ * les fichiers `*.moc.cpp` sont générés par _moc_ et permettent, pour toutes les classes implémentant un Q_OBJECT, de produire le code pour faire fonctionner le système de signal-slot.
 
-# Notes
-### Utiliser Git avec Eclipse CDT
-Pour éviter de devoir taper un mot de passe, il faut d'abord avoir son propre certificat et l'avoir ajouté dans les préférences de son compte sur Github.
-Il y a une différence lorsqu'on accède en https et en ssh.
-En ssh, il suffit (si on a bien suivi https://help.github.com/articles/generating-ssh-keys) de changer l'url remote : https://help.github.com/articles/changing-a-remote-s-url
+
+# Notes d'utilisation de climso-auto
 ### Problème avec Arduino
 * Impossible d'initialiser la connexion car le fichier spécial "/dev/usbACM0" (par exemple) n'appartient pas à l'utilisateur en cours. Pour réparer ça, il faut ajouter l'utilisateur en cours dans le groupe "dialup"
 
@@ -223,10 +218,14 @@ J'ai donc renommé `/etc/profile.d/qt.sh` en `/etc/profile.d/qt.sh.disabled`. En
 
  Manque des includes dans Eclipse CDT (dans la liste "Includes" de l'explorateur) mais ce problème s'est résolu tout seul (comment ? CDT a trouvé les chemins des includes tout seul ?? Non...)
 
-### Ouvrir ce projet "autotools" (Makefile.am, configure.ac...) avec QTCreator
+### Ouvrir ce projet "autotools" (Makefile.am, configure.ac...) avec QtCreator
 Il faut aller dans Aide > Plugins > et cocher AutotoolsProjectManager.
 
 Ensuite on peut ouvrir le projet avec QtCreator en faisant Ouvrir fichier ou projet > on choisit le premier Makefile.am du projet et c'est bon.
 Par contre seuls les fichiers donnés dans le Makefile.am seront affichés dans QtCreator, ce qui est une bonne chose pour ne pas se perdre !
 Concernant le fichier .ui, je ne sais pas comment faire en sorte qu'il soit affiché dans QtCreator autrement qu'en l'ajoutant dans les `_SOURCES` de `Makefile.am`.
 
+### Utiliser Git avec Eclipse CDT
+Pour éviter de devoir taper un mot de passe, il faut d'abord avoir son propre certificat et l'avoir ajouté dans les préférences de son compte sur Github.
+Il y a une différence lorsqu'on accède en https et en ssh.
+En ssh, il suffit (si on a bien suivi https://help.github.com/articles/generating-ssh-keys) de changer l'url remote : https://help.github.com/articles/changing-a-remote-s-url
