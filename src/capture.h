@@ -35,7 +35,8 @@ private:
 
     bool cameraConnectee();
     void capturerEtTrouverPosition();
-
+	void enregistrerParametres();
+	void lireParametres();
 public:
 	Capture();
 	virtual ~Capture();
@@ -55,6 +56,7 @@ signals:
 	void stopperGuidage();
 	void etatCamera(int);
 	void resultats(Image* img, double l, double c, int diametre, double bruitsignal);
+	void diametreSoleil(int);
 };
 
 #endif /* CAPTURE_H_ */

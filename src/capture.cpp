@@ -7,11 +7,14 @@
  *
  */
 
+#include <QtCore/QSettings>
 #include "capture.h"
 
-#define DIAMETRE_DEFAUT			200  // diamètre du soleil par défaut
-#define PERIODE_CAPTURES 		1500 // en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
-#define DUREE_EXPOSITION		100 // en ms
+#define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
+#define PERIODE_CAPTURES 		1800 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
+#define DUREE_EXPOSITION		100 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
+
+#define DEBUG_IMAGES_CAMERA 	1		// Enregistrer les images capturées et traitées en .tif
 
 #if DEBUG_IMAGES_CAMERA
 static string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
@@ -29,14 +32,28 @@ Capture::Capture() {
 	captureEtPosition(); // Lancement de la première capture
 	timerCapture.start(PERIODE_CAPTURES);
 	//connecterCameraAuto(); XXX La connexion se fait lors de l'appel de captureEtPosition()
+	lireParametres();
 }
 
 Capture::~Capture() {
+	enregistrerParametres();
 	deconnecterCamera();
 //	if(cam) delete cam; cam=NULL;
 //	if(img) delete img; img=NULL;
 //	if(ref_lapl) delete ref_lapl; ref_lapl = NULL;
 	cout << "Caméra deconnectée" <<endl;
+}
+
+void Capture::enregistrerParametres() {
+	QSettings parametres("irap", "climso-auto");
+	parametres.setValue("diametre-soleil-en-pixel", diametre);
+}
+
+void Capture::lireParametres() {
+	QSettings parametres("irap", "climso-auto");
+	diametre = parametres.value("diametre-soleil-en-pixel", DIAMETRE_DEFAUT).toInt();
+
+	emit diametreSoleil(diametre); // Ecrit sur l'interface le diametre, l'interface va ensuite demander la modif
 }
 
 void Capture::connecterCamera() {

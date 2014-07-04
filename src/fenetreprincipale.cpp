@@ -20,7 +20,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     capture->moveToThread(&threadCapture);
 
     // Liens entre fenetreprincipale et guidage
-    QObject::connect(this,SIGNAL(deconnecterArduino()),guidage,SLOT(deconnecterArduino()));
     QObject::connect(guidage,SIGNAL(etatArduino(int)),this,SLOT(statutArduino(int)));
     QObject::connect(guidage,SIGNAL(etatGuidage(bool)),this,SLOT(statutGuidage(bool)));
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
@@ -34,9 +33,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     // Liens entre fenetreprincipale et capture
     QObject::connect(capture,SIGNAL(etatCamera(int)),this,SLOT(statutCamera(int)));
-    QObject::connect(this,SIGNAL(connecterCamera()),capture,SLOT(connecterCameraAuto()));
-    QObject::connect(this,SIGNAL(deconnecterCamera()),capture,SLOT(deconnecterCameraAuto()));
     QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
+    QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->diametreSoleil,SLOT(setValue(int)));
     QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
 
 
@@ -50,8 +48,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(guidage,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
     QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,QColor)));
     QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,QColor)));
-
-    ui->diametreSoleil->setValue(200);
 
     threadGuidage.start();
     threadCapture.start();

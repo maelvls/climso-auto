@@ -62,13 +62,6 @@ public slots:
 signals:
 	void lancerGuidage();
 	void stopperGuidage();
-	void connecterCamera();
-	void deconnecterCamera();
-	void demanderImage();
-	void connecterArduino(QString);
-	void deconnecterArduino();
-	void consigneLigne(double l);
-	void consigneColonne(double c);
 	void modificationConsigne(int,int,int modeVitesse);
 	void quitter();
 };
