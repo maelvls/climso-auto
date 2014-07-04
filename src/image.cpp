@@ -178,8 +178,8 @@ Image* Image::depuisSBIGImg(CSBIGImg &img) {
  */
 Image* Image::depuisTableauDouble(double **tableau, int hauteur, int largeur) {
     Image* img_out = new Image(hauteur,largeur);
-	for (int lign=0; lign< img_out->lignes; lign++) {
-		for (int col=0; col< img_out->colonnes; col++) {
+	for (int lign=0; lign < img_out->lignes; lign++) {
+		for (int col=0; col < img_out->colonnes; col++) {
             img_out->setPix(lign, col, tableau[lign][col]);
 		}
 	}
@@ -409,13 +409,21 @@ Image* Image::correlation_rapide_centree(Image& reference, float seuil_ref) {
 }
 
 Image* Image::correlation(Image& reference, float seuil_ref) {
+	int min_l, min_c, max_l, max_c;
+	reference.minMaxPixel(&min_l, &min_c, &max_l, &max_c);
+	MonDouble seuil_relatif = reference.getPix(min_l, min_c)
+			+ seuil_ref*(reference.getPix(max_l, max_c)-reference.getPix(min_l, min_c));
+
 	double** obj = this->versTableauDeDouble();
 	double** ref = reference.versTableauDeDouble();
 	double** res = new double*[this->lignes];
 	for(int l=0; l<this->lignes;l++)
 		res[l] = new double[this->colonnes];
 
-	calc_convol(obj,ref,res,colonnes,lignes,reference.colonnes,reference.lignes,seuil_ref*INTENSITE_MAX);
+	calc_convol(obj,ref,res,colonnes,lignes,reference.colonnes,reference.lignes,seuil_relatif);
+
+	Image* img_resultat = Image::depuisTableauDouble(res,lignes,colonnes);
+	img_resultat->normaliser();
 
 	for(int l=0; l<reference.lignes;l++)
 		delete [] ref[l];
@@ -423,10 +431,6 @@ Image* Image::correlation(Image& reference, float seuil_ref) {
 	for(int l=0; l<this->lignes;l++)
 		delete [] obj[l];
 	delete [] obj;
-
-	Image* img_resultat = Image::depuisTableauDouble(res,lignes,colonnes);
-	img_resultat->versTiff("t0_essai_correl.tif");
-
 	for(int l=0; l<this->lignes;l++)
 		delete [] res[l];
 	delete [] res;
