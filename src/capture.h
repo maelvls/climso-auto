@@ -44,16 +44,13 @@ public slots:
 	void lancerCapture();
 	void stopperCapture();
 	void connecterCamera();
-	void connecterCameraAuto();
 	void deconnecterCamera();
-	void deconnecterCameraAuto();
 	bool capturerImage();
 	void trouverPosition();
 private slots:
 	void connexionAuto();
 	void captureEtPosition();
 signals:
-	void messageCamera(PAR_ERROR, QString);
 	void message(QString);
 	void stopperGuidage();
 	void etatCamera(int);
