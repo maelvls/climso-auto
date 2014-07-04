@@ -37,6 +37,23 @@ Voir dans m4/explications
 ------------ Utilisation de clock() pour calculer le temps écoulé
 clock() ne donne pas le bon temps. Il faut utiliser gettimeofday().
 
+
+    // --------- XXX ----------
+    struct timeval start, end;
+    long mtime, seconds, useconds;
+    gettimeofday(&start, NULL);
+    // --------- --- ----------
+    
+puis
+
+    // --------- XXX ----------
+    gettimeofday(&end, NULL);
+    seconds  = end.tv_sec  - start.tv_sec;
+    useconds = end.tv_usec - start.tv_usec;
+    mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
+    printf("Elapsed time: %ld milliseconds\n", mtime);
+    // --------- --- ----------
+
 ------------ Performances de la caméra
 Pour que la commande CC_START_EXPOSURE2 soit effectuée, même avec un temps d'expo de 1ms, ça met 440ms environ.
 Pour le readout (en fast readout ou pas) ça met 260ms environ (en binning 3x3).

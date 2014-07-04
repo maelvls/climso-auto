@@ -5,3 +5,6 @@ On ajoutera alors dans Makefile.am dans "BUILT_OBJECTS" le .moc.cpp pour être s
 
 ------------ Ne pas bloquer la fenêtre principale : QThread
 Pour ne pas bloquer la fenêtre principale lors du lancement de la boucle de guidage, il a fallu créer une classe n'ayant que des slots et signaux (guidage.h).
+
+------------ Enregistrer les paramètres
+Grâce à QSettings, les parametres sont sauvés dans ~/.config/irap/climso-auto.conf
