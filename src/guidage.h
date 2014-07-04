@@ -20,8 +20,7 @@
 #include "arduino.h"
 #include "image.h"
 
-
-#define IMPULSION_PIXEL_H	400 //ms
+#define IMPULSION_PIXEL_H	400 // en ms, durée d'impulsion envoyée
 #define IMPULSION_PIXEL_V	800 //ms (2px pour 1sec)
 #define PIN_NORD			12
 #define	PIN_SUD				11
@@ -29,11 +28,10 @@
 #define PIN_OUEST			9
 #define ORIENTATION_NORD_SUD 		-1 // 1 quand le nord correspond au nord, -1 sinon
 #define ORIENTATION_EST_OUEST		-1 // 1 quand l'est correspond à l'est, -1 sinon
-#define SEUIL_BRUIT_SIGNAL			0.50
-#define PERIODE_ENTRE_GUIDAGES		5000 // en ms
-#define PERIODE_ENTRE_CONNEXIONS	1000
-#define SEUIL_DECALAGE_PIXELS		1.0
-// FIXME: si temps envoi arduino > timer, pbm (on limite ce temps à un peu au dessous de celui du timer)
+#define SEUIL_BRUIT_SIGNAL			0.50 // Seuil Bruit/Signal au dessus lequel le guidage ne peut être effectué (nuages..)
+#define PERIODE_ENTRE_GUIDAGES		5000 // en ms // FIXME IL FAUT PASSER EN NOMBRE D'echantillons et pas de période !!!
+#define PERIODE_ENTRE_CONNEXIONS	1000 // Période entre deux vérifications de connexion à l'arduino
+#define SEUIL_DECALAGE_PIXELS		1.0 // Distance en pixels en dessous laquelle la position est estimée comme correcte
 
 #define POSITION_OK				Qt::green //QColor(qRgb(255,145,164))//QColor(qRgb(44,117,255))
 #define POSITION_NOK			Qt::gray //QColor(qRgb(187,210,225))
@@ -42,7 +40,7 @@
 #define CONSIGNE_DIVERGE		Qt::red
 
 #define INCREMENT_LENT		0.1 // en nombre de pixels
-#define INCREMENT_RAPIDE	1
+#define INCREMENT_RAPIDE	1	// en nombre de pixels
 #define VITESSE_LENTE		0
 #define VITESSE_RAPIDE		1
 
@@ -54,50 +52,59 @@
 #define ARDUINO_CONNEXION_AUTO_ON		0
 #define ARDUINO_CONNEXION_AUTO_OFF		1
 
-class Guidage : public QObject {
-	Q_OBJECT
+class Guidage: public QObject {
+Q_OBJECT
 private:
 	QTimer timerCorrection;
 	QTimer timerVerificationConnexions;
 	Arduino* arduino;
 
+	// Résultats des captures envoyées par Capture
 	double consigne_l, consigne_c;
+	Image* img;	// Image envoyée par la classe Capture par le signal resultat()
 	double position_l, position_c;
-	double decalage;
-	int diametre; // Pour l'affichage
-	Image* img;
 	double bruitsignal;
-	QList<double> historique_l;
-	QList<double> historique_c;
+	int diametre; // Diametre du soleil en pixels pour l'affichage lorsqu'on utilisera repereSoleil(...)
+	double decalage; // Vecteur décalage entre la consigne et la position
+	QList<double> historique_l; // Historique des position_l
+	QList<double> historique_c; // Historique des position_c
+
+	// Paramètres de guidage
+	int orientationNordSud; // 1 si l'orientation Nord-Sud est correcte, -1 si elle est inversée
+	int orientationEstOuest; // 1 si l'orientation Est-Ouest est correcte, -1 si elle est inversée
 
 	void capturerImage();
-    bool arduinoConnecte();
-    void afficherImageSoleilEtReperes();
+	bool arduinoConnecte();
+	void afficherImageSoleilEtReperes();
+	void enregistrerParametres();
+	void lireParametres();
 public:
 	Guidage();
 	~Guidage();
-    static QStringList chercherFichiersArduino();
+	static QStringList chercherFichiersArduino();
 public slots:
 // guidage
 	void lancerGuidage();
 	void stopperGuidage();
 // arduino
-    void connecterArduino(QString nom);
-    void deconnecterArduino();
+	void connecterArduino(QString nom);
+	void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
 private slots:
 	void guidageAuto();
 	void initialiserConsigne();
 	void connexionAuto();
-	void traiterResultatsCapture(Image* img, double l, double c, int diametre, double bruitsignal);
-	void modifierConsigne(int deltaLigne, int deltaColonne, int modeVitesse);
-signals:
+	void traiterResultatsCapture(Image* img, double l, double c, int diametre,
+			double bruitsignal);
+	void modifierConsigne(int deltaLigne, int deltaColonne, int modeVitesse);signals:
 	void message(QString msg);
 	void etatArduino(int);
 	void etatGuidage(bool);
 	void imageSoleil(Image*);
-	void repereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x, QColor couleur);
-	void repereConsigne(float pourcent_x, float pourcent_y, float diametre_pourcent_x, QColor couleur);
+	void repereSoleil(float pourcent_x, float pourcent_y,
+			float diametre_pourcent_x, QColor couleur);
+	void repereConsigne(float pourcent_x, float pourcent_y,
+			float diametre_pourcent_x, QColor couleur);
 	void signalBruit(double);
 };
 
