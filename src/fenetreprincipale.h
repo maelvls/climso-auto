@@ -66,6 +66,7 @@ signals:
 	void modificationConsigne(int,int,int modeVitesse);
 	void quitter();
 	void diametreSoleil(int);
+	void initialiserCapture();
 };
 
 #endif // FENETREPRINCIPALE_H

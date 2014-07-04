@@ -14,11 +14,10 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // Faire en sorte que les chaines statiques "C-strings" soient considérées comme UTF-8
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
-    guidage = new Guidage;
+    guidage = new Guidage; // ATTENTION: pas d'envoi de signaux dans le constructeur !
     guidage->moveToThread(&threadGuidage);
-    capture = new Capture;
+    capture = new Capture; // ATTENTION: pas d'envoi de signaux dans le constructeur !
     capture->moveToThread(&threadCapture);
-
 
     // Liens entre fenetreprincipale et guidage
     QObject::connect(guidage,SIGNAL(etatArduino(int)),this,SLOT(statutArduino(int)));
@@ -36,6 +35,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(capture,SIGNAL(etatCamera(int)),this,SLOT(statutCamera(int)));
     QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->valeurDiametreSoleil,SLOT(setValue(int)));
     QObject::connect(this,SIGNAL(diametreSoleil(int)),capture,SLOT(modifierDiametre(int)));
+    QObject::connect(this,SIGNAL(initialiserCapture()),capture,SLOT(initialiserObjetCapture()));
+
 
     QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
 
@@ -53,6 +54,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     threadGuidage.start();
     threadCapture.start();
+    emit initialiserCapture();
 
     ui->vitesseDecalageRapide->setChecked(true);
 
