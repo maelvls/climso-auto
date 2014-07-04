@@ -11,7 +11,7 @@
 #include "capture.h"
 
 #define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
-#define PERIODE_CAPTURES 		1800 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
+#define DUREE_ENTRE_CAPTURES 	200 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
 #define DUREE_EXPOSITION		100 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
 
 #define DEBUG_IMAGES_CAMERA 	1		// Enregistrer les images capturées et traitées en .tif
@@ -28,9 +28,10 @@ Capture::Capture() {
 	ref_lapl = NULL;
 	position_c = position_l = 0;
 	diametre = 0;
-	QObject::connect(&timerCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
+	QObject::connect(&timerProchaineCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
 	captureEtPosition(); // Lancement de la première capture
-	timerCapture.start(PERIODE_CAPTURES);
+	timerProchaineCapture.setSingleShot(true);
+	timerProchaineCapture.setInterval(DUREE_ENTRE_CAPTURES);
 	//connecterCameraAuto(); XXX La connexion se fait lors de l'appel de captureEtPosition()
 	lireParametres();
 }
@@ -42,6 +43,7 @@ Capture::~Capture() {
 //	if(img) delete img; img=NULL;
 //	if(ref_lapl) delete ref_lapl; ref_lapl = NULL;
 	cout << "Caméra deconnectée" <<endl;
+	// FIXME: Quand on a fait le quit(), les events sont tous traités ?
 }
 
 void Capture::enregistrerParametres() {
@@ -52,8 +54,8 @@ void Capture::enregistrerParametres() {
 void Capture::lireParametres() {
 	QSettings parametres("irap", "climso-auto");
 	diametre = parametres.value("diametre-soleil-en-pixel", DIAMETRE_DEFAUT).toInt();
-
-	emit diametreSoleil(diametre); // Ecrit sur l'interface le diametre, l'interface va ensuite demander la modif
+	modifierDiametre(diametre);
+	emit diametreSoleil(diametre);
 }
 
 void Capture::connecterCamera() {
@@ -106,10 +108,10 @@ void Capture::connexionAuto() {
 }
 
 void Capture::lancerCapture() {
-	timerCapture.start();
+	timerProchaineCapture.start();
 }
 void Capture::stopperCapture() {
-	timerCapture.stop();
+	timerProchaineCapture.stop();
 }
 bool Capture::capturerImage() {
     if (!cameraConnectee()) {
@@ -158,14 +160,17 @@ void Capture::trouverPosition() {
 void Capture::captureEtPosition() {
 	connexionAuto();
 	//t.start();
-	if(capturerImage()) {
+	if(capturerImage() && ref_lapl) {
     //cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
     //cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
 	}
+	timerProchaineCapture.start();
+	//emit diametreSoleil(diametre);
 }
 
 void Capture::modifierDiametre(int diametre) {
+	cout << "modif de";
 	if(ref_lapl) delete ref_lapl;
 	Image *ref = Image::tracerFormeSoleil(diametre);
 	ref_lapl = ref->convoluerParDerivee();

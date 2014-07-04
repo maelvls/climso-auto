@@ -24,7 +24,7 @@ class Capture: public QObject {
 	Q_OBJECT
 private:
 	QTimer timerConnexion;
-	QTimer timerCapture;
+	QTimer timerProchaineCapture;
 	CSBIGCam* cam;
 	//CSBIGImg* img_sbig;
 	Image* img;
