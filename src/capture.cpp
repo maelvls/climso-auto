@@ -12,22 +12,21 @@
 #define DIAMETRE_DEFAUT			200  // diamètre du soleil par défaut
 #define PERIODE_CAPTURES 		1500 // en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
 #define DUREE_EXPOSITION		100 // en ms
-#define PERIODE_CONNEXION		1000 // en ms, inutilisé (connexion dans captureEtPosition())
 
+#if DEBUG_IMAGES_CAMERA
+static string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
+#endif
 
-static string emplacement = "";
 QTime t;
 
 Capture::Capture() {
-	timerConnexion.setInterval(PERIODE_CONNEXION);
 	cam = NULL;
 	img = NULL;
 	ref_lapl = NULL;
 	position_c = position_l = 0;
 	diametre = 0;
-	QObject::connect(&timerConnexion,SIGNAL(timeout()),this,SLOT(connexionAuto()));
 	QObject::connect(&timerCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
-	captureEtPosition();
+	captureEtPosition(); // Lancement de la première capture
 	timerCapture.start(PERIODE_CAPTURES);
 	//connecterCameraAuto(); XXX La connexion se fait lors de l'appel de captureEtPosition()
 }
@@ -63,11 +62,6 @@ void Capture::connecterCamera() {
     }
 }
 
-void Capture::connecterCameraAuto() {
-	connecterCamera();
-	timerConnexion.start();
-}
-
 void Capture::deconnecterCamera() {
     if(cam) {
         cam->CloseDevice();
@@ -78,12 +72,6 @@ void Capture::deconnecterCamera() {
     else {
         emit message("Aucune camera n'est connectee");
     }
-}
-
-void Capture::deconnecterCameraAuto() {
-	timerConnexion.stop();
-	QCoreApplication::flush();
-	deconnecterCamera();
 }
 
 bool Capture::cameraConnectee() {
@@ -138,7 +126,7 @@ void Capture::trouverPosition() {
 	// ENVOI DES RESULTATS
     emit resultats(img,position_l,position_c,diametre,bruitsignal);
 
-#if DEBUG
+#if DEBUG_IMAGES_CAMERA
 	img->versTiff(emplacement+"t0_obj.tif");
 	correl->versTiff(emplacement+"t0_correl.tif");
 	obj_lapl->versTiff(emplacement+"t0_obj_lapl.tif");
@@ -152,32 +140,11 @@ void Capture::trouverPosition() {
 
 void Capture::captureEtPosition() {
 	connexionAuto();
-	//QCoreApplication::processEvents();
-
-
-
-    // --------- XXX ----------
-    struct timeval start, end;
-    long mtime, seconds, useconds;
-    gettimeofday(&start, NULL);
-    // --------- --- ----------
-
-
-	t.start();
-
+	//t.start();
 	if(capturerImage()) {
-    cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
+    //cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
-    cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
-
-    // --------- XXX ----------
-    gettimeofday(&end, NULL);
-    seconds  = end.tv_sec  - start.tv_sec;
-    useconds = end.tv_usec - start.tv_usec;
-    mtime = ((seconds) * 1000 + useconds/1000.0) + 0.5;
-    printf("Elapsed time: %ld milliseconds\n", mtime);
-    // --------- --- ----------
-
+    //cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
 	}
 }
 
@@ -186,7 +153,7 @@ void Capture::modifierDiametre(int diametre) {
 	Image *ref = Image::tracerFormeSoleil(diametre);
 	ref_lapl = ref->convoluerParDerivee();
 
-#if DEBUG
+#if DEBUG_IMAGES_CAMERA
 	ref->versTiff(emplacement+"t0_ref.tif");
 	ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
 #endif
