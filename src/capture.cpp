@@ -120,7 +120,7 @@ void Capture::trouverPosition() {
 		return;
 	}
 	Image *obj_lapl = img->convoluerParDerivee();
-	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.80);
+	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.85);
 	correl->maxParInterpolation(&position_l, &position_c);
 	double bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
 	// ENVOI DES RESULTATS
