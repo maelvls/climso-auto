@@ -12,28 +12,24 @@
 string emplacement_capture = "";
 
 Guidage::Guidage() {
-	timerVerificationConnexions.setInterval(PERIODE_ENTRE_CONNEXIONS);
-	timerCorrection.setInterval(PERIODE_ENTRE_GUIDAGES);
+	timerConnexionAuto.setInterval(PERIODE_ENTRE_CONNEXIONS);
+	arduino = NULL;
+	img = NULL;
 
 	consigne_c = consigne_l = 0;
-	position_c = position_l = 0;
 	decalage = 1000000;
 	bruitsignal = 1;
 
 	// Paramètres de guidage
 	orientationNordSud = ORIENTATION_NORD_SUD;
 	orientationEstOuest = ORIENTATION_EST_OUEST;
+	guidageEnMarche = false;
 
-	arduino = NULL;
-	img = NULL;
-
-	QObject::connect(&timerCorrection, SIGNAL(timeout()), this,
-			SLOT(guidageAuto()));
-	QObject::connect(&timerVerificationConnexions, SIGNAL(timeout()), this,
+	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,
 			SLOT(connexionAuto()));
 
 	connexionAuto(); // lancer les connexions au démarrage
-	timerVerificationConnexions.start();
+	timerConnexionAuto.start();
 
 	// Test sauvegarde
 	lireParametres();
@@ -45,6 +41,7 @@ Guidage::~Guidage() {
 //	if(arduino) delete arduino; arduino=NULL;
 //	if(img) delete img; img=NULL;
 	cout << "Arduino déconnecté" << endl;
+	// FIXME: Quand on a fait le quit(), les events sont tous traités ?
 }
 
 void Guidage::enregistrerParametres() {
@@ -79,56 +76,57 @@ void Guidage::connexionAuto() {
 }
 
 void Guidage::lancerGuidage() {
-	if (img == NULL || position_c == 0 || position_l == 0) {
+	if (img == NULL || position_c.isEmpty() || position_l.isEmpty()) {
 		emit message(
 				"Impossible de guider, la position n'a pas ete initialisee");
-		return;
+		guidageEnMarche = false;
+	}
+	else {
+		guidageEnMarche = true;
 	}
 	if (consigne_c == 0 || consigne_l == 0) {
 		initialiserConsigne();
 	}
-	emit etatGuidage(true);
-	timerCorrection.start();
+	emit etatGuidage(guidageEnMarche);
+	tempsDepuisDernierGuidage.start();
 }
 void Guidage::stopperGuidage() {
-	timerCorrection.stop();
-	emit etatGuidage(false);
-	return;
+	guidageEnMarche = false;
+	emit etatGuidage(guidageEnMarche);
 }
 
 void Guidage::initialiserConsigne() {
-	if (position_c == 0 || position_l == 0) {
+	if (position_c.isEmpty() || position_l.isEmpty()) {
 		emit message(
 				"Impossible d'initialiser la consigne, aucune position enregistree");
 		return;
 	}
-	consigne_c = position_c;
-	consigne_l = position_l;
+	consigne_c = position_c.last();
+	consigne_l = position_l.last();
 	emit message(
 			"Position initiale"
 					" (x= " + QString::number(consigne_c) + ", y="
 					+ QString::number(consigne_l) + ")");
 }
 
-void Guidage::guidageAuto() {
+void Guidage::guider() {
 	if (!arduinoConnecte()) {
 		emit message("Verifiez les connexions avec l'arduino");
-		timerCorrection.stop();
+		stopperGuidage();
 		return;
 	}
-	if (position_l == 0 || position_c == 0) {
+	if (position_c.isEmpty() || position_l.isEmpty()) {
 		emit message("Aucune position courante");
 		return;
 	}
 	// Calcul de la moyenne de décalage
-
 	double moyenne_l = 0, moyenne_c = 0;
 	int i;
-	for (i = 0; historique_l.length() > 0; i++) {
-		moyenne_l += historique_l.first();
-		moyenne_c += historique_c.first();
-		historique_l.removeFirst();
-		historique_c.removeFirst();
+	for (i = 0; position_l.length() > 0; i++) {
+		moyenne_l += position_l.last();
+		moyenne_c += position_c.last();
+		position_l.removeLast();
+		position_c.removeLast();
 	}
 	moyenne_l = moyenne_l / i;
 	moyenne_c = moyenne_c / i;
@@ -139,17 +137,18 @@ void Guidage::guidageAuto() {
 	decalage = qSqrt(l_decal * l_decal + c_decal * c_decal);
 
 	emit message(
-			"(x= " + QString::number(position_c) + ", y="
-					+ QString::number(position_l) + ") "
+			"(x= " + QString::number(position_c.last()) + ", y="
+					+ QString::number(position_l.last()) + ") "
 							", (dx= " + QString::number(l_decal) + ", dy="
 					+ QString::number(c_decal) + ")");
 	int l_decal_duree = qAbs(l_decal * IMPULSION_PIXEL_V);
 	int c_decal_duree = qAbs(c_decal * IMPULSION_PIXEL_H);
-	if (l_decal_duree > PERIODE_ENTRE_GUIDAGES - 100) // La duree entre deux corrections ne doit pas depasser le timer
-		l_decal_duree = PERIODE_ENTRE_GUIDAGES - 100;
-	if (c_decal_duree > PERIODE_ENTRE_GUIDAGES - 100)
-		c_decal_duree = PERIODE_ENTRE_GUIDAGES - 100;
 
+	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed()-100) // La duree entre deux corrections ne doit pas depasser le timer
+		l_decal_duree = tempsDepuisDernierGuidage.elapsed()-100;
+	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed()-100)
+		c_decal_duree = tempsDepuisDernierGuidage.elapsed()-100;
+	tempsDepuisDernierGuidage.restart();
 	envoyerCmd((l_decal * ORIENTATION_NORD_SUD < 0) ? PIN_SUD : PIN_NORD,
 			l_decal_duree);
 	envoyerCmd((c_decal * ORIENTATION_EST_OUEST < 0) ? PIN_OUEST : PIN_EST,
@@ -205,10 +204,8 @@ void Guidage::envoyerCmd(int pin, int duree) {
 void Guidage::traiterResultatsCapture(Image* img, double l, double c,
 		int diametre, double bruitsignal) {
 	this->diametre = diametre;
-	position_c = c;
-	position_l = l;
-	historique_l << l;
-	historique_c << c;
+	position_l << l;
+	position_c << c;
 	this->img = img;
 	this->bruitsignal = bruitsignal;
 	emit signalBruit(bruitsignal);
@@ -217,6 +214,10 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c,
 		stopperGuidage();
 	}
 	afficherImageSoleilEtReperes();
+	// Si l'historique des positions contient assez de poitions, on envoie le guidage
+	if(guidageEnMarche && position_l.length() > ECHANTILLONS_PAR_GUIDAGE) {
+		guider();
+	}
 }
 
 void Guidage::modifierConsigne(int deltaLigne, int deltaColonne,
@@ -254,11 +255,11 @@ QStringList Guidage::chercherFichiersArduino() {
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
 	if (bruitsignal < SEUIL_BRUIT_SIGNAL) {
-		emit repereSoleil(position_c / img->getColonnes(),
-				position_l / img->getLignes(),
+		emit repereSoleil(position_c.last() / img->getColonnes(),
+				position_l.last() / img->getLignes(),
 				((float) diametre) / img->getColonnes(), POSITION_OK);
 	} else {
-		emit repereSoleil(position_c/img->getColonnes(),position_l/img->getLignes(),((float)diametre)/img->getColonnes(),POSITION_NOK);
+		emit repereSoleil(position_c.last()/img->getColonnes(),position_l.last()/img->getLignes(),((float)diametre)/img->getColonnes(),POSITION_NOK);
 	}
 	if (not (consigne_l == 0 || consigne_c == 0)) {
 		if (decalage < SEUIL_DECALAGE_PIXELS) {

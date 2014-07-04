@@ -16,7 +16,8 @@
 #include <QtCore/QThread>
 #include <QtGui/QColor>
 #include <QtCore/QFileInfo>
-#include <QDir>
+#include <QtCore/QDir>
+#include <QtCore/QTime>
 #include "arduino.h"
 #include "image.h"
 
@@ -29,7 +30,7 @@
 #define ORIENTATION_NORD_SUD 		-1 // 1 quand le nord correspond au nord, -1 sinon
 #define ORIENTATION_EST_OUEST		-1 // 1 quand l'est correspond à l'est, -1 sinon
 #define SEUIL_BRUIT_SIGNAL			0.50 // Seuil Bruit/Signal au dessus lequel le guidage ne peut être effectué (nuages..)
-#define PERIODE_ENTRE_GUIDAGES		5000 // en ms // FIXME IL FAUT PASSER EN NOMBRE D'echantillons et pas de période !!!
+#define ECHANTILLONS_PAR_GUIDAGE	3 	// Nombre d'échatillons (de captures) nécessaires avant de guider
 #define PERIODE_ENTRE_CONNEXIONS	1000 // Période entre deux vérifications de connexion à l'arduino
 #define SEUIL_DECALAGE_PIXELS		1.0 // Distance en pixels en dessous laquelle la position est estimée comme correcte
 
@@ -55,23 +56,22 @@
 class Guidage: public QObject {
 Q_OBJECT
 private:
-	QTimer timerCorrection;
-	QTimer timerVerificationConnexions;
+	QTimer timerConnexionAuto;
 	Arduino* arduino;
 
 	// Résultats des captures envoyées par Capture
 	double consigne_l, consigne_c;
 	Image* img;	// Image envoyée par la classe Capture par le signal resultat()
-	double position_l, position_c;
+	QList<double> position_l, position_c; // Historique des positions
 	double bruitsignal;
 	int diametre; // Diametre du soleil en pixels pour l'affichage lorsqu'on utilisera repereSoleil(...)
 	double decalage; // Vecteur décalage entre la consigne et la position
-	QList<double> historique_l; // Historique des position_l
-	QList<double> historique_c; // Historique des position_c
 
 	// Paramètres de guidage
+	bool guidageEnMarche;
 	int orientationNordSud; // 1 si l'orientation Nord-Sud est correcte, -1 si elle est inversée
 	int orientationEstOuest; // 1 si l'orientation Est-Ouest est correcte, -1 si elle est inversée
+	QTime tempsDepuisDernierGuidage;
 
 	void capturerImage();
 	bool arduinoConnecte();
@@ -91,7 +91,7 @@ public slots:
 	void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
 private slots:
-	void guidageAuto();
+	void guider();
 	void initialiserConsigne();
 	void connexionAuto();
 	void traiterResultatsCapture(Image* img, double l, double c, int diametre,
