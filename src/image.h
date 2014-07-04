@@ -115,9 +115,10 @@ public:
     Image* correlation_simple(Image& p, float seuil_ref);
     Image* correlation_rapide(Image& reference, float seuil_ref);
     Image* correlation_rapide_centree(Image& reference, float seuil_ref);
+#if INCLUDE_CONVOL
     // Correlation optimisée de Laurent Koechlin
     Image* correlation(Image& reference, float seuil_ref);
-
+#endif
     Image* convoluer(const int *noyau, int taille);
     Image* convoluerParDerivee();
     Image* deriveeCarre();

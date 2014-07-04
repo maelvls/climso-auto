@@ -11,23 +11,36 @@
 //	- Sample : sous-partie du pixel ; 3 par pixel pour une image en couleurs, 1 pour du gris
 //
 // Problème avec la classe Image : l'utilisation d'objets avec allocation dynamique a deux pbms :
-//		- il y a des fuites de mémoire dans la boucle, et cette fuite va faire crasher le système
 // 		- les allocation dynamiques à chaque fois (environ 10 à 40 mo par objet) ralentissent
 //
 
 #include <cmath>
 #include "image.h"
 
+/**
+ * Crée une Image sans taille
+ */
 Image::Image() {
     lignes = 0;
     colonnes = 0;
     img = NULL;
 }
+
+/**
+ * Crée une image vierge selon les grandeurs données ; les pixels de l'images ne sont pas initialisées
+ * @param hauteur
+ * @param largeur
+ */
 Image::Image(int hauteur, int largeur) {
     lignes = hauteur;
     colonnes = largeur;
     img = new MonDouble[lignes*colonnes];
 }
+
+/**
+ * Constructeur par recopie
+ * @param src L'image à copier
+ */
 Image::Image(Image& src) {
 	lignes = src.lignes;
     colonnes = src.colonnes;
@@ -36,7 +49,14 @@ Image::Image(Image& src) {
     copier(src);
 }
 
-
+/**
+ * Constructeur de recopie à partir d'une partie de l'image src
+ * @param src
+ * @param ligne_0 Coordonnées du point de départ de la partie copiée de src (nord-ouest du rectangle)
+ * @param col_0
+ * @param hauteur Grandeur du rectangle de copie
+ * @param largeur
+ */
 Image::Image(Image& src, int ligne_0, int col_0, int hauteur, int largeur) {
     lignes = hauteur;
     colonnes = largeur;
@@ -44,7 +64,9 @@ Image::Image(Image& src, int ligne_0, int col_0, int hauteur, int largeur) {
     this->copier(src,ligne_0,col_0,hauteur,largeur);
 }
 
-
+/**
+ * Destructeur de la classe Image
+ */
 Image::~Image() {
     if(img != NULL)
         delete [] img;
@@ -104,11 +126,9 @@ Image* Image::depuisTiff(string fichierEntree) {
 }
 
 /**
- *
  * @param fichierSortie
  * @author Nehad Hirmiz (http://stackoverflow.com/a/20170682)
  * 		modifié par Mael Valais
- *
  */
 void Image::versTiff(string fichierSortie) {
 	TIFF* out = TIFFOpen(fichierSortie.c_str(), "w");
@@ -240,10 +260,19 @@ void Image::copier(Image& src, int l_decal, int c_decal, int hauteur, int largeu
 		}
 	}
 }
+
+/**
+ * Copie intégralement l'image src dans l'image receuveuse (dans la limite de sa taille)
+ * @param src L'image à copier
+ */
 void Image::copier(Image& src) {
 	copier(src,0,0,src.lignes,src.colonnes);
 }
 
+/**
+ * Initialise l'image à une valeur donnée
+ * @param val
+ */
 void Image::init(int val) {
 	for (int l = 0; l < lignes; ++l) {
 		for (int c = 0; c < colonnes; ++c) {
@@ -256,8 +285,8 @@ void Image::init(int val) {
 /**
  * Correlation de l'image receveuse avec l'image référence,
  * avec normalisation de l'espace de correlation sur [0, INTENSITE_MAX]
- * @param ref L'image de référence
- * @param seuil Le seuil entre 0 et 1
+ * @param reference L'image de référence
+ * @param seuil_ref Le seuil minimal de prise en compte des valeurs des pixles de la référence, entre 0 et 1
  * @return L'espace de corrélation
  */
 Image* Image::correlation_simple(Image& reference, float seuil_ref) {
@@ -332,9 +361,14 @@ Image* Image::correlation_simple(Image& reference, float seuil_ref) {
 	return convol;
 }
 
-// Correl où l'espace de correl est limité à l'image "obj", donc on n'étudie pas
-// les cas de décalage où la référence n'est pas incluse dans l'objet
-// avec opti pointeurs
+/**
+ * Correlation de l'image receveuse avec l'image référence,
+ * avec normalisation de l'espace de correlation sur [0, INTENSITE_MAX]
+ * et optimisation par utilisation de pointeurs au lieu des getters/setters
+ * @param reference L'image de référence
+ * @param seuil_ref Le seuil minimal de prise en compte des valeurs des pixles de la référence, entre 0 et 1
+ * @return L'espace de corrélation
+ */
 Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
 	Image* obj = this;
 	Image* ref = new Image(reference);
@@ -347,9 +381,9 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
     
 	int haut_convol = obj->lignes+ref->lignes-1;
 	int larg_convol = obj->colonnes+ref->colonnes-1;
-    
+#if DEBUG
 	double temps_calcul = (double)(clock());
-
+#endif
 
     double nbboucles=0;
 
@@ -392,22 +426,39 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
 			}
 		}
 	}
-
+#if DEBUG
 	printf ("Temps calcul = %4.2f s (%.0f boucles)\n",  (double)(clock() - temps_calcul) /CLOCKS_PER_SEC, nbboucles);
-
+#endif
 	delete ref;
 	convol->normaliser();
 	return convol;
 }
 
+/**
+ * Correl où l'espace de correl est limité à l'image "obj", donc on n'étudie pas
+ * les cas de décalage où la référence n'est pas incluse dans l'objet
+ * Utilise correlation_rapide
+ * @param reference L'image de référence
+ * @param seuil_ref Le seuil minimal de prise en compte des valeurs des pixles de la référence, entre 0 et 1
+ * @return L'espace de corrélation
+ */
 Image* Image::correlation_rapide_centree(Image& reference, float seuil_ref) {
 	Image* img = correlation_rapide(reference,seuil_ref);
+	// FIXME: L'image "découpée" est environ 1 à 2 pixels en dessous de l'image qu'on devrait avoir (comparaison avec algo LK)
 	Image* img_centree = new Image(*img,reference.lignes/2,reference.colonnes/2,img->lignes-(reference.lignes-1),img->colonnes - (reference.colonnes-1));
 	img_centree->versTiff("t_obj_centre.tif");
 	delete img;
 	return img_centree;
 }
 
+#if INCLUDE_CONVOL
+/**
+ * Corrélation (de convol.c)
+ * @author Laurent Koechlin (C) 2008
+ * @param reference L'image de référence
+ * @param seuil_ref Le seuil minimal de prise en compte des valeurs des pixles de la référence, entre 0 et 1
+ * @return L'espace de corrélation
+ */
 Image* Image::correlation(Image& reference, float seuil_ref) {
 	int min_l, min_c, max_l, max_c;
 	reference.minMaxPixel(&min_l, &min_c, &max_l, &max_c);
@@ -437,7 +488,7 @@ Image* Image::correlation(Image& reference, float seuil_ref) {
 
 	return img_resultat;
 }
-
+#endif
 /**
  * Affiche sur la sortie standard l'image en terme d'intensité (pour débug)
  */
