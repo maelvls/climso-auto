@@ -19,6 +19,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     capture = new Capture;
     capture->moveToThread(&threadCapture);
 
+
     // Liens entre fenetreprincipale et guidage
     QObject::connect(guidage,SIGNAL(etatArduino(int)),this,SLOT(statutArduino(int)));
     QObject::connect(guidage,SIGNAL(etatGuidage(bool)),this,SLOT(statutGuidage(bool)));
@@ -33,8 +34,9 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     // Liens entre fenetreprincipale et capture
     QObject::connect(capture,SIGNAL(etatCamera(int)),this,SLOT(statutCamera(int)));
-    QObject::connect(ui->diametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
-    QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->diametreSoleil,SLOT(setValue(int)));
+    QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->valeurDiametreSoleil,SLOT(setValue(int)));
+    QObject::connect(this,SIGNAL(diametreSoleil(int)),capture,SLOT(modifierDiametre(int)));
+
     QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
 
 
@@ -52,6 +54,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     threadGuidage.start();
     threadCapture.start();
 
+    ui->vitesseDecalageRapide->setChecked(true);
 
     // Pour capturer les touches directionnelles du clavier pour controler la consigne
     ui->messages->installEventFilter(this);
@@ -62,7 +65,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 	ui->consigneDroite->installEventFilter(this);
 	ui->consigneGauche->installEventFilter(this);
 	ui->consigneHaut->installEventFilter(this);
-	ui->diametreSoleil->installEventFilter(this);
+	ui->valeurDiametreSoleil->installEventFilter(this);
+	ui->diametreSoleilValider->installEventFilter(this);
 	ui->imageCamera->installEventFilter(this);
 	ui->initialiserConsigne->installEventFilter(this);
 	ui->lancerGuidage->installEventFilter(this);
@@ -85,6 +89,10 @@ void FenetrePrincipale::on_lancerGuidage_clicked() {
 
 void FenetrePrincipale::on_stopperGuidage_clicked() {
 	emit stopperGuidage();
+}
+void FenetrePrincipale::on_diametreSoleilValider_clicked() {
+	emit diametreSoleil(ui->valeurDiametreSoleil->value());
+	cout << "Diam modif : " << ui->valeurDiametreSoleil->value() << endl;
 }
 
 void FenetrePrincipale::statutCamera(int etat) {
@@ -183,7 +191,8 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
     		 || obj ==  ui->consigneDroite
     		 || obj ==  ui->consigneGauche
     		 || obj ==  ui->consigneHaut
-    		 || obj ==  ui->diametreSoleil
+    		 || obj ==  ui->valeurDiametreSoleil
+    		 || obj ==  ui->diametreSoleilValider
     		 || obj ==  ui->imageCamera
     		 || obj ==  ui->initialiserConsigne
     		 || obj ==  ui->lancerGuidage

@@ -28,7 +28,7 @@ private:
     QThread threadCapture;
     Capture* capture;
 
-    int modeVitesse;
+    int modeVitesse; // VITESSE_LENTE ou VITESSE_RAPIDE
 
     QPalette paletteTexteVert;
     QPalette paletteTexteRouge;
@@ -43,6 +43,7 @@ public:
 private slots:
     void on_lancerGuidage_clicked();
     void on_stopperGuidage_clicked();
+    void on_diametreSoleilValider_clicked();
     void on_consigneHaut_clicked();
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();
@@ -64,6 +65,7 @@ signals:
 	void stopperGuidage();
 	void modificationConsigne(int,int,int modeVitesse);
 	void quitter();
+	void diametreSoleil(int);
 };
 
 #endif // FENETREPRINCIPALE_H
