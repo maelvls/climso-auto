@@ -30,16 +30,12 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
 
-
     // Liens entre fenetreprincipale et capture
     QObject::connect(capture,SIGNAL(etatCamera(int)),this,SLOT(statutCamera(int)));
     QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->valeurDiametreSoleil,SLOT(setValue(int)));
-    QObject::connect(this,SIGNAL(diametreSoleil(int)),capture,SLOT(modifierDiametre(int)));
+    QObject::connect(ui->valeurDiametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
     QObject::connect(this,SIGNAL(initialiserCapture()),capture,SLOT(initialiserObjetCapture()));
-
-
     QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
-
 
     // Liens entre capture et guidage
     QObject::connect(capture,SIGNAL(resultats(Image*,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(Image*,double,double,int,double)));
@@ -68,7 +64,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 	ui->consigneGauche->installEventFilter(this);
 	ui->consigneHaut->installEventFilter(this);
 	ui->valeurDiametreSoleil->installEventFilter(this);
-	ui->diametreSoleilValider->installEventFilter(this);
 	ui->imageCamera->installEventFilter(this);
 	ui->initialiserConsigne->installEventFilter(this);
 	ui->lancerGuidage->installEventFilter(this);
@@ -91,10 +86,6 @@ void FenetrePrincipale::on_lancerGuidage_clicked() {
 
 void FenetrePrincipale::on_stopperGuidage_clicked() {
 	emit stopperGuidage();
-}
-void FenetrePrincipale::on_diametreSoleilValider_clicked() {
-	emit diametreSoleil(ui->valeurDiametreSoleil->value());
-	cout << "Diam modif : " << ui->valeurDiametreSoleil->value() << endl;
 }
 
 void FenetrePrincipale::statutCamera(int etat) {
@@ -194,7 +185,6 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
     		 || obj ==  ui->consigneGauche
     		 || obj ==  ui->consigneHaut
     		 || obj ==  ui->valeurDiametreSoleil
-    		 || obj ==  ui->diametreSoleilValider
     		 || obj ==  ui->imageCamera
     		 || obj ==  ui->initialiserConsigne
     		 || obj ==  ui->lancerGuidage

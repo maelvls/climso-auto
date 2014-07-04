@@ -43,7 +43,6 @@ public:
 private slots:
     void on_lancerGuidage_clicked();
     void on_stopperGuidage_clicked();
-    void on_diametreSoleilValider_clicked();
     void on_consigneHaut_clicked();
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();
