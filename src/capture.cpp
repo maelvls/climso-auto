@@ -17,7 +17,7 @@
 #define DEBUG_IMAGES_CAMERA 	1		// Enregistrer les images capturées et traitées en .tif
 
 #if DEBUG_IMAGES_CAMERA
-static string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
+string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
 #endif
 
 QTime t;
@@ -29,11 +29,8 @@ Capture::Capture() {
 	position_c = position_l = 0;
 	diametre = 0;
 	QObject::connect(&timerProchaineCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
-	captureEtPosition(); // Lancement de la première capture
 	timerProchaineCapture.setSingleShot(true);
 	timerProchaineCapture.setInterval(DUREE_ENTRE_CAPTURES);
-	//connecterCameraAuto(); XXX La connexion se fait lors de l'appel de captureEtPosition()
-	lireParametres();
 }
 
 Capture::~Capture() {
@@ -44,6 +41,15 @@ Capture::~Capture() {
 //	if(ref_lapl) delete ref_lapl; ref_lapl = NULL;
 	cout << "Caméra deconnectée" <<endl;
 	// FIXME: Quand on a fait le quit(), les events sont tous traités ?
+}
+
+/**
+ * Cette méthode permet de lancer les méthodes d'initialisation qui nécessitent l'envoi de signaux
+ * et donc qui ne peuvent pas être fait durant la création de l'objet Capture dans le constructeur
+ */
+void Capture::initialiserObjetCapture() {
+	lireParametres(); // Chargement des paramètres
+	captureEtPosition(); // Lancement de la première capture
 }
 
 void Capture::enregistrerParametres() {

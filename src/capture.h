@@ -48,6 +48,7 @@ public slots:
 	void deconnecterCamera();
 	bool capturerImage();
 	void trouverPosition();
+	void initialiserObjetCapture();
 private slots:
 	void connexionAuto();
 	void captureEtPosition();
