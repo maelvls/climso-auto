@@ -17,7 +17,6 @@ Guidage::Guidage() {
 	img = NULL;
 
 	consigne_c = consigne_l = 0;
-	decalage = 1000000;
 	bruitsignal = 1;
 
 	// Paramètres de guidage
@@ -97,8 +96,7 @@ void Guidage::stopperGuidage() {
 
 void Guidage::initialiserConsigne() {
 	if (position_c.isEmpty() || position_l.isEmpty()) {
-		emit message(
-				"Impossible d'initialiser la consigne, aucune position enregistree");
+		emit message("Impossible d'initialiser la consigne, aucune position enregistree");
 		return;
 	}
 	consigne_c = position_c.last();
@@ -134,7 +132,24 @@ void Guidage::guider() {
 	double l_decal = moyenne_l - consigne_l;
 	double c_decal = moyenne_c - consigne_c;
 	// Calcul de la longueur en pixels du décalage
-	decalage = qSqrt(l_decal * l_decal + c_decal * c_decal);
+	decalage << qSqrt(l_decal * l_decal + c_decal * c_decal);
+	decalageTimestamp << QTime::currentTime();
+	// Vérification de la divergence (les commandes n'ont pas d'effet/un effet contraire)
+	double somme = 0;
+	int indiceAncienDecalage = (decalage.length()>10)?decalage.length()-10:0;
+	for(i = indiceAncienDecalage+1; i < decalage.length(); i++) {
+		// Pour les 10 (ou moins) derniers décalages
+		somme += decalage.at(i);
+	}
+	somme = somme / (decalage.length()-(indiceAncienDecalage+1)); // Car decalage.lenght() > 0
+	if(somme > decalage.at(indiceAncienDecalage)) {
+		emit message("Le guidage ne semble pas répondre");
+		stopperGuidage();
+	}
+
+	if(decalage.length() > 100) {
+		decalage.removeFirst();
+	}
 
 	emit message(
 			"(x= " + QString::number(position_c.last()) + ", y="
@@ -214,6 +229,7 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c,
 		stopperGuidage();
 	}
 	afficherImageSoleilEtReperes();
+
 	// Si l'historique des positions contient assez de poitions, on envoie le guidage
 	if(guidageEnMarche && position_l.length() > ECHANTILLONS_PAR_GUIDAGE) {
 		guider();
@@ -262,11 +278,8 @@ void Guidage::afficherImageSoleilEtReperes() {
 		emit repereSoleil(position_c.last()/img->getColonnes(),position_l.last()/img->getLignes(),((float)diametre)/img->getColonnes(),POSITION_NOK);
 	}
 	if (not (consigne_l == 0 || consigne_c == 0)) {
-		if (decalage < SEUIL_DECALAGE_PIXELS) {
-			emit repereConsigne(consigne_c / img->getColonnes(),
-					consigne_l / img->getLignes(),
-					((float) diametre) / img->getColonnes(), CONSIGNE_LOIN);
-
+		if (!decalage.isEmpty() && decalage.last() < SEUIL_DECALAGE_PIXELS) {
+			emit repereConsigne(consigne_c / img->getColonnes(),consigne_l / img->getLignes(),((float) diametre) / img->getColonnes(), CONSIGNE_LOIN);
 				} else if (true) {
 					emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_LOIN);
 		} else {
@@ -277,5 +290,8 @@ void Guidage::afficherImageSoleilEtReperes() {
 
 /*
  * Echantillon toutes les 1 secondes (on garde les positions)
- * Guidage toutes les 5 secondes avec les échantillons récoltés
+ * Guidage tous les 3-4 échantillons récoltés
+ * On envoie des impulsions et on garde l'historique des décalages ;
+ * Si on constate (comment?) que le décalage augmente ou est égal,
+ * 	on prévient et on arrête
  */

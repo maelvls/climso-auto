@@ -65,7 +65,8 @@ private:
 	QList<double> position_l, position_c; // Historique des positions
 	double bruitsignal;
 	int diametre; // Diametre du soleil en pixels pour l'affichage lorsqu'on utilisera repereSoleil(...)
-	double decalage; // Vecteur décalage entre la consigne et la position
+	QList<double> decalage; // Vecteur décalage entre la consigne et la position
+	QList<QTime> decalageTimestamp;
 
 	// Paramètres de guidage
 	bool guidageEnMarche;
