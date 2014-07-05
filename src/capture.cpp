@@ -27,9 +27,9 @@
 #define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
 #define DUREE_ENTRE_CAPTURES 	200 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
 #define DUREE_EXPOSITION		100 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
-#define DEBUG_IMAGES_CAMERA 	1		// Enregistrer les images capturées et traitées en .tif
 
-#if DEBUG_IMAGES_CAMERA
+// ACTIVER LE DEBUG: ./configure CPPFLAGS="-DDEBUG=1" (si autotools) ou gcc -DDEBUG=1 sinon
+#if DEBUG // Il faut activer la macro DEBUG pour enregistrer les images capturées et traitées en .tif
 string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
 #endif
 
@@ -164,7 +164,7 @@ void Capture::trouverPosition() {
 	// ENVOI DES RESULTATS
     emit resultats(img,position_l,position_c,diametre,bruitsignal);
 
-#if DEBUG_IMAGES_CAMERA
+#if DEBUG
 	img->versTiff(emplacement+"t0_obj.tif");
 	correl->versTiff(emplacement+"t0_correl.tif");
 	obj_lapl->versTiff(emplacement+"t0_obj_lapl.tif");
@@ -192,7 +192,7 @@ void Capture::modifierDiametre(int diametre) {
 	Image *ref = Image::tracerFormeSoleil(diametre);
 	ref_lapl = ref->convoluerParDerivee();
 
-#if DEBUG_IMAGES_CAMERA
+#if DEBUG
 	ref->versTiff(emplacement+"t0_ref.tif");
 	ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
 #endif

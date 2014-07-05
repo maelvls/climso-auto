@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <exception>
 using namespace std;
 
 class FormatException: public exception {

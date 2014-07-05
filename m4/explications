@@ -1,7 +1,8 @@
 Pour passer le projet Qmake que j'avais fait sous Qcreator, j'ai trouvé l'outil Autotroll.
 
 ---------- Probleme de sed dans ./configure : --------------
-J'ai remarqué des erreurs de parsing du fichier Makefile généré par Qmake pour trouver les flags CFLAGS etc. J'ai corrigé cela dans autotroll.m4.
+J'ai remarqué des erreurs de parsing du fichier Makefile généré par Qmake pour trouver les flags CFLAGS etc. 
+J'ai corrigé cela dans autotroll.m4.
 
 ---------- Problème avec la génération .ui.h :--------------
 Lorsque le mainwindow.ui.h était généré, le #define MAINWINDOW_H était le même que celui présent dans mainwindow.h. D'ou une erreur. 

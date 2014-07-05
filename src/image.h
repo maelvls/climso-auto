@@ -10,14 +10,13 @@
 #define __climso_auto__picture__
 
 // Quelles fonctions externes sont utilisée ?
-#define INCLUDE_INTERPOL	0	// Fonctions contenues dans interpol.c
-#define INCLUDE_CONVOL		1   // Fonction de calcul de correlation
+#define INCLUDE_INTERPOL	1	// Fonctions contenues dans interpol.c (maxParInterpolation()...)
+#define INCLUDE_CONVOL		0   // Fonction de calcul de correlation données par Laurent Koechlin
 #define INCLUDE_TIFF		1 	// Si 1, alors -L/usr/local/lib et -ltiff
 #define INCLUDE_SBIGCAM		1
 #define INCLUDE_SBIGIMG		1 	// Si 1, alors	(MAC) -F/Library/Frameworks et -framework SBIGUDrv (selon installation)
 								//				(LINUX) -L/usr/local/lib et -lsbigudrv (selon installation)
 
-#include <exception>
 #include <iostream>
 #include <sstream>
 using namespace std;
@@ -73,12 +72,8 @@ public:
 
     // Correlations ecrites par Mael Valais (pour apprendre..)
     Image* correlation_simple(Image& p, float seuil_ref);
-    Image* correlation_rapide(Image& reference, float seuil_ref);
-    Image* correlation_rapide_centree(Image& reference, float seuil_ref);
-#if INCLUDE_CONVOL
-    // Correlation optimisée de Laurent Koechlin
-    Image* correlation(Image& reference, float seuil_ref);
-#endif
+    Image* correlation_rapide(Image& reference, float seuil_ref); // Correlation optimisée
+    Image* correlation_rapide_centree(Image& reference, float seuil_ref); // Correlation optimisée
     Image* convoluer(const int *noyau, int taille);
     Image* convoluerParDerivee();
     Image* deriveeCarre();
@@ -103,7 +98,6 @@ public:
     MonDouble* ptr() { return img; }
     MonDouble getPix(int l, int c) { return img[l*colonnes + c];}
     void setPix(int l, int c, MonDouble intensite) { img[l*colonnes + c]=intensite;}
-
 
     void afficher(); // Affiche les intensités brutes, pour debug
 	
