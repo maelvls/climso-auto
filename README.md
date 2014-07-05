@@ -1,12 +1,12 @@
 climso-auto
 ===========
-Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool.
+Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool (autoconf 2.61 minimum) et donc il sera nécessaire d'utiliser `autoreconf`. Voir section "pour compiler".
 
 # Le système climso-auto
+[Site du système CLIMSO](http://www.climso.fr/index.php/fr/climso/le-projet) pour comprendre le contexte du projet vis à vis des équipements CLIMSO.
+
 ## Schéma du système climso-auto
 ![Schéma simplifié du système](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.jpg)
-
-Les liaisons en rouge sont de l'USB. 
 
 La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallonge USB par UTP.
 
@@ -16,6 +16,15 @@ La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallong
 Le schéma ne présente pas l'interface utilisateur ni les intéractions possibles.
 Il s'agissait du programme de test lors des premières phases du projet.
 
+## Objectifs du projet
+Les observateurs associés, par équipes de deux, viennent opérer la coupole des coronographes pendant une semaine. Dans l'état actuel, un suivi automatique à gain constant permet de suivre le déplacement du soleil. Mais celui-ci ne suffit souvent pas et un repositionnement plus précis doit être effectué avant la prise d'image, toutes les cinq minutes.
+
+Rendre ce _repositionnement précis_ automatique permettra donc de simplifier les procédures des observateurs et garder un centrage constant (rendant ainsi les films post-produits moins chaotiques).
+
+## Performances et limitations du système
+
+* Au niveau des performances, le logiciel échantillonne tous les 1000 à 1200ms et envoie des commandes tous les 5 échantillons. Les commandes sont calculées par simple moyenne.
+* La caméra SBIG STF-8300M ne semble pas être adaptée à la capture de plusieurs images par seconde. Cela réduit le taux d'échantillonnage à une image par seconde maximum.
 
 # Pour compiler
 
@@ -95,8 +104,7 @@ Ces fichiers sont très commentés, les lire permettra sans doute de comprendre 
 * `Makefile.am` contenant les fichiers à compiler
 * `configure.ac` permettant de comprendre le fonctionnement de `./configure`
 
-### Les fichiers contenus dans src/
-Il y a trois groupes de fichiers :
+### Les fichiers source contenus (dans src/)
  
 * Les fichiers pour le traitement des images :
  * `src/convol.c` (écrit par Laurent Koechlin, pour la corrélation)
