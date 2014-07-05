@@ -1,10 +1,21 @@
-//
-//  exceptions.cpp
-//  climso-auto
-//
-//  Created by Maël Valais on 22/04/2014.
-//  Copyright (c) 2014 Maël Valais. All rights reserved.
-//
+/*
+ *  exceptions.cpp
+ *  climso-auto
+ *
+ *  Created by Maël Valais on 22/04/2014.
+ *  Copyright (c) 2014 Maël Valais. All rights reserved.
+ *
+ *	Cette classe apporte les exceptions possible pour la classe Image.
+ *
+ *	NOTE: Cette classe devrait être amenée à disparaitre car je n'ai pas
+ *	fait le choix d'utiliser des exceptions. Ceci dit, leur utilité lorsqu'on
+ *	lit une image (fichier inexistant...) permet de debugger même si
+ *	l'utilisateur de la classe a oublié d'implémenter des garde-fous.
+ *
+ *	Exceptions à ajouter :
+ * 	- si on ajoute une valeur trop grande
+ * 	- si on est en dehors des indices de l'image
+ */
 
 
 #include "exceptions.h"

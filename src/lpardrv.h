@@ -1,8 +1,15 @@
 /*
+ * lpardrv.h - Local options for pardrv.h
+ *
+ * Si la machine semble ne pas reconnaitre les macros système __LINUX__, __APPLE__
+ * et autres, vérifiez que la macro système est bien définie pour cette machine :
+ * 		touch essai.h; cpp -dM essai.h; rm essai.h
+ * Cela donnera une liste des macros définies lors de la compilation. J'ai
+ * tenté d'indiquer suffisement de macros possibles pour qu'aucun problème n'apparaisse,
+ * mais on est jamais trop sûr...
+ *
+ */
 
-lpardrv.h - Local options for pardrv.h
-
-*/
 #ifndef _LPARDRV_
 #define _LPARDRV_
 
