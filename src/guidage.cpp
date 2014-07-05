@@ -75,7 +75,7 @@ void Guidage::lireParametres() {
 
 void Guidage::connexionAuto() {
 	if (!arduinoConnecte()) {
-		emit etatArduino(ARDUINO_CONNEXION_AUTO_OFF);
+		emit etatArduino(ARDUINO_CONNEXION_ON);
 		QStringList l = chercherFichiersArduino();
 		if (l.length() > 0) {
 			connecterArduino(l.first());
@@ -84,7 +84,7 @@ void Guidage::connexionAuto() {
 		}
 		stopperGuidage(); // car il y a eu un arrêt de guidage
 	} else {
-		emit etatArduino(ARDUINO_CONNEXION_AUTO_ON);
+		emit etatArduino(ARDUINO_CONNEXION_OFF);
 	}
 }
 

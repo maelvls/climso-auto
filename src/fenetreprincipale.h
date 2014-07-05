@@ -45,7 +45,6 @@ private slots:
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();
     void on_consigneGauche_clicked();
-    void on_vitesseDecalageLent_toggled();
 
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent* event);
