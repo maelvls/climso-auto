@@ -165,9 +165,7 @@ void FenetrePrincipale::statutGuidage(bool statut) {
  * Il s'agit d'un "raccourci" pour éviter de passer par un
  * signal -> slot -> appel de fonction.
  */
-void FenetrePrincipale::on_vitesseDecalageLent_toggled() {
-	modeVitesse = (ui->vitesseDecalageLent->isChecked())?VITESSE_LENTE:VITESSE_RAPIDE;
-}
+
 void FenetrePrincipale::on_consigneHaut_clicked() {
 	emit modificationConsigne(-1,0,(ui->vitesseDecalageLent->isChecked()));
 }
@@ -198,20 +196,19 @@ void FenetrePrincipale::closeEvent(QCloseEvent* event) {
 	// de supprimer l'objet
 }
 
-
 void FenetrePrincipale::keyPressEvent(QKeyEvent* event) {
 	switch(event->key()) {
 		case Qt::Key_Up:
-			emit modificationConsigne(-1,0,modeVitesse);
+			emit modificationConsigne(-1,0,(ui->vitesseDecalageLent->isChecked()));
 			break;
 		case Qt::Key_Down:
-			emit modificationConsigne(1,0,modeVitesse);
+			emit modificationConsigne(1,0,(ui->vitesseDecalageLent->isChecked()));
 			break;
 		case Qt::Key_Right:
-			emit modificationConsigne(0,1,modeVitesse);
+			emit modificationConsigne(0,1,(ui->vitesseDecalageLent->isChecked()));
 			break;
 		case Qt::Key_Left:
-			emit modificationConsigne(0,-1,modeVitesse);
+			emit modificationConsigne(0,-1,(ui->vitesseDecalageLent->isChecked()));
 			break;
 	}
 }
