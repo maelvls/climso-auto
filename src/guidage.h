@@ -4,8 +4,6 @@
  *  Created on: 16 juin 2014
  *      Author: Maël Valais
  *
- *  Cette classe contient les slots et signaux permettant de lancer l'execution de la boucle
- *  de guidage
  */
 
 #ifndef GUIDAGE_H_
@@ -40,18 +38,13 @@
 #define CONSIGNE_LOIN			Qt::yellow //QColor(qRgb(230,126,48))
 #define CONSIGNE_DIVERGE		Qt::red
 
-#define INCREMENT_LENT		0.1 // en nombre de pixels
-#define INCREMENT_RAPIDE	1	// en nombre de pixels
-#define VITESSE_LENTE		0
-#define VITESSE_RAPIDE		1
+#define INCREMENT_LENT		0.1 // Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
+#define INCREMENT_RAPIDE	1	// Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
 
-// Du moins pire au pire
+// États possibles pour l'Arduino (permet de rafraichir le statut d'arduino dans la fenêtre)
 #define ARDUINO_CONNEXION_ON		0
 #define ARDUINO_CONNEXION_OFF		1
 #define ARDUINO_FICHIER_INTROUV		2
-
-#define ARDUINO_CONNEXION_AUTO_ON		0
-#define ARDUINO_CONNEXION_AUTO_OFF		1
 
 class Guidage: public QObject {
 Q_OBJECT
@@ -93,11 +86,11 @@ public slots:
 	void envoyerCmd(int pin, int duree);
 private slots:
 	void guider();
-	void initialiserConsigne();
+	void consigneReset();
 	void connexionAuto();
-	void traiterResultatsCapture(Image* img, double l, double c, int diametre,
-			double bruitsignal);
-	void modifierConsigne(int deltaLigne, int deltaColonne, int modeVitesse);signals:
+	void traiterResultatsCapture(Image* img, double l, double c, int diametre,double bruitsignal);
+	void modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent);
+signals:
 	void message(QString msg);
 	void etatArduino(int);
 	void etatGuidage(bool);

@@ -3,6 +3,21 @@
  *
  *  Created on: 16 juin 2014
  *      Author: Maël Valais
+ *
+ *	Classe de traitement (contrairement à fenetreprincipale.cpp qui gère l'interface).
+ *	Cette classe gère :
+ *		- la connexion et déconnexion à l'arduino,
+ *		- la réception des résultats envoyés par la classe Capture (position et image),
+ *		- l'envoi des impulsions à l'arduino à partir des positions à partir des résultats,
+ *	Cette classe est aussi responsable de l'envoi à WidgetImage des informations concernant
+ *	l'image à afficher.
+ *
+ * FONCTIONNEMENT DU GUIDAGE:
+ * 		- Echantillon toutes les 1 secondes (on garde les positions)
+ * 		- Guidage tous les 3-4 échantillons récoltés
+ * 		- On envoie des impulsions et on garde l'historique des décalages ;
+ * 			Si on constate (comment?) que le décalage augmente ou est égal,
+ * 			on prévient et on arrête
  */
 
 #include "guidage.h"
@@ -24,8 +39,7 @@ Guidage::Guidage() {
 	orientationEstOuest = ORIENTATION_EST_OUEST;
 	guidageEnMarche = false;
 
-	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,
-			SLOT(connexionAuto()));
+	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,SLOT(connexionAuto()));
 
 	connexionAuto(); // lancer les connexions au démarrage
 	timerConnexionAuto.start();
@@ -84,7 +98,7 @@ void Guidage::lancerGuidage() {
 		guidageEnMarche = true;
 	}
 	if (consigne_c == 0 || consigne_l == 0) {
-		initialiserConsigne();
+		consigneReset();
 	}
 	emit etatGuidage(guidageEnMarche);
 	tempsDepuisDernierGuidage.start();
@@ -94,17 +108,16 @@ void Guidage::stopperGuidage() {
 	emit etatGuidage(guidageEnMarche);
 }
 
-void Guidage::initialiserConsigne() {
+void Guidage::consigneReset() {
 	if (position_c.isEmpty() || position_l.isEmpty()) {
 		emit message("Impossible d'initialiser la consigne, aucune position enregistree");
 		return;
 	}
 	consigne_c = position_c.last();
 	consigne_l = position_l.last();
-	emit message(
-			"Position initiale"
-					" (x= " + QString::number(consigne_c) + ", y="
-					+ QString::number(consigne_l) + ")");
+	emit message("Position initiale"
+				" (x= " + QString::number(consigne_c) + ", y="
+				+ QString::number(consigne_l) + ")");
 }
 
 void Guidage::guider() {
@@ -159,11 +172,15 @@ void Guidage::guider() {
 	int l_decal_duree = qAbs(l_decal * IMPULSION_PIXEL_V);
 	int c_decal_duree = qAbs(c_decal * IMPULSION_PIXEL_H);
 
-	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed()-100) // La duree entre deux corrections ne doit pas depasser le timer
+	// La duree entre deux corrections ne doit pas depasser la durée entre
+	// deux séries d'échantillons (tempsDepuisDernierGuidage ici)
+	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed()-100)
 		l_decal_duree = tempsDepuisDernierGuidage.elapsed()-100;
 	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed()-100)
 		c_decal_duree = tempsDepuisDernierGuidage.elapsed()-100;
 	tempsDepuisDernierGuidage.restart();
+
+	// Envoi des commandes
 	envoyerCmd((l_decal * ORIENTATION_NORD_SUD < 0) ? PIN_SUD : PIN_NORD,
 			l_decal_duree);
 	envoyerCmd((c_decal * ORIENTATION_EST_OUEST < 0) ? PIN_OUEST : PIN_EST,
@@ -179,18 +196,13 @@ void Guidage::connecterArduino(QString nom) {
 		delete arduino;
 	arduino = new Arduino(nom.toStdString());
 	if (arduino->getErreur() != NO_ERR) {
-		emit message(
-				QString::fromStdString(arduino->getDerniereErreurMessage()));
+		emit message(QString::fromStdString(arduino->getDerniereErreurMessage()));
 	} else
-		emit message(
-				"Arduino connecte ("
-						+ QString::fromStdString(arduino->getPath()) + ")");
+		emit message("Arduino connecte ("+ QString::fromStdString(arduino->getPath()) + ")");
 }
 void Guidage::deconnecterArduino() {
 	if (arduino != NULL) {
-		emit message(
-				"Le fichier " + QString::fromStdString(arduino->getPath())
-						+ " a ete ferme");
+		emit message("Le fichier " + QString::fromStdString(arduino->getPath())+ " a ete ferme");
 		delete arduino;
 		arduino = NULL;
 	} else
@@ -204,14 +216,9 @@ bool Guidage::arduinoConnecte() {
 void Guidage::envoyerCmd(int pin, int duree) {
 	if (arduino && arduino->getErreur() == NO_ERR) {
 		arduino->EnvoyerCmd(pin, duree);
-		emit message(
-				"Envoi impulsion pin " + QString::number(pin) + " et duree "
-						+ QString::number(duree));
+		emit message("Envoi impulsion pin " + QString::number(pin) + " et duree "+ QString::number(duree));
 	} else if (arduino) {
-		emit message(
-				"Arduino non connecte : "
-						+ QString::fromStdString(
-								arduino->getDerniereErreurMessage()));
+		emit message("Arduino non connecte : "+ QString::fromStdString(arduino->getDerniereErreurMessage()));
 	} else
 		emit message("Aucun arduino connecte");
 }
@@ -237,21 +244,13 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c,
 }
 
 void Guidage::modifierConsigne(int deltaLigne, int deltaColonne,
-		int modeVitesse) {
+		bool decalageLent) {
 	if (consigne_l == 0 || consigne_c == 0 || img == NULL) {
 		emit message("Impossible de modifier la consigne : aucune position");
 		return;
 	}
-	consigne_l = consigne_l
-			+ deltaLigne
-					* ((modeVitesse == VITESSE_LENTE) ?
-					INCREMENT_LENT :
-														INCREMENT_RAPIDE);
-	consigne_c = consigne_c
-			+ deltaColonne
-					* ((modeVitesse == VITESSE_LENTE) ?
-					INCREMENT_LENT :
-														INCREMENT_RAPIDE);
+	consigne_l = consigne_l+ deltaLigne* (decalageLent?INCREMENT_LENT:INCREMENT_RAPIDE);
+	consigne_c = consigne_c+ deltaColonne* (decalageLent?INCREMENT_LENT :INCREMENT_RAPIDE);
 	afficherImageSoleilEtReperes();
 }
 
@@ -287,11 +286,3 @@ void Guidage::afficherImageSoleilEtReperes() {
 		}
 	}
 }
-
-/*
- * Echantillon toutes les 1 secondes (on garde les positions)
- * Guidage tous les 3-4 échantillons récoltés
- * On envoie des impulsions et on garde l'historique des décalages ;
- * Si on constate (comment?) que le décalage augmente ou est égal,
- * 	on prévient et on arrête
- */

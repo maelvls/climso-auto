@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>701</width>
-    <height>702</height>
+    <height>718</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -141,7 +141,7 @@
       <string>Sud</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="initialiserConsigne">
+    <widget class="QPushButton" name="consigneReset">
      <property name="geometry">
       <rect>
        <x>50</x>
@@ -339,19 +339,29 @@
      </property>
     </widget>
    </widget>
-   <zorder>imageCamera</zorder>
-   <zorder>statutCamera</zorder>
-   <zorder>messages</zorder>
-   <zorder>statutArduino</zorder>
-   <zorder>choixVitesse</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>initialiserConsigne</zorder>
-   <zorder>consigneGauche</zorder>
-   <zorder>consigneHaut</zorder>
-   <zorder>groupBox_2</zorder>
-   <zorder>statutGuidage</zorder>
-   <zorder>groupBox_3</zorder>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>701</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="actionParam_tres"/>
+   </widget>
+   <addaction name="menuMenu"/>
+  </widget>
+  <action name="actionParam_tres">
+   <property name="text">
+    <string>Paramètres</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
@@ -362,22 +372,5 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections>
-  <connection>
-   <sender>label_3</sender>
-   <signal>linkActivated(QString)</signal>
-   <receiver>label_3</receiver>
-   <slot>setFocus()</slot>
-   <hints>
-    <hint type="sourcelabel">
-     <x>570</x>
-     <y>460</y>
-    </hint>
-    <hint type="destinationlabel">
-     <x>570</x>
-     <y>460</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

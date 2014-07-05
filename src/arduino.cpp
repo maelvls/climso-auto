@@ -3,6 +3,30 @@
  *
  *  Created on: 6 juin 2014
  *      Author: Maël Valais
+ *
+ *  cmd_arduino.c
+ *  climso-auto
+ *
+ *  Created by Maël Valais on 18/04/2014.
+ *  2014, Maël Valais
+ *
+ *  D'après arduino-serial-lib -- simple library for reading/writing serial ports
+ * 	2006-2013, Tod E. Kurt, http://todbot.com/blog/
+ *
+ *  Classe permettant de gérer l'arduino en permettant :
+ *  	- l'envoi de commandes,
+ *  	- la connexion, la déconnexion,
+ *  	- vérifier si l'arduino est toujours connecté
+ *  NOM DU FICHIER SYSTÈME: le nom du fichier système lié à la connexion série par caractères
+ *  doit être connu et l'utilisateur courant doit avoir les droits suffisants
+ *  (sous Linux, il faut que l'utilisateur appartienne au groupe "dialup").
+ *  Généralement, le nom est /dev/ttyACM0 (linux) ou /dev/tty.usbmodemfa131 (Mac)
+ *  par exemple.
+ *
+ *  COMMENT ÇA MARCHE:
+ *  Une commande se constitue d'une chaîne type C (donc finie par \0) et est de la forme
+ *  	3,3000 (avec \0 à la fin) avec 3 le numéro du pin et 3000 la durée en ms
+ *
  */
 
 #include <cstdio>

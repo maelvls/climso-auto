@@ -28,8 +28,6 @@ private:
     QThread threadCapture;
     Capture* capture;
 
-    int modeVitesse; // VITESSE_LENTE ou VITESSE_RAPIDE
-
     QPalette paletteTexteVert;
     QPalette paletteTexteRouge;
     QPalette paletteTexteJaune;
@@ -47,11 +45,11 @@ private slots:
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();
     void on_consigneGauche_clicked();
+    void on_vitesseDecalageLent_toggled();
 
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent* event);
     bool eventFilter(QObject *obj, QEvent *event);
-    void modifierVitesseDeplacement();
 
 public slots:
 	void afficherMessage(QString msg);
@@ -62,7 +60,7 @@ public slots:
 signals:
 	void lancerGuidage();
 	void stopperGuidage();
-	void modificationConsigne(int,int,int modeVitesse);
+	void modificationConsigne(int,int,bool decalageLent);
 	void quitter();
 	void diametreSoleil(int);
 	void initialiserCapture();

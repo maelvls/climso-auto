@@ -1,16 +1,46 @@
+/*
+ * Guidage.cpp
+ *
+ *  Created on: 16 juin 2014
+ *      Author: Maël Valais
+ *
+ *	Classe d'interaction utilisateur correspondant à la fenetre principale. Il s'agit de la
+ *	partie graphique du logiciel. La classe WidgetImage (widgetimage.cpp) fait aussi partie
+ *	des classes d'interaction utilisateur.
+ *
+ *  La classe communique avec les classes Capture (capture.cpp) et Guidage (guidage.cpp) grâce au
+ *  système de signaux-slots. Par exemple, lorsqu'on appuie sur le bonton "Reset de consigne",
+ *  le signal clicked() provenant du bouton ui->consigneReset est envoyé au slot consigneReset().
+ *  Ici les noms sont idientiques.
+ *
+ *  Pour que la connexion entre le signal et le slot se fasse, on écrit :
+ *  	QObject::connect(ui->consigneReset,SIGNAL(clicked()),guidage,SLOT(consigneReset()));
+ *
+ *	Toutes les fonctions de fenetreprincipale sont liées à de l'intéraction avec l'utilisateur.
+ *	Tous les traitements se font dans Capture ou Guidage.
+ */
+
 #include "fenetreprincipale.h"
 #include "fenetreprincipale_ui.h"
 #include <QtCore/QTextCodec>
 
-
+/*
+ * ATTENTION, dans les constructeurs de Capture et Guidage on ne peut pas envoyer de signal car
+ * l'appel du constructeur est effectué avant que la connexion soit effectuée
+ */
 FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::FenetrePrincipale)
 {
-    ui->setupUi(this);
+    // Lancement de l'interface utilisateur (setupUi provient de fenetreprincipale_ui.h
+	// généré à partir de fenetreprincipale.ui, qui permet de modifier la disposition)
+	ui->setupUi(this);
+
+    // Couleurs de texte
     paletteTexteVert.setColor(QPalette::WindowText, Qt::green);
     paletteTexteRouge.setColor(QPalette::WindowText, Qt::red);
     paletteTexteJaune.setColor(QPalette::WindowText, Qt::yellow);
+
     // Faire en sorte que les chaines statiques "C-strings" soient considérées comme UTF-8
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 
@@ -19,42 +49,45 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     capture = new Capture; // ATTENTION: pas d'envoi de signaux dans le constructeur !
     capture->moveToThread(&threadCapture);
 
-    // Liens entre fenetreprincipale et guidage
+    // Signaux-slots entre fenetreprincipale et guidage
     QObject::connect(guidage,SIGNAL(etatArduino(int)),this,SLOT(statutArduino(int)));
     QObject::connect(guidage,SIGNAL(etatGuidage(bool)),this,SLOT(statutGuidage(bool)));
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
     QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
     QObject::connect(this,SIGNAL(modificationConsigne(int,int,int)),guidage,SLOT(modifierConsigne(int,int,int)));
-    QObject::connect(ui->initialiserConsigne,SIGNAL(clicked()),guidage,SLOT(initialiserConsigne()));
+    QObject::connect(ui->consigneReset,SIGNAL(clicked()),guidage,SLOT(consigneReset()));
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
 
-    // Liens entre fenetreprincipale et capture
+    // Signaux-slots entre fenetreprincipale et capture
     QObject::connect(capture,SIGNAL(etatCamera(int)),this,SLOT(statutCamera(int)));
     QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->valeurDiametreSoleil,SLOT(setValue(int)));
     QObject::connect(ui->valeurDiametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
     QObject::connect(this,SIGNAL(initialiserCapture()),capture,SLOT(initialiserObjetCapture()));
     QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
 
-    // Liens entre capture et guidage
+    // Signaux-slots entre capture et guidage
     QObject::connect(capture,SIGNAL(resultats(Image*,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(Image*,double,double,int,double)));
     QObject::connect(capture,SIGNAL(stopperGuidage()),guidage, SLOT(stopperGuidage()));
 
-
-    // Liens entre les éléments de l'interface
-    QObject::connect(ui->vitesseDecalageLent,SIGNAL(toggled(bool)),this,SLOT(modifierVitesseDeplacement()));
+    // Signaux-slots entre les éléments de l'interface
     QObject::connect(guidage,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
     QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,QColor)));
     QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,QColor)));
 
+    // Lancement des threads
     threadGuidage.start();
     threadCapture.start();
-    emit initialiserCapture();
+    emit initialiserCapture(); // En plus du constructeur Capture() on appelle initialiserCapture()
+    // à cause du fait que les signaux ne peuvent pas être envoyés depuis un constructeur.
 
+    // Le mode de décalage rapide est par défaut
     ui->vitesseDecalageRapide->setChecked(true);
 
-    // Pour capturer les touches directionnelles du clavier pour controler la consigne
+    // Pour capturer les touches directionnelles du clavier pour controler la consigne,
+    // on met un filtre sur toutes les parties de l'interface, et on redéfinit la méthode
+    // eventFilter() (voir plus bas)
     ui->messages->installEventFilter(this);
     ui->consigneDroite->installEventFilter(this);
     ui->centralWidget->installEventFilter(this);
@@ -65,7 +98,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 	ui->consigneHaut->installEventFilter(this);
 	ui->valeurDiametreSoleil->installEventFilter(this);
 	ui->imageCamera->installEventFilter(this);
-	ui->initialiserConsigne->installEventFilter(this);
+	ui->consigneReset->installEventFilter(this);
 	ui->lancerGuidage->installEventFilter(this);
 	ui->messages->installEventFilter(this);
 	ui->vitesseDecalageLent->installEventFilter(this);
@@ -78,14 +111,6 @@ FenetrePrincipale::~FenetrePrincipale() {
 
 void FenetrePrincipale::afficherMessage(QString msg) {
     ui->messages->append(msg);
-}
-
-void FenetrePrincipale::on_lancerGuidage_clicked() {
-    emit lancerGuidage();
-}
-
-void FenetrePrincipale::on_stopperGuidage_clicked() {
-	emit stopperGuidage();
 }
 
 void FenetrePrincipale::statutCamera(int etat) {
@@ -106,7 +131,7 @@ void FenetrePrincipale::statutArduino(int etat) {
 			ui->statutArduino->setText("Arduino connecté");
 			break;
 		case ARDUINO_CONNEXION_OFF:
-			ui->statutArduino->setPalette(paletteTexteJaune);
+			ui->statutArduino->setPalette(paletteTexteRouge);
 			ui->statutArduino->setText("Arduino déconnecté");
 			break;
 		case ARDUINO_FICHIER_INTROUV:
@@ -115,17 +140,51 @@ void FenetrePrincipale::statutArduino(int etat) {
 	}
 }
 
+/**
+ * Slot permettant de modifier l'affichage de l'état du guidage
+ * @param statut True pour guidage en marche
+ */
+void FenetrePrincipale::statutGuidage(bool statut) {
+	if(statut) {
+		ui->statutGuidage->setPalette(paletteTexteVert);
+		ui->statutGuidage->setText("Marche");
+	}
+	else {
+		ui->statutGuidage->setPalette(paletteTexteRouge);
+		ui->statutGuidage->setText("Arrêt");
+	}
+}
+
+/*
+ * NOTE SUR LES METHODES on_elementInterface_clicked() (par exemple) :
+ *
+ * Ces méthodes permettent de s'affranchir de l'étape signal-slot,
+ * la méthode on_consigneHaut_clicked est appelée à chaque fois que
+ * le bouton consigneHaut est pressé.
+ *
+ * Il s'agit d'un "raccourci" pour éviter de passer par un
+ * signal -> slot -> appel de fonction.
+ */
+void FenetrePrincipale::on_vitesseDecalageLent_toggled() {
+	modeVitesse = (ui->vitesseDecalageLent->isChecked())?VITESSE_LENTE:VITESSE_RAPIDE;
+}
 void FenetrePrincipale::on_consigneHaut_clicked() {
-	emit modificationConsigne(-1,0,modeVitesse);
+	emit modificationConsigne(-1,0,(ui->vitesseDecalageLent->isChecked()));
 }
 void FenetrePrincipale::on_consigneBas_clicked() {
-	emit modificationConsigne(1,0,modeVitesse);
+	emit modificationConsigne(1,0,(ui->vitesseDecalageLent->isChecked()));
 }
 void FenetrePrincipale::on_consigneDroite_clicked() {
-	emit modificationConsigne(0,1,modeVitesse);
+	emit modificationConsigne(0,1,(ui->vitesseDecalageLent->isChecked()));
 }
 void FenetrePrincipale::on_consigneGauche_clicked() {
-	emit modificationConsigne(0,-1,modeVitesse);
+	emit modificationConsigne(0,-1,(ui->vitesseDecalageLent->isChecked()));
+}
+void FenetrePrincipale::on_lancerGuidage_clicked() {
+    emit lancerGuidage();
+}
+void FenetrePrincipale::on_stopperGuidage_clicked() {
+	emit stopperGuidage();
 }
 
 
@@ -139,24 +198,6 @@ void FenetrePrincipale::closeEvent(QCloseEvent* event) {
 	// de supprimer l'objet
 }
 
-void FenetrePrincipale::modifierVitesseDeplacement() {
-	if(ui->vitesseDecalageLent->isChecked()) {
-		modeVitesse = VITESSE_LENTE;
-	} else {
-		modeVitesse = VITESSE_RAPIDE;
-	}
-}
-
-void FenetrePrincipale::statutGuidage(bool statut) {
-	if(statut) {
-		ui->statutGuidage->setPalette(paletteTexteVert);
-		ui->statutGuidage->setText("Marche");
-	}
-	else {
-		ui->statutGuidage->setPalette(paletteTexteRouge);
-		ui->statutGuidage->setText("Arrêt");
-	}
-}
 
 void FenetrePrincipale::keyPressEvent(QKeyEvent* event) {
 	switch(event->key()) {
@@ -179,20 +220,19 @@ void FenetrePrincipale::keyPressEvent(QKeyEvent* event) {
 // Pour capturer les touches directionnelles du clavier pour controler la consigne
 bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
  {
-     if (		obj ==  ui->centralWidget
+     if ((obj ==  ui->centralWidget
     		 || obj ==  ui->consigneBas
     		 || obj ==  ui->consigneDroite
     		 || obj ==  ui->consigneGauche
     		 || obj ==  ui->consigneHaut
     		 || obj ==  ui->valeurDiametreSoleil
     		 || obj ==  ui->imageCamera
-    		 || obj ==  ui->initialiserConsigne
+    		 || obj ==  ui->consigneReset
     		 || obj ==  ui->lancerGuidage
     		 || obj ==  ui->messages
     		 || obj ==  ui->vitesseDecalageRapide
-    		 || obj ==  ui->vitesseDecalageLent
-     ) {
-    	 if (event->type() == QEvent::KeyPress) {
+    		 || obj ==  ui->vitesseDecalageLent)
+    		 && event->type() == QEvent::KeyPress) {
     		 QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
     		 if(keyEvent->key() == Qt::Key_Up
     				 || keyEvent->key() == Qt::Key_Right
@@ -201,10 +241,6 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
 
     			 keyPressEvent(keyEvent);
     			 return true;
-    		 }
-    		 else {
-    			 return false;
-    		 }
          } else {
              return false;
          }

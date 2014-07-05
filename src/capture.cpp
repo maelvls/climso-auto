@@ -4,6 +4,20 @@
  *  Created on: 24 juin 2014
  *      Author: Maël Valais
  *
+ *	Classe de traitement (contrairement à fenetreprincipale.cpp qui gère l'interface)
+ *	gérant :
+ *		- la connexion et déconnexion avec la caméra,
+ *		- la capture des images avec la caméra,
+ *		- le calcul de la position par corrélation.
+ *
+ *	Les résultats des captures sont envoyées à la classe Guidage (grâce au signal
+ *	resultats(...)).
+ *
+ *	Cette classe gère aussi le diamètre du soleil.
+ *
+ *	L'instance de cette classe doit être exécuté dans un thread différent car dans le cas contraire,
+ *	l'interface serait bloquée.
+ *
  *
  */
 
@@ -13,7 +27,6 @@
 #define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
 #define DUREE_ENTRE_CAPTURES 	200 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
 #define DUREE_EXPOSITION		100 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
-
 #define DEBUG_IMAGES_CAMERA 	1		// Enregistrer les images capturées et traitées en .tif
 
 #if DEBUG_IMAGES_CAMERA
@@ -172,11 +185,9 @@ void Capture::captureEtPosition() {
     //cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
 	}
 	timerProchaineCapture.start();
-	//emit diametreSoleil(diametre);
 }
 
 void Capture::modifierDiametre(int diametre) {
-	cout << "modif de";
 	if(ref_lapl) delete ref_lapl;
 	Image *ref = Image::tracerFormeSoleil(diametre);
 	ref_lapl = ref->convoluerParDerivee();

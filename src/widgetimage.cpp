@@ -3,6 +3,15 @@
  *
  *  Created on: 19 juin 2014
  *      Author: Maël Valais
+ *
+ *
+ *	Classe d'interaction utilisateur correspondant au cadre contenant l'image du soleil.
+ *	L'instance de la classe (on appelle cela un widget) est dans le même thread que
+ *	FenetrePrincipale.
+ *
+ *  Cette classe gère:
+ *  	- le passage des Image au format d'image accepté par Qt et leur affichage,
+ *  	- l'affichage d'un repère (sorte de cible) permettant de visualiser les positions.
  */
 
 #include "widgetimage.h"
