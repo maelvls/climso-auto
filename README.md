@@ -28,6 +28,10 @@ Rendre ce _repositionnement précis_ automatique permettra donc de simplifier le
 
 # Pour compiler
 
+Librairies externes requises :
+* `libtiff`, installable par `yum install libtiff`
+* `libsbigudrv` (Linux) ou `SBIGUDrv.framework` (Mac), qu'on peut trouver sur le site sbig.com
+
 On distinguera la compilation utilisateur final de la préparation de compilation développeur.
 Le développeur utilise les fichiers de configuration autotools (configure.ac, Makefile.am...) ainsi que les outils (automake, autoconf..) alors que l'utilisateur final n'utilisera que les fichiers générés par ces outils (./configure, Makefile.in etc).
 
@@ -36,13 +40,7 @@ Pour la mise à jour des fichiers de configuration de conmpilation :
 	
 	autoreconf 
 
-Ça lancera les commandes autoconf, automake, aclocal. 
-
-Si une erreur du type :
-	
-	configure.ac:29: error: required file 'config/	config.guess' not found
-
-lancer la commande
+Ça lancera les commandes autoconf, automake, aclocal. Si une erreur du type `configure.ac:29: error: required file '' not found`, lancer la commande
 	
 	automake --add-missing
 	
@@ -55,12 +53,11 @@ Cela creera un zip contenant le projet avec seulement les fichiers vitaux à des
 
 __Fichiers utilisés pour la configuration de la compilation :__
 
-* `Makefile.am` dans tous les sous-dossiers (écrits à la main)
-* `configure.ac` (écrit à la main)
+* `Makefile.am` dans tous les endroits donnés par `AC_CONFIG_FILES(Makefile:Makefile.in)` (écrits à la main, **obligatoire**)
+* `configure.ac` (écrit à la main, **obligatoire**)
 * autotroll.mk (pour gérer Qt)
-* `m4/autotroll.m4`, (pour gérer Qt)
+* `m4/autotroll.m4`, (pour gérer Qt, vient de http://repo.or.cz/w/autotroll.git)
 * `m4/check_framework.m4` (pour vérifier que le framework sbigudrv est présent)
-* `config.h.in` éventuellement (généré par Autoheader)
 	
 ### Du côté de l'utilisateur final (et pour les tests développeur)
 Commandes de compilation :
@@ -68,10 +65,11 @@ Commandes de compilation :
 	./configure
 	make
 
-Fichiers utilisés par cette compilation :
+__Fichiers utilisés lors de la compilation :__
 
 - `Makefile.in` (listé(s) dans l'option `AC_CONFIG_FILES` de configure.ac)
 - `configure`
+- `config.h.in` (généré par autoheader)
 - `config/compile` (généré par automake, pour les compilateurs ne gérant pas -c -o)
 - `config/missing`, (généré par automake)
 - `config/install-sh` (généré par automake)
@@ -81,19 +79,19 @@ Fichiers utilisés par cette compilation :
 ### Fichiers générés automatiquement
 Certains fichiers sont générés lors de la compilation ou de la configuration du projet sont inutiles dans certains cas ; ces fichiers sont temporaires.
 
-Lors de la tâche de compilation de l'executable :
+__Lors de la tâche de configuration de la compilation :__
+
+* `configure`
+* `aclocal.m4` (généré par `aclocal`)
+* `config.h.in` (généré par autoheader)
+
+__Lors de la tâche de compilation de l'executable :__
 
 * `config.h`
 * `Makefile`
 * `config.log`
 * `config.status` (permet de debugger)
 * `stamp-h1` (??)
-
-Lors de la tâche de configuration de la compilation :
-
-* `configure`
-* `aclocal.m4` (généré par `aclocal`)
-
 
 # Pour comprendre le projet
 Pour maintenir le projet, il est nécessaire de comprendre la structure du projet que j'ai choisi.
@@ -128,33 +126,32 @@ Ces fichiers sont très commentés, les lire permettra sans doute de comprendre 
  * `src/main_qt_gui.cpp` (écrit par moi, permet de lancer l'application)
  * `src/fenetreprincipale.cpp` (écrit par moi, gère l'affichage des éléments et lance les deux autres processus légers (threads)
  * `src/widgetimage.cpp` (écrit par moi, gère l'affichage de l'image du soleil dans l'application)
- * 	`src/fenetreprincipale.ui` (est géré par QtDesigner et permet de dessiner la fenêtre de l'application – est transformé en `fenetreprincipale_ui.h` par _uic_. Pour modifier l'interface, il faut ouvrir fenetreprincipale.ui avec QtDesigner ou QtCreator)
+ * 	`src/fenetreprincipale.ui` (est géré par QtDesigner et permet de dessiner la fenêtre de l'application – est transformé en `fenetreprincipale_ui.h` par _uic_. **Pour modifier l'interface, il faut ouvrir fenetreprincipale.ui avec QtDesigner ou QtCreator**)
 
 * Les fichiers contrôlant l'interface (avec l'algorithme de guidage, la corrélation...)
  * `src/capture.cpp` (écrit par moi, est placé dans un thread différent, gère la capture de l'image SBIG, la corrélation et le diamètre du soleil. Envoie les résultats à guidage.cpp)
- * `src/capture.moc.cpp` (généré par _moc_)
  * `src/guidage.cpp` (écrit par moi, gère la position de consigne, les envois des commandes à l'Arduino et l'affichage de l'image et des indicateurs gris/jaune/vert/rouge permettant de repérer le soleil)
- * `src/guidage.moc.cpp` (généré par _moc_
-
 
 * Les fichiers "à côté" :
- * les fichiers `*.moc.cpp` sont générés par _moc_ et permettent, pour toutes les classes implémentant un Q_OBJECT, de produire le code pour faire fonctionner le système de signal-slot.
+ * les fichiers `*.moc.cpp` sont générés par _moc_ et permettent, pour toutes les classes implémentant un Q_OBJECT, de produire du méta-code.
 
 
 # Notes d'utilisation de climso-auto
+### Stockage des paramètres du logiciel
+Grâce à QSettings, les parametres sont sauvés dans `~/.config/irap/climso-auto.conf` sous Linux, ou dans `~/Library/Preferences/com.irap.climso-auto.plist` sous MacOSX.
+
 ### Problème avec Arduino
-* Impossible d'initialiser la connexion car le fichier spécial "/dev/usbACM0" (par exemple) n'appartient pas à l'utilisateur en cours. Pour réparer ça, il faut ajouter l'utilisateur en cours dans le groupe "dialup"
+* Impossible d'initialiser la connexion car le fichier spécial "/dev/usbACM0" (par exemple) n'appartient pas à l'utilisateur en cours. Pour réparer ça, il faut ajouter l'utilisateur en cours dans le groupe "dialup".
 
+###Problèmes avec la caméra SBIG
 
-### Problème avec SBIG
-* Caméra qui clignote toutes les secondes : une prise de vue est en cours.
+* Si la caméra clignote toutes les secondes : une prise de vue est en cours. Si le logiciel est quitté d'une façon inappropriée, la caméra peut ne pas avoir été déconnectée correctement, et celle-ci peut s'être bloquée en mode prise de vue.
 
-###Problèmes de connexion
-* "Permission denied" : il faut être root pour y accéder. La solution est d'ajouter la règle udev dans /usr/lib/udev/rules.d/51-mes-regles-climso.rules.
+* `Permission denied` : il faut être root pour y accéder. La solution est d'ajouter la règle udev dans `/usr/lib/udev/rules.d/51-mes-regles-climso.rules`.
 
-* "No error" : c'était une erreur qui apparaissait lorsque le modèle de la caméra n'était pas connu, mais là je ne sais pas d'où vient l'erreur
+* `No error` : c'était une erreur qui apparaissait lorsque le modèle de la caméra n'était pas connu, mais là je ne sais pas d'où vient l'erreur. Il faut redémarrer la caméra.
 
-* "Camera Not Found" : 
+* `Camera Not Found` : la caméra est sans doute déjà utilisée quelque part, à moins qu'elle ne soit pas connectée. Vérifiez qu'elle est bien établie en tant que périphérique USB par la commande `lsusb`. Si cela ne fonctionne pas, redémarrer la caméra.
  
 # Explications
 ## Pourquoi ./configure, make...
@@ -194,46 +191,48 @@ devient :
 	%_ui.h: %.ui
 		$(UIC) $< -o $@
 
-## Qt
-### Problème avec -qt-lm non trouvé (qt-3.3)
-Ce problème provient des -L/librairies manquants. J'ai vu que la variable `$QT_LIBS` est celle contenant tous les -l et -L. Or, la voici sur le Fedora :
-	
-	QT_LIBS=-L$(QT_QTDIR)/lib -lqt-mt -lXext -lX11 -lm
-	QT_QTDIR=
-On voit que `$(QT_QTDIR)` n'a pas été expended. Sur le mac, `$QT_LIBS` ne donne pas de `-L$(QT_QTDIR)`.
-J'ai vu que `$(QTDIR)` contient par contre le bon chemin, ce qui permettrait à `$QT_LIBS` de se compléter correctement.
-	
-	QT_LIBS=/usr/lib/qt-3.3
+### Utiliser la librairie Qt-3.3 au lieu de Qt4 (ou l'inverse)
+Dans mon cas, j'avais installé plusieurs librairies Qt : `/usr/lib/qt4` et `/usr/lib/qt-3.3`. Le choix de la bonne librairie vient d'abord de ce qui est mis dans le PATH :
 
-ce qui correspond bien au chemin manquant.
+	echo $PATH
+	/usr/lib/qt4/bin:/usr/lib/qt4/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/home/admin/.local/bin:/home/admin/bin
 
-On sait aussi que `autotroll.m4` prend toutes les variables de type `$BLABLA` et y préfixe en `$QT_BLABLA`.
+Par défaut, au démarrage de la machine, tous les .sh du dossier `/etc/profile.d` sont exécutés. Ces scripts ajoutent au PATH un morceau, ou alors ajoutent des variables globales...
+Dans notre cas, le fichier `qt.sh` (pour qt-3.3) est responsable de l'ajout dans la variable `$PATH`. J'ai modifié le nom en `qt.sh.disabled` et crée le fichier `qt4.sh` qui contient l'ajout du dossier de qt4 au `$PATH`.
 
-Donc je pense qu'il y a un problème par là.
+Du coup, les commandes qmake, moc, rcc, uic... sont lancées depuis le répertoire ciblé dans le `$PATH`.
 
-* `autotroll.m4:348` Le filtre SED `$qt_sed_filter` met `QT_` devant tous les noms de variable. 
+Pour switcher entre qt-3.3 et qt4, il suffit donc de modifier le nom de `qt4.sh` en `qt4.sh.qqchose` et `qt.sh.disabled` en `qt.sh`.
 
-J'ai aussi découvert que **qmake utilisé était celui de qt-3.3** (en faisant which qmake). 
+# Eclipse, Xcode, Git et outils pour le projet
 
-J'ai donc renommé `/etc/profile.d/qt.sh` en `/etc/profile.d/qt.sh.disabled`. Ensuite j'ai ajouté `/etc/profile.d/qt4.sh` avec dedans :
-	
-	QT4DIR=/usr/lib/qt4
-	export PATH=/usr/lib/qt4/bin:$PATH
-	export PKG_CONFIG_PATH=/usr/lib/qt4/lib/pkgconfig:$PKG_CONFIG_PATH
-	export QT4DIR
-
-**Du coup, qmake est bien celui du qt4. Et cette fois ça marche parfaitement.**
-
- Manque des includes dans Eclipse CDT (dans la liste "Includes" de l'explorateur) mais ce problème s'est résolu tout seul (comment ? CDT a trouvé les chemins des includes tout seul ?? Non...)
-
-### Ouvrir ce projet "autotools" (Makefile.am, configure.ac...) avec QtCreator
+### Ouvrir ce projet _autotools_ (Makefile.am, configure.ac...) avec QtCreator
 Il faut aller dans Aide > Plugins > et cocher AutotoolsProjectManager.
 
 Ensuite on peut ouvrir le projet avec QtCreator en faisant Ouvrir fichier ou projet > on choisit le premier Makefile.am du projet et c'est bon.
 Par contre seuls les fichiers donnés dans le Makefile.am seront affichés dans QtCreator, ce qui est une bonne chose pour ne pas se perdre !
 Concernant le fichier .ui, je ne sais pas comment faire en sorte qu'il soit affiché dans QtCreator autrement qu'en l'ajoutant dans les `_SOURCES` de `Makefile.am`.
 
+### Ouvrir le projet _autotools_ avec Xcode
+
+Xcode n'a pas de fonctionnalité gérant directement le système _autotools_. En revanche, grâce à un système de cibles (targets), il est possible de développer sous Xcode.
+
+On peut par exemple utiliser le binaire par défaut comme cible des sources, mais des problèmes de framework et librairies manquantes risquent d'empêcher d'utiliser pleinement l'IDE. 
+
+### Ouvrir le projet _autotools_ avec Eclipse CDT
+Eclipse est un IDE très élaboré sur lequel j'ai choisi de m'appuyer pour la plupart du développement de ce logiciel. De plus, un plugin _autotools_ existe. 
+
+__Installer le plugin C/C++ Autotools support__
+
+Menu Help > Install new software > work with : -- All available sites-- > filtrer par "autotools" puis installez le.
+
+__Importer le projet :__
+Import > Existing code as Makefile project > GNU Autotools toolchain.
+
 ### Utiliser Git avec Eclipse CDT
 Pour éviter de devoir taper un mot de passe, il faut d'abord avoir son propre certificat et l'avoir ajouté dans les préférences de son compte sur Github.
 Il y a une différence lorsqu'on accède en https et en ssh.
 En ssh, il suffit (si on a bien suivi https://help.github.com/articles/generating-ssh-keys) de changer l'url remote : https://help.github.com/articles/changing-a-remote-s-url
+
+### Passer en mode debug
+./configure CPPFLAGS="-DDEBUG=1"
