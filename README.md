@@ -96,6 +96,8 @@ __Lors de la tâche de compilation de l'executable :__
 # Pour comprendre le projet
 Pour maintenir le projet, il est nécessaire de comprendre la structure du projet que j'ai choisi.
 
+![Schéma de structure du projet](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/structure-fichiers.png)
+
 ### Lire les fichiers très commentés
 Ces fichiers sont très commentés, les lire permettra sans doute de comprendre la structure choisie :
 
@@ -222,12 +224,10 @@ On peut par exemple utiliser le binaire par défaut comme cible des sources, mai
 ### Ouvrir le projet _autotools_ avec Eclipse CDT
 Eclipse est un IDE très élaboré sur lequel j'ai choisi de m'appuyer pour la plupart du développement de ce logiciel. De plus, un plugin _autotools_ existe. 
 
-__Installer le plugin C/C++ Autotools support__
-
+__Installer le plugin C/C++ Autotools support :__
 Menu Help > Install new software > work with : -- All available sites-- > filtrer par "autotools" puis installez le.
 
-__Importer le projet :__
-Import > Existing code as Makefile project > GNU Autotools toolchain.
+__Importer le projet :__ Import > Existing code as Makefile project > GNU Autotools toolchain.
 
 ### Utiliser Git avec Eclipse CDT
 Pour éviter de devoir taper un mot de passe, il faut d'abord avoir son propre certificat et l'avoir ajouté dans les préférences de son compte sur Github.
