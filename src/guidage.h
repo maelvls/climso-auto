@@ -80,16 +80,16 @@ public slots:
 // guidage
 	void lancerGuidage();
 	void stopperGuidage();
+	void modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent);
+	void traiterResultatsCapture(Image* img, double l, double c, int diametre,double bruitsignal);
 // arduino
 	void connecterArduino(QString nom);
 	void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
+	void consigneReset();
 private slots:
 	void guider();
-	void consigneReset();
 	void connexionAuto();
-	void traiterResultatsCapture(Image* img, double l, double c, int diametre,double bruitsignal);
-	void modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent);
 signals:
 	void message(QString msg);
 	void etatArduino(int);

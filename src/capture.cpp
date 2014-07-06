@@ -93,7 +93,7 @@ void Capture::connecterCamera() {
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
         cam->SetExposureTime(DUREE_EXPOSITION * 0.001);
-        cam->SetABGState(ABG_LOW7);
+        cam->SetABGState((ABG_STATE7)ABG_LOW7);
 
         emit message("Camera connectee");
         emit etatCamera(CAMERA_CONNEXION_ON);
