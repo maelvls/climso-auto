@@ -28,7 +28,7 @@ bin_PROGRAMS=main_qt
 # Fichiers source (.c, .cpp, .h ou tout autre fichier utile aux étapes de compilation)
 main_qt_SOURCES=\
 	src/arduino.cpp\
-	src/interpol.c src/convol.c src/fcts_LK3.c\
+	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
 	src/exceptions.cpp  src/image.cpp\
 	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
@@ -38,12 +38,12 @@ main_qt_SOURCES=\
 	src/capture.cpp src/capture.moc.cpp\
 	\
 	src/arduino.h\
-	src/interpol.h src/convol.h src/fcts_LK3.h\
+	src/interpol.h\
 	src/diametre_soleil.h\
 	src/exceptions.h src/image.h\
 	src/fenetreprincipale.h src/fenetreprincipale_ui.h\
 	src/csbigcam.h src/csbigimg.h\
-	src/sbigudrv.h src/lpardrv.h\
+	src/lpardrv.h\
 	src/guidage.h\
 	src/widgetimage.h\
 	src/capture.h\
@@ -55,7 +55,7 @@ main_qt_SOURCES=\
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
 CXXFLAGS=-g -O2
 main_qt_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
-main_qt_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS) -DDEBUG
+main_qt_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
 main_qt_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
 main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 
