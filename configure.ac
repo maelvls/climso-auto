@@ -7,7 +7,7 @@
 # de récupérer la dernière version d'autoconf (en espérant que l'ascendance se fasse)
 
 AC_PREREQ([2.61])
-AC_INIT([climso-auto], [1.1], [mael.valais@irap.omp.eu])
+AC_INIT([climso-auto], [0.2], [mael.valais@irap.omp.eu])
 
 # La fonction qui permet de vérifier que (pour un mac) le framework sbigudrv existe
 m4_include([m4/check_framework.m4])

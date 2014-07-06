@@ -55,7 +55,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
     QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
-    QObject::connect(this,SIGNAL(modificationConsigne(int,int,int)),guidage,SLOT(modifierConsigne(int,int,int)));
+    QObject::connect(this,SIGNAL(modificationConsigne(int,int,bool)),guidage,SLOT(modifierConsigne(int,int,bool)));
     QObject::connect(ui->consigneReset,SIGNAL(clicked()),guidage,SLOT(consigneReset()));
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
