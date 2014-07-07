@@ -37,7 +37,14 @@ Guidage::Guidage() {
 	// Paramètres de guidage
 	orientationNordSud = ORIENTATION_NORD_SUD;
 	orientationEstOuest = ORIENTATION_EST_OUEST;
-	guidageEnMarche = false;
+	qRegisterMetaType<enum EtatPosition>("enum EtatPosition");
+	qRegisterMetaType<enum EtatConsigne>("enum EtatConsigne");
+	qRegisterMetaType<enum EtatArduino>("enum EtatArduino");
+	qRegisterMetaType<enum EtatGuidage>("enum EtatGuidage");
+	etatGuidage = GUIDAGE_ARRET_NORMAL;
+	etatArduino = ARDUINO_CONNEXION_OFF;
+	etatConsigne = CONSIGNE_NON_INITIALISEE;
+	etatPosition = POSITION_NON_INITIALISEE;
 
 	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,SLOT(connexionAuto()));
 
@@ -74,43 +81,44 @@ void Guidage::lireParametres() {
 }
 
 void Guidage::connexionAuto() {
+	arduinoConnecte();
 	if (!arduinoConnecte()) {
-		emit etatArduino(ARDUINO_CONNEXION_ON);
+		emit envoiEtatArduino(ARDUINO_CONNEXION_OFF);
 		QStringList l = chercherFichiersArduino();
 		if (l.length() > 0) {
 			connecterArduino(l.first());
 		} else {
-			emit etatArduino(ARDUINO_FICHIER_INTROUV);
+			emit envoiEtatArduino(ARDUINO_FICHIER_INTROUV);
 		}
 		stopperGuidage(); // car il y a eu un arrêt de guidage
 	} else {
-		emit etatArduino(ARDUINO_CONNEXION_OFF);
+		emit envoiEtatArduino(ARDUINO_CONNEXION_ON);
 	}
 }
 
 void Guidage::lancerGuidage() {
 	if (img == NULL || position_c.isEmpty() || position_l.isEmpty()) {
 		emit message(
-				"Impossible de guider, la position n'a pas ete initialisee");
-		guidageEnMarche = false;
+				"Impossible de guider, aucune position précédente");
+		etatGuidage = GUIDAGE_BESOIN_POSITION;
 	}
 	else {
-		guidageEnMarche = true;
+		etatGuidage = GUIDAGE_MARCHE;
 	}
 	if (consigne_c == 0 || consigne_l == 0) {
 		consigneReset();
 	}
-	emit etatGuidage(guidageEnMarche);
+	emit envoiEtatGuidage(etatGuidage);
 	tempsDepuisDernierGuidage.start();
 }
 void Guidage::stopperGuidage() {
-	guidageEnMarche = false;
-	emit etatGuidage(guidageEnMarche);
+	decalage.clear(); // On vide l'historique des derniers décalages
+	emit envoiEtatGuidage(etatGuidage);
 }
 
 void Guidage::consigneReset() {
 	if (position_c.isEmpty() || position_l.isEmpty()) {
-		emit message("Impossible d'initialiser la consigne, aucune position enregistree");
+		emit message("Impossible, aucune position précédente");
 		return;
 	}
 	consigne_c = position_c.last();
@@ -118,16 +126,20 @@ void Guidage::consigneReset() {
 	emit message("Position initiale"
 				" (x= " + QString::number(consigne_c) + ", y="
 				+ QString::number(consigne_l) + ")");
+	etatConsigne = CONSIGNE_OK;
 }
 
 void Guidage::guider() {
 	if (!arduinoConnecte()) {
 		emit message("Verifiez les connexions avec l'arduino");
+		etatGuidage = GUIDAGE_ARRET_PANNE;
 		stopperGuidage();
 		return;
 	}
 	if (position_c.isEmpty() || position_l.isEmpty()) {
 		emit message("Aucune position courante");
+		etatGuidage = GUIDAGE_BESOIN_POSITION;
+		stopperGuidage();
 		return;
 	}
 	// Calcul de la moyenne de décalage
@@ -156,13 +168,19 @@ void Guidage::guider() {
 	}
 	somme = somme / (decalage.length()-(indiceAncienDecalage+1)); // Car decalage.lenght() > 0
 	if(somme > decalage.at(indiceAncienDecalage)) {
-		emit message("Le guidage ne semble pas répondre");
+		emit message("Les commandes envoyées ne semblent pas avoir d'effet");
+		emit envoiEtatGuidage(etatGuidage = GUIDAGE_ARRET_DIVERGE);
 		stopperGuidage();
+		afficherImageSoleilEtReperes();
 	}
 
 	if(decalage.length() > 100) {
 		decalage.removeFirst();
 	}
+
+
+	// Il y a divergence si le dernier décalage est supérieur à la somme des
+
 
 	emit message(
 			"(x= " + QString::number(position_c.last()) + ", y="
@@ -196,10 +214,18 @@ void Guidage::connecterArduino(QString nom) {
 		delete arduino;
 	arduino = new Arduino(nom.toStdString());
 	if (arduino->getErreur() != NO_ERR) {
+		if(arduino->getErreur() == ERR_OUVERTURE_FICHIER) {
+			emit envoiEtatArduino(ARDUINO_FICHIER_INTROUV);
+		} else {
+			emit envoiEtatArduino(ARDUINO_CONNEXION_OFF);
+		}
 		emit message(QString::fromStdString(arduino->getDerniereErreurMessage()));
-	} else
+	} else {
+		emit envoiEtatArduino(ARDUINO_CONNEXION_ON);
 		emit message("Arduino connecte ("+ QString::fromStdString(arduino->getPath()) + ")");
+	}
 }
+
 void Guidage::deconnecterArduino() {
 	if (arduino != NULL) {
 		emit message("Le fichier " + QString::fromStdString(arduino->getPath())+ " a ete ferme");
@@ -211,16 +237,14 @@ void Guidage::deconnecterArduino() {
 
 bool Guidage::arduinoConnecte() {
 	return arduino && arduino->getErreur() == NO_ERR;
+	// FIXME return arduino && arduino->verifierConnexion();
 }
 
 void Guidage::envoyerCmd(int pin, int duree) {
-	if (arduino && arduino->getErreur() == NO_ERR) {
+	if (arduinoConnecte()) {
 		arduino->EnvoyerCmd(pin, duree);
 		emit message("Envoi impulsion pin " + QString::number(pin) + " et duree "+ QString::number(duree));
-	} else if (arduino) {
-		emit message("Arduino non connecte : "+ QString::fromStdString(arduino->getDerniereErreurMessage()));
-	} else
-		emit message("Aucun arduino connecte");
+	}
 }
 
 void Guidage::traiterResultatsCapture(Image* img, double l, double c,
@@ -234,11 +258,15 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c,
 	emit imageSoleil(img);
 	if (bruitsignal > SEUIL_BRUIT_SIGNAL) {
 		stopperGuidage();
+		etatPosition = POSITION_INCOHERANTE;
+		etatGuidage = GUIDAGE_ARRET_BRUIT;
+	}
+	else {
+		etatPosition = POSITION_COHERANTE;
 	}
 	afficherImageSoleilEtReperes();
-
 	// Si l'historique des positions contient assez de poitions, on envoie le guidage
-	if(guidageEnMarche && position_l.length() > ECHANTILLONS_PAR_GUIDAGE) {
+	if(etatGuidage == GUIDAGE_MARCHE && position_l.length() > ECHANTILLONS_PAR_GUIDAGE) {
 		guider();
 	}
 }
@@ -250,7 +278,7 @@ void Guidage::modifierConsigne(int deltaLigne, int deltaColonne,
 		return;
 	}
 	consigne_l = consigne_l+ deltaLigne* (decalageLent?INCREMENT_LENT:INCREMENT_RAPIDE);
-	consigne_c = consigne_c+ deltaColonne* (decalageLent?INCREMENT_LENT :INCREMENT_RAPIDE);
+	consigne_c = consigne_c+ deltaColonne* (decalageLent?INCREMENT_LENT:INCREMENT_RAPIDE);
 	afficherImageSoleilEtReperes();
 }
 
@@ -269,20 +297,9 @@ QStringList Guidage::chercherFichiersArduino() {
 }
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
-	if (bruitsignal < SEUIL_BRUIT_SIGNAL) {
-		emit repereSoleil(position_c.last() / img->getColonnes(),
-				position_l.last() / img->getLignes(),
-				((float) diametre) / img->getColonnes(), POSITION_OK);
-	} else {
-		emit repereSoleil(position_c.last()/img->getColonnes(),position_l.last()/img->getLignes(),((float)diametre)/img->getColonnes(),POSITION_NOK);
-	}
-	if (not (consigne_l == 0 || consigne_c == 0)) {
-		if (!decalage.isEmpty() && decalage.last() < SEUIL_DECALAGE_PIXELS) {
-			emit repereConsigne(consigne_c / img->getColonnes(),consigne_l / img->getLignes(),((float) diametre) / img->getColonnes(), CONSIGNE_LOIN);
-				} else if (true) {
-					emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_LOIN);
-		} else {
-			emit repereConsigne(consigne_c/img->getColonnes(),consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),CONSIGNE_DIVERGE);
-		}
-	}
+	emit repereSoleil(position_c.last()/img->getColonnes(),
+			position_l.last()/img->getLignes(),((float)diametre)/img->getColonnes(),etatPosition);
+	emit repereConsigne(consigne_c/img->getColonnes(),
+			consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),etatConsigne);
+
 }

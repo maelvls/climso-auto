@@ -52,9 +52,9 @@ private slots:
 
 public slots:
 	void afficherMessage(QString msg);
-    void statutCamera(int etat);
-    void statutArduino(int etat);
-    void statutGuidage(bool statut);
+    void modifierStatutCamera(enum EtatCamera);
+    void modifierStatutArduino(enum EtatArduino);
+    void modifierStatutGuidage(enum EtatGuidage);
 
 signals:
 	void lancerGuidage();

@@ -47,11 +47,4 @@
 	#include "sbigudrv.h"
 #endif
 
-#if TARGET == ENV_LINUX
-	#include <libusb.h>
-	#ifdef _DEBUG
-			#define _DEBUG 1
-	#endif
-#endif
-
 #endif

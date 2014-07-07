@@ -12,13 +12,17 @@
 #include <QtCore/QTimer>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTime>
+#include <QtCore/QMetaType>
 
 #include "csbigcam.h"
 #include "csbigimg.h"
 #include "image.h"
 
-#define CAMERA_CONNEXION_ON		1
-#define CAMERA_CONNEXION_OFF	2
+enum EtatCamera {
+	CAMERA_CONNEXION_ON,
+	CAMERA_CONNEXION_OFF
+};
+Q_DECLARE_METATYPE(enum EtatCamera); // Pour utiliser ce type comme parametre signal/slot
 
 class Capture: public QObject {
 	Q_OBJECT
@@ -55,9 +59,8 @@ private slots:
 signals:
 	void message(QString);
 	void stopperGuidage();
-	void etatCamera(int);
+	void envoiEtatCamera(enum EtatCamera);
 	void resultats(Image* img, double l, double c, int diametre, double bruitsignal);
 	void diametreSoleil(int);
 };
-
 #endif /* CAPTURE_H_ */

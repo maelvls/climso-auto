@@ -42,7 +42,15 @@ void WidgetImage::afficherImageSoleil(Image* imgOrig) {
 
 }
 
-void WidgetImage::afficherRepereConsigne(float x_pourcent, float y_pourcent, float diametre_pourcent_x,QColor couleur) {
+void WidgetImage::afficherRepereConsigne(float x_pourcent, float y_pourcent, float diametre_pourcent_x,enum EtatConsigne etatConsigne) {
+	QColor couleur;
+	switch (etatConsigne) {
+	case CONSIGNE_OK: couleur = Qt::yellow; break;
+	case CONSIGNE_LOIN: couleur = Qt::yellow; break;
+	case CONSIGNE_DIVERGE: couleur = Qt::red; break;
+	case CONSIGNE_NON_INITIALISEE: return; break;
+	default: couleur = Qt::red; break;
+	}
 	QPainter paint(&rawImage);
 	QPen pen;
 	pen.setStyle(Qt::SolidLine);
@@ -61,7 +69,15 @@ void WidgetImage::afficherRepereConsigne(float x_pourcent, float y_pourcent, flo
 	paint.drawText(rawImage.width()-165,40,"x="+QString::number(position_x)+", y="+QString::number(position_y)+"");
 	this->setPixmap(rawImage); // On affiche
 }
-void WidgetImage::afficherRepereSoleil(float x_pourcent, float y_pourcent, float diametre_pourcent_x,QColor couleur) {
+void WidgetImage::afficherRepereSoleil(float x_pourcent, float y_pourcent, float diametre_pourcent_x,enum EtatPosition etatPosition) {
+	QColor couleur;
+	switch (etatPosition) {
+	case POSITION_COHERANTE: couleur = Qt::green; break;
+	case POSITION_INCOHERANTE: couleur = Qt::gray; break;
+	case POSITION_NON_INITIALISEE: return;
+	default: couleur = Qt::gray; break;
+	}
+
 	QPainter paint(&rawImage);
 	QPen pen;
 	pen.setStyle(Qt::SolidLine);

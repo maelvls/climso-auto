@@ -24,16 +24,15 @@
 #include <QtCore/QSettings>
 #include "capture.h"
 
+#define SEUIL_CORRELATION		0.85 	// entre 0 et 1 (% du max de ref) au dessus duquel les valeurs de ref. sont correlées
 #define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
-#define DUREE_ENTRE_CAPTURES 	200 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
-#define DUREE_EXPOSITION		100 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
+#define DUREE_ENTRE_CAPTURES 	100 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
+#define DUREE_EXPOSITION		10 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
 
 // ACTIVER LE DEBUG: ./configure CPPFLAGS="-DDEBUG=1" (si autotools) ou gcc -DDEBUG=1 sinon
 #if DEBUG // Il faut activer la macro DEBUG pour enregistrer les images capturées et traitées en .tif
 string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
 #endif
-
-QTime t;
 
 Capture::Capture() {
 	cam = NULL;
@@ -44,6 +43,7 @@ Capture::Capture() {
 	QObject::connect(&timerProchaineCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
 	timerProchaineCapture.setSingleShot(true);
 	timerProchaineCapture.setInterval(DUREE_ENTRE_CAPTURES);
+	qRegisterMetaType<enum EtatCamera>("enum EtatCamera");
 }
 
 Capture::~Capture() {
@@ -84,11 +84,11 @@ void Capture::connecterCamera() {
     cam = new CSBIGCam(DEV_USB); // Creation du device USB
     if ((err = cam->GetError()) != CE_NO_ERROR) {
         emit message("Erreur avec la camera lors de la creation de l'objet camera : "+QString::fromStdString(cam->GetErrorString()));
-        emit etatCamera(CAMERA_CONNEXION_OFF);
+        emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
     }
     else if ((err=cam->EstablishLink()) != CE_NO_ERROR) { // Connexion à la camera
         emit message("Erreur avec la camera lors de l'etablissement du lien: "+QString::fromStdString(cam->GetErrorString()));
-        emit etatCamera(CAMERA_CONNEXION_OFF);
+        emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
     }
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
@@ -97,7 +97,7 @@ void Capture::connecterCamera() {
         cam->SetABGState((ABG_STATE7)ABG_LOW7);
 
         emit message("Camera connectee");
-        emit etatCamera(CAMERA_CONNEXION_ON);
+        emit envoiEtatCamera(CAMERA_CONNEXION_ON);
     }
 }
 
@@ -106,7 +106,7 @@ void Capture::deconnecterCamera() {
         cam->CloseDevice();
         emit message("Camera deconnectee");
         delete cam; cam = NULL;
-        emit etatCamera(CAMERA_CONNEXION_OFF);
+        emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
     }
     else {
         emit message("Aucune camera n'est connectee");
@@ -119,11 +119,11 @@ bool Capture::cameraConnectee() {
 
 void Capture::connexionAuto() {
 	if(!cameraConnectee()) {
-		emit etatCamera(CAMERA_CONNEXION_OFF);
+		emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
 		emit stopperGuidage();
 		connecterCamera();
 	} else {
-		emit etatCamera(CAMERA_CONNEXION_ON);
+		emit envoiEtatCamera(CAMERA_CONNEXION_ON);
 	}
 }
 
@@ -159,7 +159,7 @@ void Capture::trouverPosition() {
 		return;
 	}
 	Image *obj_lapl = img->convoluerParDerivee();
-	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, 0.85);
+	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, SEUIL_CORRELATION);
 	correl->maxParInterpolation(&position_l, &position_c);
 	double bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
 	// ENVOI DES RESULTATS
@@ -176,14 +176,14 @@ void Capture::trouverPosition() {
 	delete obj_lapl;
 }
 
-
+QTime t; // pour debug de durée de correl/capture
 void Capture::captureEtPosition() {
 	connexionAuto();
-	t.start();
+	//t.start();
 	if(capturerImage() && ref_lapl) {
-    cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
+    //cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
-    cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
+    //cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
 	}
 	timerProchaineCapture.start();
 }

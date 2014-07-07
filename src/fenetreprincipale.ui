@@ -89,7 +89,7 @@
      <rect>
       <x>330</x>
       <y>540</y>
-      <width>141</width>
+      <width>151</width>
       <height>151</height>
      </rect>
     </property>
@@ -104,7 +104,7 @@
       <rect>
        <x>80</x>
        <y>20</y>
-       <width>51</width>
+       <width>61</width>
        <height>21</height>
       </rect>
      </property>
@@ -200,7 +200,7 @@
       <x>490</x>
       <y>540</y>
       <width>201</width>
-      <height>81</height>
+      <height>91</height>
      </rect>
     </property>
     <property name="title">
@@ -209,14 +209,14 @@
     <widget class="QPushButton" name="lancerGuidage">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>25</y>
-       <width>121</width>
-       <height>21</height>
+       <x>0</x>
+       <y>30</y>
+       <width>71</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Lancer guidage</string>
+      <string>Marche</string>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
@@ -231,10 +231,10 @@
     <widget class="QLabel" name="statutGuidage">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>30</y>
-       <width>41</width>
-       <height>31</height>
+       <x>0</x>
+       <y>60</y>
+       <width>201</width>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -244,28 +244,28 @@
     <widget class="QPushButton" name="stopperGuidage">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>48</y>
-       <width>121</width>
-       <height>21</height>
+       <x>70</x>
+       <y>30</y>
+       <width>71</width>
+       <height>31</height>
       </rect>
      </property>
      <property name="text">
-      <string>Stopper guidage</string>
+      <string>Arrêt</string>
      </property>
     </widget>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>500</x>
       <y>630</y>
-      <width>201</width>
+      <width>191</width>
       <height>61</height>
      </rect>
     </property>
     <property name="title">
-     <string>Paramètres de détection du soleil</string>
+     <string>Paramètres détection soleil</string>
     </property>
     <widget class="QLabel" name="label_3">
      <property name="geometry">
@@ -300,9 +300,9 @@
    <widget class="QGroupBox" name="groupBox_3">
     <property name="geometry">
      <rect>
-      <x>120</x>
+      <x>20</x>
       <y>540</y>
-      <width>191</width>
+      <width>271</width>
       <height>41</height>
      </rect>
     </property>
@@ -346,7 +346,7 @@
      <x>0</x>
      <y>0</y>
      <width>701</width>
-     <height>22</height>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">

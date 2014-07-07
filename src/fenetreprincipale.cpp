@@ -50,8 +50,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     capture->moveToThread(&threadCapture);
 
     // Signaux-slots entre fenetreprincipale et guidage
-    QObject::connect(guidage,SIGNAL(etatArduino(int)),this,SLOT(statutArduino(int)));
-    QObject::connect(guidage,SIGNAL(etatGuidage(bool)),this,SLOT(statutGuidage(bool)));
+    QObject::connect(guidage,SIGNAL(envoiEtatArduino(enum EtatArduino)),this,SLOT(modifierStatutArduino(enum EtatArduino)));
+    QObject::connect(guidage,SIGNAL(envoiEtatGuidage(enum EtatGuidage)),this,SLOT(modifierStatutGuidage(enum EtatGuidage)));
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
     QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
@@ -61,7 +61,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
 
     // Signaux-slots entre fenetreprincipale et capture
-    QObject::connect(capture,SIGNAL(etatCamera(int)),this,SLOT(statutCamera(int)));
+    QObject::connect(capture,SIGNAL(envoiEtatCamera(enum EtatCamera)),this,SLOT(modifierStatutCamera(enum EtatCamera)));
     QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->valeurDiametreSoleil,SLOT(setValue(int)));
     QObject::connect(ui->valeurDiametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
     QObject::connect(this,SIGNAL(initialiserCapture()),capture,SLOT(initialiserObjetCapture()));
@@ -73,8 +73,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     // Signaux-slots entre les éléments de l'interface
     QObject::connect(guidage,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
-    QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,QColor)));
-    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,QColor)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,QColor)));
+    QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,enum EtatConsigne)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,enum EtatConsigne)));
+    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,enum EtatPosition)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,enum EtatPosition)));
 
     // Lancement des threads
     threadGuidage.start();
@@ -113,30 +113,34 @@ void FenetrePrincipale::afficherMessage(QString msg) {
     ui->messages->append(msg);
 }
 
-void FenetrePrincipale::statutCamera(int etat) {
-	if(etat & CAMERA_CONNEXION_ON) {
-		ui->statutCamera->setPalette(paletteTexteVert);
-		ui->statutCamera->setText("Caméra connectée");
-	}
-	else if(etat & CAMERA_CONNEXION_OFF){
-		ui->statutCamera->setPalette(paletteTexteRouge);
-		ui->statutCamera->setText("Caméra déconnectée");
+void FenetrePrincipale::modifierStatutCamera(enum EtatCamera etat) {
+	switch (etat) {
+		case CAMERA_CONNEXION_ON:
+			ui->statutCamera->setPalette(paletteTexteVert);
+			ui->statutCamera->setText("Caméra connectée");
+			break;
+		case CAMERA_CONNEXION_OFF:
+			ui->statutCamera->setPalette(paletteTexteRouge);
+			ui->statutCamera->setText("Caméra déconnectée");
+			break;
+		default:
+			break;
 	}
 }
 
-void FenetrePrincipale::statutArduino(int etat) {
+void FenetrePrincipale::modifierStatutArduino(enum EtatArduino etat) {
 	switch(etat) {
-		case ARDUINO_CONNEXION_ON:
-			ui->statutArduino->setPalette(paletteTexteVert);
-			ui->statutArduino->setText("Arduino connecté");
-			break;
-		case ARDUINO_CONNEXION_OFF:
-			ui->statutArduino->setPalette(paletteTexteRouge);
-			ui->statutArduino->setText("Arduino déconnecté");
-			break;
-		case ARDUINO_FICHIER_INTROUV:
-			ui->statutArduino->setPalette(paletteTexteRouge);
-			ui->statutArduino->setText("Arduino introuvable");
+	case ARDUINO_CONNEXION_ON:
+		ui->statutArduino->setPalette(paletteTexteVert);
+		ui->statutArduino->setText("Arduino connecté");
+		break;
+	case ARDUINO_CONNEXION_OFF:
+		ui->statutArduino->setPalette(paletteTexteRouge);
+		ui->statutArduino->setText("Arduino déconnecté");
+		break;
+	case ARDUINO_FICHIER_INTROUV:
+		ui->statutArduino->setPalette(paletteTexteRouge);
+		ui->statutArduino->setText("Arduino introuvable");
 	}
 }
 
@@ -144,14 +148,35 @@ void FenetrePrincipale::statutArduino(int etat) {
  * Slot permettant de modifier l'affichage de l'état du guidage
  * @param statut True pour guidage en marche
  */
-void FenetrePrincipale::statutGuidage(bool statut) {
-	if(statut) {
+void FenetrePrincipale::modifierStatutGuidage(enum EtatGuidage statut) {
+	switch (statut) {
+	case GUIDAGE_MARCHE:
 		ui->statutGuidage->setPalette(paletteTexteVert);
-		ui->statutGuidage->setText("Marche");
-	}
-	else {
+		ui->statutGuidage->setText("Guidage en marche");
+		break;
+	case GUIDAGE_BESOIN_POSITION:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
-		ui->statutGuidage->setText("Arrêt");
+		ui->statutGuidage->setText("Pas de position du soleil");
+		break;
+	case GUIDAGE_ARRET_BRUIT:
+		ui->statutGuidage->setPalette(paletteTexteRouge);
+		ui->statutGuidage->setText("Arrêt: bruit/signal trop fort");
+		break;
+	case GUIDAGE_ARRET_NORMAL:
+		ui->statutGuidage->setPalette(paletteTexteRouge);
+		ui->statutGuidage->setText("Arrêt: tout est normal");
+		break;
+	case GUIDAGE_ARRET_DIVERGE:
+		ui->statutGuidage->setPalette(paletteTexteRouge);
+		ui->statutGuidage->setText("Arrêt: guidage sans effet");
+		break;
+	case GUIDAGE_ARRET_PANNE:
+		ui->statutGuidage->setPalette(paletteTexteRouge);
+		ui->statutGuidage->setText("Arrêt: caméra ou arduino HS");
+		break;
+
+	default:
+		break;
 	}
 }
 

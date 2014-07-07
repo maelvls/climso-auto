@@ -27,6 +27,7 @@
  *  Une commande se constitue d'une chaîne type C (donc finie par \0) et est de la forme
  *  	3,3000 (avec \0 à la fin) avec 3 le numéro du pin et 3000 la durée en ms
  *
+ *
  */
 
 #include <cstdio>
@@ -125,6 +126,12 @@ int Arduino::EnvoyerCmd(char* cmd) {
 	return EnvoyerCmd(cmd,strlen(cmd)+1);
 }
 
+/**
+ * Envoie une suite de caracteres
+ * @param cmd Le tableau de caracteres
+ * @param longCmd La longueur du tableau de caracteres
+ * @return NO_ERR si pas d'erreur, un code d'erreur ERR_ sinon
+ */
 int Arduino::EnvoyerCmd(char* cmd, int longCmd) {
 	int donneesEcrites = write(fd,cmd,longCmd);
 	if(donneesEcrites < longCmd) {
@@ -185,8 +192,6 @@ int Arduino::LireReponse(char* buf, int longMaxBuf, char carDeFin, int timeout) 
             continue;
         }
 
-        //printf("serialport_read_until: i=%d, n=%d temp='%c' (%d)\n",i,n,curChar[0],curChar[0]); // debug
-
         buf[i] = curChar[0];
         i++;
     } while(curChar[0] != carDeFin && i < longMaxBuf && timeout>0 );
@@ -195,6 +200,8 @@ int Arduino::LireReponse(char* buf, int longMaxBuf, char carDeFin, int timeout) 
     return NO_ERR;
 }
 
+
+
 /**
  * Nettoie les eventuelles donnees du buffer entrant
  * @author 2006-2013, Tod E. Kurt, http://todbot.com/blog/ (arduino-serial-lib)
@@ -202,7 +209,6 @@ int Arduino::LireReponse(char* buf, int longMaxBuf, char carDeFin, int timeout) 
  */
 int Arduino::Flush()
 {
-    sleep(2); //required to make flush work, for some reason
     return tcflush(fd, TCIOFLUSH);
 }
 
@@ -253,18 +259,16 @@ int Arduino::getErreur() {
 
 #define ENQ 	5
 #define ACK		6
+
 bool Arduino::verifierConnexion() { // FIXME
 	int err;
-	char enquiry[2];
-	char ack[2];
-	sprintf(enquiry,"%c",ENQ);
-	if((err=EnvoyerCmd(enquiry))==NO_ERR) {
-		err = LireReponse(ack,2,'\0',1000);
-		//cout << "Reponse : '" << ack << "'";
-		if(err==NO_ERR) {
-			if(ack[0] == ACK) {
-				return true;
-			}
+	char ack;
+	char enq = ENQ;
+	Flush();
+	if((err=EnvoyerCmd(&enq,1))==NO_ERR) {
+		err = LireReponse(&ack,1,ACK,100); // Timeout:50ms
+		if(err==NO_ERR && ack == ACK) {
+			return true;
 		}
 	}
 	return false;

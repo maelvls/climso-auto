@@ -16,6 +16,7 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QTime>
+#include <QtCore/QMetaType>
 #include "arduino.h"
 #include "image.h"
 
@@ -32,22 +33,43 @@
 #define PERIODE_ENTRE_CONNEXIONS	1000 // Période entre deux vérifications de connexion à l'arduino
 #define SEUIL_DECALAGE_PIXELS		1.0 // Distance en pixels en dessous laquelle la position est estimée comme correcte
 
-#define POSITION_OK				Qt::green //QColor(qRgb(255,145,164))//QColor(qRgb(44,117,255))
-#define POSITION_NOK			Qt::gray //QColor(qRgb(187,210,225))
-#define CONSIGNE_OK				Qt::green //QColor(qRgb(86,130,3))
-#define CONSIGNE_LOIN			Qt::yellow //QColor(qRgb(230,126,48))
-#define CONSIGNE_DIVERGE		Qt::red
+
 
 #define INCREMENT_LENT		0.1 // Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
 #define INCREMENT_RAPIDE	1	// Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
 
-// États possibles pour l'Arduino (permet de rafraichir le statut d'arduino dans la fenêtre)
-#define ARDUINO_CONNEXION_ON		0
-#define ARDUINO_CONNEXION_OFF		1
-#define ARDUINO_FICHIER_INTROUV		2
+enum EtatPosition {
+	POSITION_COHERANTE,
+	POSITION_INCOHERANTE,
+	POSITION_NON_INITIALISEE
+};
+enum EtatConsigne {
+	CONSIGNE_OK,
+	CONSIGNE_LOIN,
+	CONSIGNE_DIVERGE,
+	CONSIGNE_NON_INITIALISEE
+};
+enum EtatArduino {
+	ARDUINO_CONNEXION_ON,
+	ARDUINO_CONNEXION_OFF,
+	ARDUINO_FICHIER_INTROUV
+};
+enum EtatGuidage {
+	GUIDAGE_MARCHE,
+	GUIDAGE_BESOIN_POSITION,
+	GUIDAGE_ARRET_BRUIT,
+	GUIDAGE_ARRET_NORMAL,
+	GUIDAGE_ARRET_DIVERGE,
+	GUIDAGE_ARRET_PANNE
+};
+
+Q_DECLARE_METATYPE(enum EtatGuidage);
+Q_DECLARE_METATYPE(enum EtatArduino);
+Q_DECLARE_METATYPE(enum EtatPosition);
+Q_DECLARE_METATYPE(enum EtatConsigne);
 
 class Guidage: public QObject {
-Q_OBJECT
+	Q_OBJECT
 private:
 	QTimer timerConnexionAuto;
 	Arduino* arduino;
@@ -62,10 +84,14 @@ private:
 	QList<QTime> decalageTimestamp;
 
 	// Paramètres de guidage
-	bool guidageEnMarche;
 	int orientationNordSud; // 1 si l'orientation Nord-Sud est correcte, -1 si elle est inversée
 	int orientationEstOuest; // 1 si l'orientation Est-Ouest est correcte, -1 si elle est inversée
+	enum EtatArduino etatArduino;
+	enum EtatConsigne etatConsigne;
+	enum EtatPosition etatPosition;
+	enum EtatGuidage etatGuidage;
 	QTime tempsDepuisDernierGuidage;
+
 
 	void capturerImage();
 	bool arduinoConnecte();
@@ -77,12 +103,12 @@ public:
 	~Guidage();
 	static QStringList chercherFichiersArduino();
 public slots:
-// guidage
+	// guidage
 	void lancerGuidage();
 	void stopperGuidage();
 	void modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent);
 	void traiterResultatsCapture(Image* img, double l, double c, int diametre,double bruitsignal);
-// arduino
+	// arduino
 	void connecterArduino(QString nom);
 	void deconnecterArduino();
 	void envoyerCmd(int pin, int duree);
@@ -92,13 +118,11 @@ private slots:
 	void connexionAuto();
 signals:
 	void message(QString msg);
-	void etatArduino(int);
-	void etatGuidage(bool);
+	void envoiEtatArduino(enum EtatArduino);
+	void envoiEtatGuidage(enum EtatGuidage);
 	void imageSoleil(Image*);
-	void repereSoleil(float pourcent_x, float pourcent_y,
-			float diametre_pourcent_x, QColor couleur);
-	void repereConsigne(float pourcent_x, float pourcent_y,
-			float diametre_pourcent_x, QColor couleur);
+	void repereSoleil(float pourcent_x, float pourcent_y,float diametre_pourcent_x, enum EtatPosition);
+	void repereConsigne(float pourcent_x, float pourcent_y,float diametre_pourcent_x, enum EtatConsigne);
 	void signalBruit(double);
 };
 
