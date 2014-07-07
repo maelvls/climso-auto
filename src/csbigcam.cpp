@@ -75,7 +75,7 @@
 #include <string>
 #include <math.h>
 #include <stdio.h>
-#include <time.h>
+
 #include <iostream>
 
 using namespace std;
@@ -135,19 +135,21 @@ static double hex2double(unsigned long ul)
 */
 void CSBIGCam::Init()
 {
-	m_eLastError 	= CE_NO_ERROR;
-	m_eLastCommand 	= (PAR_COMMAND)0;
-	m_nDrvHandle 	= INVALID_HANDLE_VALUE;
-	m_eCameraType 	= NO_CAMERA;
-	m_eActiveCCD 	= CCD_IMAGING;
-	m_dExposureTime = 0.1;
-	m_uReadoutMode 	= 0;
-	m_eABGState 	= ABG_CLK_MED7;
-	m_nSubFrameLeft = m_nSubFrameTop = m_nSubFrameWidth = m_nSubFrameHeight = 0;
-	m_eGrabState 	= GS_IDLE;
-	m_dGrabPercent 	= 0.0;
-	m_eCFWModel 	= CFWSEL_UNKNOWN;
-	m_eCFWError 	= CFWE_NONE;
+	m_eLastError 			= CE_NO_ERROR;
+	m_eLastCommand 		= (PAR_COMMAND)0;
+	m_nDrvHandle 			= INVALID_HANDLE_VALUE;
+	m_eCameraType 		= NO_CAMERA;
+	m_eActiveCCD 			= CCD_IMAGING;
+	m_dExposureTime 	= 0.1;
+	m_uReadoutMode 		= 0;
+	m_eABGState 			= ABG_CLK_MED7;
+	m_nSubFrameLeft 	= m_nSubFrameTop = m_nSubFrameWidth = m_nSubFrameHeight = 0;
+	m_eGrabState 			= GS_IDLE;
+	m_dGrabPercent 		= 0.0;
+	m_eCFWModel 			= CFWSEL_UNKNOWN;
+	m_eCFWError 			= CFWE_NONE;
+	m_FastReadout 		= false;
+	m_DualChannelMode	= false;
 }
 
 /*
@@ -681,7 +683,7 @@ PAR_ERROR CSBIGCam::GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 			m_sGrabInfo.vBin = m_sGrabInfo.vertNBinning;
 		}
 	}
-    else
+	else
 	{
 		if (m_sGrabInfo.rm < 3)
 		{
@@ -700,12 +702,6 @@ PAR_ERROR CSBIGCam::GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 		{
 			m_sGrabInfo.hBin = m_sGrabInfo.vBin = 9;
 		}
-        else if(m_eCameraType == STF_CAMERA && m_sGrabInfo.rm == 10) {
-            // Added for RM_NXN support on STF-8300 (Mael Valais)
-            // RM_NXN Example: RM_NXN | 0x0400 will give a 4x4 binning
-            // or RM_NXN | 0x0400
-            m_sGrabInfo.hBin = m_sGrabInfo.vBin = m_sGrabInfo.vertNBinning;
-        }
 	}
 	gcip.request = (m_eActiveCCD == CCD_IMAGING ? CCD_INFO_IMAGING : CCD_INFO_TRACKING);
 
@@ -746,11 +742,6 @@ PAR_ERROR CSBIGCam::GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 				m_sGrabInfo.height = gcir.readoutInfo[m_sGrabInfo.rm].height / m_sGrabInfo.vertNBinning;
 			}
 		}
-        // Added for RM_NXN mode support for the STF-8300 camera (Mael Valais 2014)
-		if (m_eCameraType == STF_CAMERA && m_sGrabInfo.rm == 10) {
-            m_sGrabInfo.width  = gcir.readoutInfo[0].width / m_sGrabInfo.vertNBinning;
-            m_sGrabInfo.height = gcir.readoutInfo[0].height / m_sGrabInfo.vertNBinning;
-        }
 	}
 	else
 	{
@@ -822,17 +813,16 @@ PAR_ERROR CSBIGCam::GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 */
 PAR_ERROR CSBIGCam::GrabMain(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 {
-	int 				i;
-	double 				ccdTemp;
-	time_t 				curTime;
-	PAR_ERROR 			err;
+	int 								i;
+	double 							ccdTemp = 0.0;
+	time_t 							curTime;
+	PAR_ERROR 					err;
 	StartReadoutParams 	srp;
 	ReadoutLineParams 	rlp;
-	struct tm *			pLT;
-	char 				cs[80];
-	MY_LOGICAL 			expComp;
-
-
+	struct tm *					pLT;
+	char 								cs[80];
+	MY_LOGICAL 					expComp;
+	
 	// initialize some image header params
 	if (GetCCDTemperature(ccdTemp) != CE_NO_ERROR)
 	{
@@ -865,16 +855,13 @@ PAR_ERROR CSBIGCam::GrabMain(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 	pImg->SetImageStartTime(curTime);
 
 	// wait for exposure to complete
-
-
 	do 
 	{
 		m_dGrabPercent = (double)(time(NULL) - curTime)/m_dExposureTime;
 	} 
 	while ((err = IsExposureComplete(expComp)) == CE_NO_ERROR && !expComp );
-
+	
 	EndExposure();
-
 
 	if (err != CE_NO_ERROR)
 	{
@@ -894,8 +881,7 @@ PAR_ERROR CSBIGCam::GrabMain(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 	srp.width  = m_sGrabInfo.width;
 	srp.readoutMode = m_uReadoutMode;
 	m_eGrabState = (dark == SBDF_LIGHT_ONLY ? GS_DIGITIZING_LIGHT : GS_DIGITIZING_DARK);
-
-
+	
 	if ( (err = StartReadout(srp)) == CE_NO_ERROR ) 
 	{
 		rlp.ccd = m_eActiveCCD;
@@ -910,13 +896,10 @@ PAR_ERROR CSBIGCam::GrabMain(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 		}
 	}
 	
-	EndReadout(); 	// FIXME: MV 2014: Si une erreur s'est produite pendant ReadoutLine, m_eLastError sera modifié
-					// par EndReadout et on ne pourra donc pas lire la vrai erreur !
-
-
+	EndReadout();
+	
 	if (err != CE_NO_ERROR)
 	{
-		m_eLastError = err; // FIXME: MV 2014: voici un fix pour le probleme
 		return err;
 	}
 	
@@ -1005,7 +988,7 @@ PAR_ERROR CSBIGCam::GrabMain(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 				pLT->tm_hour, pLT->tm_min, pLT->tm_sec);
 		pImg->SetImageNote(cs);
 	}
-
+	
 	return CE_NO_ERROR;	
 }
 
@@ -1022,31 +1005,17 @@ PAR_ERROR CSBIGCam::GrabImage(CSBIGImg *pImg, SBIG_DARK_FRAME dark)
 {
 	PAR_ERROR err;
 	
-
-
 	pImg->SetImageCanClose(FALSE);
 
 	/* do the Once per image setup */
 	if ((err = GrabSetup(pImg, dark)) == CE_NO_ERROR )
 	{
-
 		/* Grab the image */
 		err = GrabMain(pImg, dark);
-
 	}
-
-
-
-
-
-
-
-
-
-
 	m_eGrabState = GS_IDLE;
 	pImg->SetImageCanClose(TRUE);
-	return err;
+	return err;	
 }
 
 
@@ -1062,7 +1031,7 @@ PAR_ERROR CSBIGCam::StartExposure(SHUTTER_COMMAND shutterState)
 {
 	StartExposureParams 	sep;
 	StartExposureParams2 	sep2;
-	unsigned long 			ulExposure;
+	unsigned long 				ulExposure;
 	
 	if (!CheckLink())
 	{
@@ -1075,9 +1044,10 @@ PAR_ERROR CSBIGCam::StartExposure(SHUTTER_COMMAND shutterState)
 	if (m_dExposureTime < 0.01)
 	{
 		ulExposure = (unsigned long)(m_dExposureTime * 1000.0 + 0.5);
+
 		if (ulExposure < 1)
 		{
-			ulExposure = 1;
+				ulExposure = 1;
 		}
 		ulExposure |= EXP_MS_EXPOSURE;
 	}
@@ -1090,20 +1060,39 @@ PAR_ERROR CSBIGCam::StartExposure(SHUTTER_COMMAND shutterState)
 		}
 	}
 	
+	if (GetFastReadout())
+	{
+			ulExposure |= EXP_FAST_READOUT;
+	}
+	else
+	{
+			ulExposure &= ~EXP_FAST_READOUT;
+	}
+
+	if (GetDualChannelMode())
+	{
+			ulExposure |= EXP_DUAL_CHANNEL_MODE;
+	}
+	else
+	{
+			ulExposure &= ~EXP_DUAL_CHANNEL_MODE;
+	}
+
 	if (m_eCameraType == STX_CAMERA || m_eCameraType == STT_CAMERA ||
 		  m_eCameraType == STI_CAMERA || m_eCameraType == STF_CAMERA)
 	{
-		sep2.ccd 			= m_eActiveCCD;
-		sep2.exposureTime 	= ulExposure | EXP_FAST_READOUT;
-		sep2.abgState 		= m_eABGState;
-		sep2.openShutter 	= shutterState;
-		sep2.top 			= m_nSubFrameTop;
-		sep2.left 			= m_nSubFrameLeft;
-		sep2.height 		= m_nSubFrameHeight;
-		sep2.width 			= m_nSubFrameWidth;
-		sep2.readoutMode 	= m_uReadoutMode;
 
-/*
+		sep2.ccd 						= m_eActiveCCD;
+		sep2.exposureTime 	= ulExposure;
+		sep2.abgState 			= m_eABGState;
+		sep2.openShutter 		= shutterState;
+		sep2.top 						= m_nSubFrameTop;
+		sep2.left 					= m_nSubFrameLeft;
+		sep2.height 				= m_nSubFrameHeight;
+		sep2.width 					= m_nSubFrameWidth;
+		sep2.readoutMode 		= m_uReadoutMode;
+
+		/*
 		cout << "CSBIGCam::StartExposure2 -------------------------" << endl;
 		cout << "sep2.ccd			: " << sep2.ccd 		<< endl;
 		cout << "sep2.exposureTime	: " << sep2.exposureTime<< endl;
@@ -1113,12 +1102,11 @@ PAR_ERROR CSBIGCam::StartExposure(SHUTTER_COMMAND shutterState)
 		cout << "sep2.left      	: " << sep2.left		<< endl;
 		cout << "sep2.height      	: " << sep2.height		<< endl;
 		cout << "sep2.width      	: " << sep2.width		<< endl;
-		cout << "sep2.readoutMode	: " <<hex<<sep2.readoutMode<<dec<< endl;
+		cout << "sep2.readoutMode	: " << sep2.readoutMode	<< endl;
 		cout << "--------------------------------------------------" << endl;
-*/
+		*/
 
-		PAR_ERROR ret_err = SBIGUnivDrvCommand(CC_START_EXPOSURE2, &sep2, NULL);
-	    return ret_err;
+		return SBIGUnivDrvCommand(CC_START_EXPOSURE2, &sep2, NULL);
 	}
 	else
 	{

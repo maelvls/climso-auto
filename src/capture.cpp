@@ -93,6 +93,7 @@ void Capture::connecterCamera() {
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
         cam->SetExposureTime(DUREE_EXPOSITION * 0.001);
+        cam->SetFastReadout(true);
         cam->SetABGState((ABG_STATE7)ABG_LOW7);
 
         emit message("Camera connectee");
@@ -178,11 +179,11 @@ void Capture::trouverPosition() {
 
 void Capture::captureEtPosition() {
 	connexionAuto();
-	//t.start();
+	t.start();
 	if(capturerImage() && ref_lapl) {
-    //cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
+    cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
-    //cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
+    cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
 	}
 	timerProchaineCapture.start();
 }

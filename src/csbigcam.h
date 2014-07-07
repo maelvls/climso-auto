@@ -59,23 +59,25 @@ GRAB_STATE;
 class CSBIGCam
 {
 private:
-	PAR_ERROR 			m_eLastError;
-	PAR_COMMAND 		m_eLastCommand;
-	short 				m_nDrvHandle;
-	CAMERA_TYPE 		m_eCameraType;
+	PAR_ERROR 				m_eLastError;
+	PAR_COMMAND 			m_eLastCommand;
+	short 						m_nDrvHandle;
+	CAMERA_TYPE 			m_eCameraType;
 	unsigned short 		m_nFirmwareVersion;
-	CCD_REQUEST 		m_eActiveCCD;
-	double 				m_dExposureTime;
+	CCD_REQUEST 			m_eActiveCCD;
+	double 						m_dExposureTime;
 	unsigned short 		m_uReadoutMode;
-	ABG_STATE7 			m_eABGState;
-	int 				m_nSubFrameLeft,
-						m_nSubFrameTop,
-						m_nSubFrameWidth,
-						m_nSubFrameHeight;
-	GRAB_STATE 			m_eGrabState;
-	double 				m_dGrabPercent;
+	ABG_STATE7 				m_eABGState;
+	int 							m_nSubFrameLeft,
+										m_nSubFrameTop,
+										m_nSubFrameWidth,
+										m_nSubFrameHeight;
+	GRAB_STATE 				m_eGrabState;
+	double 						m_dGrabPercent;
 	CFW_MODEL_SELECT	m_eCFWModel;
-	CFW_ERROR 			m_eCFWError;
+	CFW_ERROR 				m_eCFWError;
+	bool							m_FastReadout;
+	bool							m_DualChannelMode;
 
 	struct GRAB_INFO
 	{
@@ -96,8 +98,8 @@ public:
 
 	// Error Reporting Routines
 	PAR_ERROR 	GetError();
-	string 		GetErrorString();
-	string 		GetErrorString(PAR_ERROR err);
+	string 			GetErrorString();
+	string 			GetErrorString(PAR_ERROR err);
 	PAR_COMMAND GetCommand();
 
 	// Setters /Getters
@@ -151,6 +153,26 @@ public:
 		m_eABGState = abgState;
 	}
 
+	void SetFastReadout(bool par)
+	{
+			m_FastReadout = par;
+	}
+
+	bool GetFastReadout()
+	{
+			return m_FastReadout;
+	}
+
+	void SetDualChannelMode(bool par)
+	{
+			m_DualChannelMode = par;
+	}
+
+	bool GetDualChannelMode()
+	{
+			return m_DualChannelMode;
+	}
+
 	void SetSubFrame(int nLeft,  int nTop,  int nWidth,  int nHeight);
 	void GetSubFrame(int &nLeft, int &nTop, int &nWidth, int &nHeight);
 
@@ -167,7 +189,7 @@ public:
 	PAR_ERROR GrabSetup(CSBIGImg *pImg, SBIG_DARK_FRAME dark);
 	PAR_ERROR GrabMain (CSBIGImg *pImg, SBIG_DARK_FRAME dark);
 	PAR_ERROR GrabImage(CSBIGImg *pImg, SBIG_DARK_FRAME dark);
-	void 	  GetGrabState(GRAB_STATE &grabState, double &percentComplete);
+	void 	    GetGrabState(GRAB_STATE &grabState, double &percentComplete);
 
 	// Low-Level Exposure Related Commands
 	PAR_ERROR StartExposure(SHUTTER_COMMAND shutterState);
