@@ -13,7 +13,8 @@
  *	Les résultats des captures sont envoyées à la classe Guidage (grâce au signal
  *	resultats(...)).
  *
- *	Cette classe gère aussi le diamètre du soleil.
+ *	Cette classe gère aussi le diamètre du soleil (on lui envoie les nouveaux diamètres
+ *	ou alors elle utilise le calcul du diamètre automatique de diametre_soleil.c)
  *
  *	L'instance de cette classe doit être exécuté dans un thread différent car dans le cas contraire,
  *	l'interface serait bloquée.
@@ -23,6 +24,7 @@
 
 #include <QtCore/QSettings>
 #include "capture.h"
+#include "diametre_soleil.h"
 
 #define SEUIL_CORRELATION		0.85 	// entre 0 et 1 (% du max de ref) au dessus duquel les valeurs de ref. sont correlées
 #define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)

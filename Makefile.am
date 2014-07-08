@@ -35,7 +35,7 @@ main_qt_SOURCES=\
 	src/main_qt_gui.cpp\
 	src/guidage.cpp src/guidage.moc.cpp\
 	src/widgetimage.cpp src/widgetimage.moc.cpp \
-	src/capture.cpp src/capture.moc.cpp\
+	src/capture.cpp src/capture.moc.cpp src/diametre_soleil.c\
 	\
 	src/arduino.h\
 	src/interpol.h\
@@ -46,7 +46,7 @@ main_qt_SOURCES=\
 	src/lpardrv.h\
 	src/guidage.h\
 	src/widgetimage.h\
-	src/capture.h\
+	src/capture.h src/diametre_soleil.h\
 	\
 	src/fenetreprincipale.ui
 

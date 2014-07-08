@@ -26,9 +26,7 @@
 #define IMAGE_REFERENCE_JOUR		21
 #define IMAGE_REFERENCE_HEURE		12
 
-#endif
-
-#if !DEBUG
+#else
 
 // Image de référence calculée par LKoechlin
 #define IMAGE_REFERENCE_DIAMETRE 	1638 // En pixels
