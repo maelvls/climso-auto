@@ -32,8 +32,6 @@ private:
     QPalette paletteTexteRouge;
     QPalette paletteTexteJaune;
 
-    void signalHandler(int signal);
-
 public:
     explicit FenetrePrincipale(QWidget *parent = 0);
     ~FenetrePrincipale();
@@ -45,6 +43,7 @@ private slots:
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();
     void on_consigneGauche_clicked();
+    void on_ouvrirParametres_triggered();
 
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent* event);
@@ -52,9 +51,9 @@ private slots:
 
 public slots:
 	void afficherMessage(QString msg);
-    void modifierStatutCamera(enum EtatCamera);
-    void modifierStatutArduino(enum EtatArduino);
-    void modifierStatutGuidage(enum EtatGuidage);
+    void modifierStatutCamera(EtatCamera);
+    void modifierStatutArduino(EtatArduino);
+    void modifierStatutGuidage(EtatGuidage);
 
 signals:
 	void lancerGuidage();
@@ -62,7 +61,8 @@ signals:
 	void modificationConsigne(int,int,bool decalageLent);
 	void quitter();
 	void diametreSoleil(int);
-	void initialiserCapture();
+	void demanderEnregistrementParametres();
+	void demanderChargementParametres();
 };
 
 #endif // FENETREPRINCIPALE_H

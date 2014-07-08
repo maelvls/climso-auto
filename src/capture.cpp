@@ -45,7 +45,8 @@ Capture::Capture() {
 	QObject::connect(&timerProchaineCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
 	timerProchaineCapture.setSingleShot(true);
 	timerProchaineCapture.setInterval(DUREE_ENTRE_CAPTURES);
-	qRegisterMetaType<enum EtatCamera>("enum EtatCamera");
+	qRegisterMetaType<EtatCamera>("EtatCamera");
+	captureEtPosition(); // Lancement de la première capture
 }
 
 Capture::~Capture() {
@@ -58,21 +59,12 @@ Capture::~Capture() {
 	// FIXME: Quand on a fait le quit(), les events sont tous traités ?
 }
 
-/**
- * Cette méthode permet de lancer les méthodes d'initialisation qui nécessitent l'envoi de signaux
- * et donc qui ne peuvent pas être fait durant la création de l'objet Capture dans le constructeur
- */
-void Capture::initialiserObjetCapture() {
-	lireParametres(); // Chargement des paramètres
-	captureEtPosition(); // Lancement de la première capture
-}
-
 void Capture::enregistrerParametres() {
 	QSettings parametres("irap", "climso-auto");
 	parametres.setValue("diametre-soleil-en-pixel", diametre);
 }
 
-void Capture::lireParametres() {
+void Capture::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
 	diametre = parametres.value("diametre-soleil-en-pixel", DIAMETRE_DEFAUT).toInt();
 	modifierDiametre(diametre);

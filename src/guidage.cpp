@@ -35,12 +35,10 @@ Guidage::Guidage() {
 	bruitsignal = 1;
 
 	// Paramètres de guidage
-	orientationNordSud = ORIENTATION_NORD_SUD;
-	orientationEstOuest = ORIENTATION_EST_OUEST;
-	qRegisterMetaType<enum EtatPosition>("enum EtatPosition");
-	qRegisterMetaType<enum EtatConsigne>("enum EtatConsigne");
-	qRegisterMetaType<enum EtatArduino>("enum EtatArduino");
-	qRegisterMetaType<enum EtatGuidage>("enum EtatGuidage");
+	qRegisterMetaType<EtatPosition>("EtatPosition");
+	qRegisterMetaType<EtatConsigne>("EtatConsigne");
+	qRegisterMetaType<EtatArduino>("EtatArduino");
+	qRegisterMetaType<EtatGuidage>("EtatGuidage");
 	etatGuidage = GUIDAGE_ARRET_NORMAL;
 	etatArduino = ARDUINO_CONNEXION_OFF;
 	etatConsigne = CONSIGNE_NON_INITIALISEE;
@@ -52,7 +50,7 @@ Guidage::Guidage() {
 	timerConnexionAuto.start();
 
 	// Test sauvegarde
-	lireParametres();
+	chargerParametres();
 }
 
 Guidage::~Guidage() {
@@ -68,16 +66,16 @@ void Guidage::enregistrerParametres() {
 	QSettings parametres("irap", "climso-auto");
 	parametres.setValue("derniere-consigne-x", consigne_c);
 	parametres.setValue("derniere-consigne-y", consigne_l);
-	parametres.setValue("orientation-axe-nord-sud", orientationNordSud);
-	parametres.setValue("orientation-axe-est-ouest", orientationEstOuest);
+	parametres.setValue("orient-nord-sud-inversee", orientVertiInversee);
+	parametres.setValue("orient-est-ouest-inversee", orientHorizInversee);
 }
 
-void Guidage::lireParametres() {
+void Guidage::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
 	consigne_c = parametres.value("derniere-consigne-x", 0).toDouble();
 	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
-	orientationNordSud = parametres.value("orientation-axe-nord-sud", ORIENTATION_NORD_SUD).toInt();
-	orientationEstOuest = parametres.value("orientation-axe-est-ouest", ORIENTATION_EST_OUEST).toInt();
+	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool();
+	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool();
 }
 
 void Guidage::connexionAuto() {
@@ -127,6 +125,7 @@ void Guidage::consigneReset() {
 				" (x= " + QString::number(consigne_c) + ", y="
 				+ QString::number(consigne_l) + ")");
 	etatConsigne = CONSIGNE_OK;
+	afficherImageSoleilEtReperes();
 }
 
 void Guidage::guider() {
@@ -145,11 +144,9 @@ void Guidage::guider() {
 	// Calcul de la moyenne de décalage
 	double moyenne_l = 0, moyenne_c = 0;
 	int i;
-	for (i = 0; position_l.length() > 0; i++) {
+	for (i = 0; i<position_l.length(); i++) {
 		moyenne_l += position_l.last();
 		moyenne_c += position_c.last();
-		position_l.removeLast();
-		position_c.removeLast();
 	}
 	moyenne_l = moyenne_l / i;
 	moyenne_c = moyenne_c / i;
@@ -187,6 +184,10 @@ void Guidage::guider() {
 					+ QString::number(position_l.last()) + ") "
 							", (dx= " + QString::number(l_decal) + ", dy="
 					+ QString::number(c_decal) + ")");
+	position_c.clear();
+	position_l.clear();
+
+
 	int l_decal_duree = qAbs(l_decal * IMPULSION_PIXEL_V);
 	int c_decal_duree = qAbs(c_decal * IMPULSION_PIXEL_H);
 
@@ -199,10 +200,11 @@ void Guidage::guider() {
 	tempsDepuisDernierGuidage.restart();
 
 	// Envoi des commandes
-	envoyerCmd((l_decal * ORIENTATION_NORD_SUD < 0) ? PIN_SUD : PIN_NORD,
-			l_decal_duree);
-	envoyerCmd((c_decal * ORIENTATION_EST_OUEST < 0) ? PIN_OUEST : PIN_EST,
-			c_decal_duree);
+
+	envoyerCmd((l_decal * (orientVertiInversee?-1:1)
+			> 0 ? PIN_SUD	: PIN_NORD), l_decal_duree);
+	envoyerCmd((c_decal * (orientHorizInversee?-1:1)
+			> 0 ? PIN_OUEST	: PIN_EST), c_decal_duree);
 }
 
 void Guidage::connecterArduino(QString nom) {
@@ -271,8 +273,7 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c,
 	}
 }
 
-void Guidage::modifierConsigne(int deltaLigne, int deltaColonne,
-		bool decalageLent) {
+void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent) {
 	if (consigne_l == 0 || consigne_c == 0 || img == NULL) {
 		emit message("Impossible de modifier la consigne : aucune position");
 		return;

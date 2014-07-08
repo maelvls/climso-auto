@@ -353,11 +353,11 @@
     <property name="title">
      <string>Menu</string>
     </property>
-    <addaction name="actionParam_tres"/>
+    <addaction name="ouvrirParametres"/>
    </widget>
    <addaction name="menuMenu"/>
   </widget>
-  <action name="actionParam_tres">
+  <action name="ouvrirParametres">
    <property name="text">
     <string>Paramètres</string>
    </property>

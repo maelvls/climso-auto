@@ -453,7 +453,7 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
                 		convol_pt += 1;
                 		nbboucles++;
                 	}
-                	// PUIS D'AVANCER CES POINTEURS DE LA BONNE FACON QUAND ON PASSE A LA LIGNE SUIVANTE
+                	// PUIS D'AVANCER CES POINTEURS DE LA BONNE FAÇON QUAND ON PASSE A LA LIGNE SUIVANTE
                     // On passe à la ligne suivante sur convol et obj
                 	//obj_pt += 1; // ATTENTION, le for avance de 1, donc pas besoin (en sortie de for) d'avancer de nouveau
                 	convol_pt += convol->colonnes - larg_decal; // ATTENTION, pas de +1 non plus ici

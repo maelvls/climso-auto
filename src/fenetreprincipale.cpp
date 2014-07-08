@@ -22,11 +22,16 @@
 
 #include "fenetreprincipale.h"
 #include "fenetreprincipale_ui.h"
+#include "parametres.h"
 #include <QtCore/QTextCodec>
 
 /*
  * ATTENTION, dans les constructeurs de Capture et Guidage on ne peut pas envoyer de signal car
- * l'appel du constructeur est effectué avant que la connexion soit effectuée
+ * l'appel du constructeur est effectué avant que la connexion soit effectuée.
+ * POUR CAPTURE: au démarrage, envoie le diamètre qu'il a lu dans les paramètres à FenetrePrincipale.
+ * J'ai donc choisi d'envoyer le chargement des paramètres après avoir fait start().
+ * POUR PARAMETRES: on appelle chargerParametres() avant de faire exec(), c'est possible car
+ * l'objet est dans le même thread.
  */
 FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QMainWindow(parent),
@@ -50,8 +55,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     capture->moveToThread(&threadCapture);
 
     // Signaux-slots entre fenetreprincipale et guidage
-    QObject::connect(guidage,SIGNAL(envoiEtatArduino(enum EtatArduino)),this,SLOT(modifierStatutArduino(enum EtatArduino)));
-    QObject::connect(guidage,SIGNAL(envoiEtatGuidage(enum EtatGuidage)),this,SLOT(modifierStatutGuidage(enum EtatGuidage)));
+    QObject::connect(guidage,SIGNAL(envoiEtatArduino(EtatArduino)),this,SLOT(modifierStatutArduino(EtatArduino)));
+    QObject::connect(guidage,SIGNAL(envoiEtatGuidage(EtatGuidage)),this,SLOT(modifierStatutGuidage(EtatGuidage)));
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
     QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
@@ -59,13 +64,16 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(ui->consigneReset,SIGNAL(clicked()),guidage,SLOT(consigneReset()));
     QObject::connect(guidage,SIGNAL(signalBruit(double)),ui->ratioSignalBruit,SLOT(setNum(double)));
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
+    QObject::connect(this,SIGNAL(demanderEnregistrementParametres()),guidage,SLOT(enregistrerParametres()));
+    QObject::connect(this,SIGNAL(demanderChargementParametres()),guidage,SLOT(chargerParametres()));
 
     // Signaux-slots entre fenetreprincipale et capture
-    QObject::connect(capture,SIGNAL(envoiEtatCamera(enum EtatCamera)),this,SLOT(modifierStatutCamera(enum EtatCamera)));
+    QObject::connect(capture,SIGNAL(envoiEtatCamera(EtatCamera)),this,SLOT(modifierStatutCamera(EtatCamera)));
     QObject::connect(capture,SIGNAL(diametreSoleil(int)),ui->valeurDiametreSoleil,SLOT(setValue(int)));
     QObject::connect(ui->valeurDiametreSoleil,SIGNAL(valueChanged(int)),capture,SLOT(modifierDiametre(int)));
-    QObject::connect(this,SIGNAL(initialiserCapture()),capture,SLOT(initialiserObjetCapture()));
     QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
+    QObject::connect(this,SIGNAL(demanderEnregistrementParametres()),capture,SLOT(enregistrerParametres()));
+    QObject::connect(this,SIGNAL(demanderChargementParametres()),capture,SLOT(chargerParametres()));
 
     // Signaux-slots entre capture et guidage
     QObject::connect(capture,SIGNAL(resultats(Image*,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(Image*,double,double,int,double)));
@@ -73,14 +81,16 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 
     // Signaux-slots entre les éléments de l'interface
     QObject::connect(guidage,SIGNAL(imageSoleil(Image*)),ui->imageCamera,SLOT(afficherImageSoleil(Image*)));
-    QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,enum EtatConsigne)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,enum EtatConsigne)));
-    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,enum EtatPosition)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,enum EtatPosition)));
+    QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,EtatConsigne)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,EtatConsigne)));
+    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,EtatPosition)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,EtatPosition)));
+
+
 
     // Lancement des threads
     threadGuidage.start();
     threadCapture.start();
-    emit initialiserCapture(); // En plus du constructeur Capture() on appelle initialiserCapture()
-    // à cause du fait que les signaux ne peuvent pas être envoyés depuis un constructeur.
+    emit demanderChargementParametres(); // Comme le chargement implique des signaux, il faut charger
+    // après le début des threads
 
     // Le mode de décalage rapide est par défaut
     ui->vitesseDecalageRapide->setChecked(true);
@@ -113,7 +123,7 @@ void FenetrePrincipale::afficherMessage(QString msg) {
     ui->messages->append(msg);
 }
 
-void FenetrePrincipale::modifierStatutCamera(enum EtatCamera etat) {
+void FenetrePrincipale::modifierStatutCamera(EtatCamera etat) {
 	switch (etat) {
 		case CAMERA_CONNEXION_ON:
 			ui->statutCamera->setPalette(paletteTexteVert);
@@ -128,7 +138,7 @@ void FenetrePrincipale::modifierStatutCamera(enum EtatCamera etat) {
 	}
 }
 
-void FenetrePrincipale::modifierStatutArduino(enum EtatArduino etat) {
+void FenetrePrincipale::modifierStatutArduino(EtatArduino etat) {
 	switch(etat) {
 	case ARDUINO_CONNEXION_ON:
 		ui->statutArduino->setPalette(paletteTexteVert);
@@ -148,7 +158,7 @@ void FenetrePrincipale::modifierStatutArduino(enum EtatArduino etat) {
  * Slot permettant de modifier l'affichage de l'état du guidage
  * @param statut True pour guidage en marche
  */
-void FenetrePrincipale::modifierStatutGuidage(enum EtatGuidage statut) {
+void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
 	switch (statut) {
 	case GUIDAGE_MARCHE:
 		ui->statutGuidage->setPalette(paletteTexteVert);
@@ -209,6 +219,14 @@ void FenetrePrincipale::on_lancerGuidage_clicked() {
 void FenetrePrincipale::on_stopperGuidage_clicked() {
 	emit stopperGuidage();
 }
+void FenetrePrincipale::on_ouvrirParametres_triggered() {
+	emit demanderEnregistrementParametres();
+	Parametres fenetreParametres(this);
+	fenetreParametres.chargerParametres(); // Cette méthode doit être lancée hors du constructeur
+	fenetreParametres.exec();
+	emit demanderChargementParametres();
+}
+
 
 
 void FenetrePrincipale::closeEvent(QCloseEvent* event) {
@@ -271,3 +289,4 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
          return QMainWindow::eventFilter(obj, event);
      }
 }
+

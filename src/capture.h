@@ -18,11 +18,10 @@
 #include "csbigimg.h"
 #include "image.h"
 
-enum EtatCamera {
+typedef enum {
 	CAMERA_CONNEXION_ON,
 	CAMERA_CONNEXION_OFF
-};
-Q_DECLARE_METATYPE(enum EtatCamera); // Pour utiliser ce type comme parametre signal/slot
+} EtatCamera;
 
 class Capture: public QObject {
 	Q_OBJECT
@@ -39,8 +38,6 @@ private:
 
     bool cameraConnectee();
     void capturerEtTrouverPosition();
-	void enregistrerParametres();
-	void lireParametres();
 public:
 	Capture();
 	virtual ~Capture();
@@ -52,15 +49,19 @@ public slots:
 	void deconnecterCamera();
 	bool capturerImage();
 	void trouverPosition();
-	void initialiserObjetCapture();
+	void enregistrerParametres();
+	void chargerParametres();
 private slots:
 	void connexionAuto();
 	void captureEtPosition();
 signals:
 	void message(QString);
 	void stopperGuidage();
-	void envoiEtatCamera(enum EtatCamera);
+	void envoiEtatCamera(EtatCamera);
 	void resultats(Image* img, double l, double c, int diametre, double bruitsignal);
 	void diametreSoleil(int);
 };
+
+Q_DECLARE_METATYPE(EtatCamera); // Pour utiliser ce type comme parametre signal/slot
+
 #endif /* CAPTURE_H_ */
