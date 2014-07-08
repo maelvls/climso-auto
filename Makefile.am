@@ -29,17 +29,17 @@ bin_PROGRAMS=main_qt
 main_qt_SOURCES=\
 	src/arduino.cpp\
 	src/interpol.c\
-	src/csbigcam.cpp src/csbigimg.cpp src/diametre_soleil.c\
+	src/csbigcam.cpp src/csbigimg.cpp\
 	src/exceptions.cpp  src/image.cpp\
 	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
 	src/main_qt_gui.cpp\
 	src/guidage.cpp src/guidage.moc.cpp\
 	src/widgetimage.cpp src/widgetimage.moc.cpp \
 	src/capture.cpp src/capture.moc.cpp src/diametre_soleil.c\
+	src/parametres.cpp src/parametres.moc.cpp\
 	\
 	src/arduino.h\
 	src/interpol.h\
-	src/diametre_soleil.h\
 	src/exceptions.h src/image.h\
 	src/fenetreprincipale.h src/fenetreprincipale_ui.h\
 	src/csbigcam.h src/csbigimg.h\
@@ -47,6 +47,7 @@ main_qt_SOURCES=\
 	src/guidage.h\
 	src/widgetimage.h\
 	src/capture.h src/diametre_soleil.h\
+	src/parametres.h\
 	\
 	src/fenetreprincipale.ui
 
@@ -62,8 +63,8 @@ main_qt_LDADD    = $(QT_LIBS) $(LDADD)
 # Fichiers qui devront être compilés par uic ou moc avant la compilation
 # Voir CONCERNANT Qt au dessus
 BUILT_SOURCES=\
-	src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h\
-	src/guidage.moc.cpp src/widgetimage.moc.cpp\
+	src/fenetreprincipale.moc.cpp src/fenetreprincipale_ui.h src/parametres_ui.h\
+	src/guidage.moc.cpp src/widgetimage.moc.cpp src/parametres.moc.cpp\
 	src/capture.moc.cpp
 
 # Règle perso car la règle présente dans autotroll.mk (%ui_.h: %.ui) ne marche pas
