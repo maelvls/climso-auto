@@ -346,7 +346,7 @@
      <x>0</x>
      <y>0</y>
      <width>701</width>
-     <height>27</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">
@@ -354,12 +354,18 @@
      <string>Menu</string>
     </property>
     <addaction name="ouvrirParametres"/>
+    <addaction name="actionAide"/>
    </widget>
    <addaction name="menuMenu"/>
   </widget>
   <action name="ouvrirParametres">
    <property name="text">
     <string>Paramètres</string>
+   </property>
+  </action>
+  <action name="actionAide">
+   <property name="text">
+    <string>Aide</string>
    </property>
   </action>
  </widget>

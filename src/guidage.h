@@ -22,10 +22,10 @@
 
 #define IMPULSION_PIXEL_H	400 // en ms, durée d'impulsion envoyée
 #define IMPULSION_PIXEL_V	800 //ms (2px pour 1sec)
-#define PIN_NORD			12
-#define	PIN_SUD				11
-#define	PIN_EST				10
-#define PIN_OUEST			9
+#define PIN_NORD			12 // Numéro du pin sur lequel seront envoyées les commandes Nord
+#define	PIN_SUD				11 // Numéro du pin sur lequel seront envoyées les commandes Sud
+#define	PIN_EST				10 // Numéro du pin sur lequel seront envoyées les commandes Est
+#define PIN_OUEST			9 // Numéro du pin sur lequel seront envoyées les commandes Ouest
 #define ORIENTATION_NORD_SUD 		0 // 1 quand le nord correspond au nord, 0 sinon
 #define ORIENTATION_EST_OUEST		0 // 1 quand l'est correspond à l'est, 0 sinon
 #define SEUIL_BRUIT_SIGNAL			0.50 // Seuil Bruit/Signal au dessus lequel le guidage ne peut être effectué (nuages..)
@@ -37,28 +37,28 @@
 #define INCREMENT_RAPIDE	1	// Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
 
 typedef enum {
-	POSITION_COHERANTE,
-	POSITION_INCOHERANTE,
-	POSITION_NON_INITIALISEE
+	POSITION_COHERANTE, // La position courante est fiable vis à vis du bruit/signal
+	POSITION_INCOHERANTE, // La position n'est pas fiable
+	POSITION_NON_INITIALISEE // La position n'a pas été initialiasée auparavant
 } EtatPosition;
 typedef enum {
-	CONSIGNE_OK,
-	CONSIGNE_LOIN,
-	CONSIGNE_DIVERGE,
-	CONSIGNE_NON_INITIALISEE
+	CONSIGNE_OK, // La consigne et la position sont superposés selon le seuil
+	CONSIGNE_LOIN, // La consigne et la position sont éloignés (envoi de commandes)
+	CONSIGNE_DIVERGE, // Éloignement non contrôlé entre consigne et position -> vérifier branchements
+	CONSIGNE_NON_INITIALISEE // La consigne n'a pas été initialiasée auparavant
 } EtatConsigne;
 typedef enum {
-	ARDUINO_CONNEXION_ON,
-	ARDUINO_CONNEXION_OFF,
-	ARDUINO_FICHIER_INTROUV
+	ARDUINO_CONNEXION_ON, // L'arduino est connecté
+	ARDUINO_CONNEXION_OFF, // L'arduino est déconnecté
+	ARDUINO_FICHIER_INTROUV // Impossible d'ouvrir/de lire le fichier Arduino
 } EtatArduino;
 typedef enum {
-	GUIDAGE_MARCHE,
-	GUIDAGE_BESOIN_POSITION,
-	GUIDAGE_ARRET_BRUIT,
-	GUIDAGE_ARRET_NORMAL,
-	GUIDAGE_ARRET_DIVERGE,
-	GUIDAGE_ARRET_PANNE
+	GUIDAGE_MARCHE, // Le guidage est en marche
+	GUIDAGE_BESOIN_POSITION, // Le guidage a besoin d'une position courante du soleil
+	GUIDAGE_ARRET_BRUIT, // Le guidage s'est arrêté pour cause de non-fiabilité (bruit/signal élevé)
+	GUIDAGE_ARRET_NORMAL, // Le guidage s'est arrêté à la demande de l'utilisateur
+	GUIDAGE_ARRET_DIVERGE, // Le guidage s'est arrêté à cause de l'éloignement non contrôlé consigne/position
+	GUIDAGE_ARRET_PANNE // Le guidage s'est arrêté car l'arduino ou la caméra fait défaut
 } EtatGuidage;
 
 Q_DECLARE_METATYPE(EtatGuidage);

@@ -38,6 +38,7 @@ private:
 
     bool cameraConnectee();
     void capturerEtTrouverPosition();
+    void trouverDiametreParRecherche();
 public:
 	Capture();
 	virtual ~Capture();

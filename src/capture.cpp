@@ -171,6 +171,15 @@ void Capture::trouverPosition() {
 }
 
 QTime t; // pour debug de durée de correl/capture
+
+/**
+ * Cherche par recherche de minimum le diamètre le plus adapté
+ */
+void Capture::trouverDiametreParRecherche() {
+	// FIXME vérifier existance img
+	// On échantillonne
+}
+
 void Capture::captureEtPosition() {
 	connexionAuto();
 	//t.start();
@@ -195,3 +204,5 @@ void Capture::modifierDiametre(int diametre) {
 	delete ref;
 	this->diametre = diametre;
 }
+
+void Capture
