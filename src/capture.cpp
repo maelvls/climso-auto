@@ -90,7 +90,7 @@ void Capture::connecterCamera() {
         cam->SetFastReadout(true);
         cam->SetABGState((ABG_STATE7)ABG_LOW7);
 
-        emit message("Camera connectee");
+        emit message("Camera connectée");
         emit envoiEtatCamera(CAMERA_CONNEXION_ON);
     }
 }
@@ -98,12 +98,12 @@ void Capture::connecterCamera() {
 void Capture::deconnecterCamera() {
     if(cam) {
         cam->CloseDevice();
-        emit message("Camera deconnectee");
+        emit message("Camera deconnectée");
         delete cam; cam = NULL;
         emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
     }
     else {
-        emit message("Aucune camera n'est connectee");
+        emit message("Aucune camera n'est connectée");
     }
 }
 
@@ -129,7 +129,7 @@ void Capture::stopperCapture() {
 }
 bool Capture::capturerImage() {
     if (!cameraConnectee()) {
-        emit message("La camera n'est pas connectee");
+        emit message("La caméra n'est pas connectée");
         return false;
     }
     CSBIGImg* img_sbig = new CSBIGImg();
@@ -157,7 +157,9 @@ void Capture::trouverPosition() {
 	correl->maxParInterpolation(&position_l, &position_c);
 	double bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
 	// ENVOI DES RESULTATS
-    emit resultats(img,position_l,position_c,diametre,bruitsignal);
+	// XXX L'envoi de l'image DOIT se faire par recopie car sinon un autre thread pourra
+	// lire un objet n'existant plus
+    emit resultats(*img,position_l,position_c,diametre,bruitsignal);
 
 #if DEBUG
 	img->versTiff(emplacement+"t0_obj.tif");
@@ -205,4 +207,3 @@ void Capture::modifierDiametre(int diametre) {
 	this->diametre = diametre;
 }
 
-void Capture

@@ -60,20 +60,19 @@ public:
     ~Image();
 
     // Opérations sur les images
-    void copier(Image& src, int ligne_0, int col_0, int hauteur, int largeur);
-    void copier(Image& src);
+    void copier(const Image& src, int ligne_0, int col_0, int hauteur, int largeur);
+    void copier(const Image& src);
     void init(int val);
     void normaliser();
     Image* reduire(int facteur_binning);
-    void minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max);
-    void maxPixel(int *l, int *c);
+    void minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max) const;
+    void maxPixel(int *l, int *c) const;
     void tracerDonut(int l_centre, int c_centre, double freq_min, double marge_int, double freq_max, double marge_ext);
     static Image* tracerFormeSoleil(int diametre);
 
     // Correlations ecrites par Mael Valais (pour apprendre..)
-    Image* correlation_simple(Image& p, float seuil_ref);
-    Image* correlation_rapide(Image& reference, float seuil_ref); // Correlation optimisée
-    Image* correlation_rapide_centree(Image& reference, float seuil_ref); // Correlation optimisée
+    void correlation_rapide(const Image& objet, const Image& reference, float seuil_ref);
+    void correlation_rapide_centree(const Image& objet, const Image& reference, float seuil_ref);
     Image* convoluer(const int *noyau, int taille);
     Image* convoluerParDerivee();
     Image* deriveeCarre();
@@ -93,10 +92,10 @@ public:
     double** versTableauDeDouble();
 
     // Getters/Setters
-    int getLignes()  {return lignes; }
-    int getColonnes() { return colonnes;}
-    MonDouble* ptr() { return img; }
-    MonDouble getPix(int l, int c) { return img[l*colonnes + c];}
+    int getLignes() const {return lignes; }
+    int getColonnes() const { return colonnes;}
+    MonDouble* ptr() const { return img; }
+    MonDouble getPix(int l, int c) const { return img[l*colonnes + c];}
     void setPix(int l, int c, MonDouble intensite) { img[l*colonnes + c]=intensite;}
 
     void afficher(); // Affiche les intensités brutes, pour debug

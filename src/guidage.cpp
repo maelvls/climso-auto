@@ -249,30 +249,6 @@ void Guidage::envoyerCmd(int pin, int duree) {
 	}
 }
 
-void Guidage::traiterResultatsCapture(Image* img, double l, double c,
-		int diametre, double bruitsignal) {
-	this->diametre = diametre;
-	position_l << l;
-	position_c << c;
-	this->img = img;
-	this->bruitsignal = bruitsignal;
-	emit signalBruit(bruitsignal);
-	emit imageSoleil(img);
-	if (bruitsignal > SEUIL_BRUIT_SIGNAL) {
-		stopperGuidage();
-		etatPosition = POSITION_INCOHERANTE;
-		etatGuidage = GUIDAGE_ARRET_BRUIT;
-	}
-	else {
-		etatPosition = POSITION_COHERANTE;
-	}
-	afficherImageSoleilEtReperes();
-	// Si l'historique des positions contient assez de poitions, on envoie le guidage
-	if(etatGuidage == GUIDAGE_MARCHE && position_l.length() > ECHANTILLONS_PAR_GUIDAGE) {
-		guider();
-	}
-}
-
 void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent) {
 	if (consigne_l == 0 || consigne_c == 0 || img == NULL) {
 		emit message("Impossible de modifier la consigne : aucune position");
@@ -303,4 +279,27 @@ void Guidage::afficherImageSoleilEtReperes() {
 	emit repereConsigne(consigne_c/img->getColonnes(),
 			consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),etatConsigne);
 
+}
+
+void Guidage::traiterResultatsCapture(Image& img, double l, double c, int diametre, double bruitsignal) {
+	// Copie de l'image : il ne faut pas que l'objet existe dans les deux threads en même temps
+	this->img->copier(img);
+	this->diametre = diametre;
+	position_l << l;
+	position_c << c;
+	this->bruitsignal = bruitsignal;
+	if (bruitsignal > SEUIL_BRUIT_SIGNAL) {
+		stopperGuidage();
+		etatPosition = POSITION_INCOHERANTE;
+		etatGuidage = GUIDAGE_ARRET_BRUIT;
+	}
+	else {
+		etatPosition = POSITION_COHERANTE;
+	}
+	afficherImageSoleilEtReperes();
+	emit signalBruit(bruitsignal);
+	// Si l'historique des positions contient assez de poitions, on envoie un guidage
+	if(etatGuidage == GUIDAGE_MARCHE && position_l.length() > ECHANTILLONS_PAR_GUIDAGE) {
+		guider();
+	}
 }

@@ -76,7 +76,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(this,SIGNAL(demanderChargementParametres()),capture,SLOT(chargerParametres()));
 
     // Signaux-slots entre capture et guidage
-    QObject::connect(capture,SIGNAL(resultats(Image*,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(Image*,double,double,int,double)));
+    QObject::connect(capture,SIGNAL(resultats(Image&,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(Image&,double,double,int,double)));
     QObject::connect(capture,SIGNAL(stopperGuidage()),guidage, SLOT(stopperGuidage()));
 
     // Signaux-slots entre les éléments de l'interface

@@ -104,7 +104,7 @@ public slots:
 	void lancerGuidage();
 	void stopperGuidage();
 	void modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent);
-	void traiterResultatsCapture(Image* img, double l, double c, int diametre,double bruitsignal);
+	void traiterResultatsCapture(Image &img, double l, double c, int diametre,double bruitsignal);
 	// arduino
 	void connecterArduino(QString nom);
 	void deconnecterArduino();

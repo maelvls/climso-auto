@@ -59,7 +59,7 @@ signals:
 	void message(QString);
 	void stopperGuidage();
 	void envoiEtatCamera(EtatCamera);
-	void resultats(Image* img, double l, double c, int diametre, double bruitsignal);
+	void resultats(Image &img, double l, double c, int diametre, double bruitsignal);
 	void diametreSoleil(int);
 };
 

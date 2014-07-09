@@ -274,13 +274,14 @@ unsigned char* Image::versUchar() {
  * Copie une image src dans l'image receveuse avec le décalage
  * à partir d'en haut à gauche. Cela permet de prendre une partie
  * de l'image src et la mettre dans l'image receuveuse
+ * @note l'image receveuse doit avoir une taille non nulle
  * @param src
  * @param l_decal
  * @param c_decal
  * @param hauteur
  * @param largeur
  */
-void Image::copier(Image& src, int l_decal, int c_decal, int hauteur, int largeur) {
+void Image::copier(const Image& src, int l_decal, int c_decal, int hauteur, int largeur) {
     int haut_cpy = min(hauteur,src.lignes);
     int larg_cpy = min(largeur, src.colonnes);
     
@@ -299,8 +300,9 @@ void Image::copier(Image& src, int l_decal, int c_decal, int hauteur, int largeu
 /**
  * Copie intégralement l'image src dans l'image receuveuse (dans la limite de sa taille)
  * @param src L'image à copier
+ *
  */
-void Image::copier(Image& src) {
+void Image::copier(const Image& src) {
 	copier(src,0,0,src.lignes,src.colonnes);
 }
 
@@ -316,147 +318,110 @@ void Image::init(int val) {
 	}
 }
 
-
 /**
- * Correlation de l'image receveuse avec l'image référence,
- * avec normalisation de l'espace de correlation sur [0, INTENSITE_MAX]
- * @param reference L'image de référence
- * @param seuil_ref Le seuil minimal de prise en compte des valeurs des pixles de la référence, entre 0 et 1
- * @return L'espace de corrélation
+ * Crée talbeau de doubles et l'initialise à 0
+ * @param lignes
+ * @param colonnes
+ * @return
  */
-Image* Image::correlation_simple(Image& reference, float seuil_ref) {
-	Image* obj = this;
-	Image* ref = new Image(reference);
-
-	ref->normaliser(); // normalisation pour le seuil
-	MonDouble seuil_relatif = seuil_ref*INTENSITE_MAX;
-
-
-	/*
-	 * Pseudo-code 1 : la convolution par la définition standard (c(x,y) = intégrale f(s)g(x-s))
-	 * 	Pour tous les décalages possibles entre obj (==g) et ref (==f),
-	 * 		Pour tous les point de ref,
-	 * 			Si le point décalé de ref dans obj existe
-	 * 				On ajoute le produit du point d'obj décalé et celui de ref dans l'espace de convolution
-	 * 			Fin si
-	 * 		Fin boucle
-	 * 	Fin boucle
-	 *
-	 * On a inversé les deux boucles pour utiliser la partimonie sur ref :
-	 *
-	 *	Pour tous les point de ref,
-	 *		Si le point de ref est au dessus du seuil,
-	 *			Pour tous les décalages possibles entre obj et ref,
-	 * 				Si le point décalé de ref dans obj existe
-	 * 					On ajoute le produit du point d'obj décalé et celui de ref dans l'espace de convolution
-	 * 				Fin si
-	 * 			Fin boucle
-	 * 		Fin si
-	 * 	Fin boucle
-	 *
-	 * Ici,
-	 * 		(l_ref,c_ref) parcourt la référence,
-	 * 		(l_decalage,c_decalage) represente les vecteurs décalage possibles entre obj(0,0) et ref(0,0)
-	 * Ensuite, deux "alias" :
-	 * 		(l_obj,c_obj) est le point dans obj correspondant au point dans ref avec le décalage,
-	 * 		(l_convol,c_convol) est le point dans convol (qui est l'espace de convolution) correspondant
-	 * 			à une valeur du décalage (l_decalage,c_decalage). Tous les vecteurs décalage ont une valeur
-	 * 			dans l'image convol.
-	 */
-    Image *convol = new Image(obj->getLignes()+ref->getLignes()-1, obj->getColonnes()+ref->getColonnes()-1);
-	convol->init(0);
-    
-	double temps_calcul = (double)(clock());
-
-
-	for (int l_ref=0; l_ref < ref->lignes; l_ref++) {
-		for (int c_ref=0; c_ref < ref->colonnes; c_ref++) {
-			if(ref->getPix(l_ref,c_ref) > seuil_relatif) {
-				for (int l_decalage=-ref->lignes; l_decalage < obj->lignes; l_decalage++) {
-					for (int c_decalage=-ref->colonnes; c_decalage < obj->colonnes; c_decalage++) {
-						int l_obj = l_ref+l_decalage, c_obj = c_ref+c_decalage;
-						int l_convol = l_decalage+ref->lignes-1, c_convol = c_decalage + ref->colonnes-1;
-                        
-						if(l_obj >= 0 && l_obj < obj->lignes && c_obj >= 0 && c_obj < obj->colonnes) {
-							convol->setPix(l_convol,c_convol,
-									convol->getPix(l_convol,c_convol)
-									+ ref->getPix(l_ref,c_ref)
-									* obj->getPix(l_obj,c_obj));
-						}
-					}
-				}
-			}
+double** creerTableauDoubles(int lignes, int colonnes);
+double** creerTableauDoubles(int lignes, int colonnes) {
+	double** tab = new double*[lignes];
+	for (int lign=0; lign< lignes; lign++) {
+		tab[lign] = new double[colonnes];
+		for (int col=0; col< colonnes; col++) {
+			tab[lign][col] = 0;
 		}
 	}
-
-	printf ("Temps calcul = %4.2f s \n",  (double)(clock() - temps_calcul) /CLOCKS_PER_SEC);
-
-    delete ref;
-	convol->normaliser();
-	return convol;
+	return tab;
+}
+void detruireTableauDoubles(double **tab, int lignes, int colonnes);
+void detruireTableauDoubles(double **tab, int lignes, int colonnes) {
+	for(int l=0; l < lignes;l++)
+		delete [] tab[l];
+	delete [] tab;
 }
 
 /**
- * Correlation de l'image receveuse avec l'image référence,
- * avec normalisation de l'espace de correlation sur [0, INTENSITE_MAX]
+ * Correlation d'une image objet avec l'image référence vers l'image receveuse
  * et optimisation par utilisation de pointeurs au lieu des getters/setters
+ * @param objet L'image objet
  * @param reference L'image de référence
  * @param seuil_ref Le seuil minimal de prise en compte des valeurs des pixles de la référence, entre 0 et 1
  * @return L'espace de corrélation
  */
-Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
-	Image* obj = this;
-	Image* ref = new Image(reference);
+void Image::correlation_rapide(const Image& obj, const Image& ref, float seuil_ref) {
+	// On gère un tableau interne (résultat de la correl) à la fonction
+	static double* correl = NULL;
+	static int correl_lignes = 0; // Hauteur = 0 lors de la première entrée dans la fonction
+	static int correl_colonnes = 0; // Largeur
+	if(correl
+			&& correl_lignes == obj.lignes+ref.lignes-1
+			&& correl_colonnes == obj.colonnes+ref.colonnes-1)
+	{
+		// On met à 0 l'ensemble du tableau
+		for (int i=0; i<correl_lignes*correl_colonnes; i++) {
+			correl[i] = 0;
+		}
+	} else {
+		if(correl) delete [] correl;
+		correl_lignes = obj.lignes+ref.lignes-1;
+		correl_colonnes = obj.colonnes+ref.colonnes-1;
+		// On crée le tableau et on le met à 0
+		correl = new double[correl_lignes*correl_colonnes];
+	}
+
+	// Calcul du seuil à partir duquel on prend en compte les valeurs de ref
+	int min_l, min_c, max_l, max_c;
+	ref.minMaxPixel(&min_l, &min_c, &max_l, &max_c);
+	MonDouble seuil_relatif = ref.getPix(min_l, min_c)
+			+ seuil_ref*(ref.getPix(max_l, max_c)-ref.getPix(min_l, min_c));
     
-	ref->normaliser(); // normalisation pour le seuil
-	MonDouble seuil_relatif = seuil_ref*INTENSITE_MAX;
+
     
-    Image *convol = new Image(obj->getLignes()+ref->getLignes()-1, obj->getColonnes()+ref->getColonnes()-1);
-	convol->init(0);
-    
-	int haut_convol = obj->lignes+ref->lignes-1;
-	int larg_convol = obj->colonnes+ref->colonnes-1;
+	int haut_convol = obj.lignes+ref.lignes-1;
+	int larg_convol = obj.colonnes+ref.colonnes-1;
 #if DEBUG
 	double temps_calcul = (double)(clock());
 #endif
 
-    double nbboucles=0;
+    double nbboucles = 0;
 
-	for (int l_ref=0; l_ref < ref->lignes; l_ref++) {
-		for (int c_ref=0; c_ref < ref->colonnes; c_ref++) {
-            int ref_pix = ref->getPix(l_ref,c_ref);
+	for (int l_ref=0; l_ref < ref.lignes; l_ref++) {
+		for (int c_ref=0; c_ref < ref.colonnes; c_ref++) {
+            int ref_pix = ref.getPix(l_ref,c_ref);
 			if(ref_pix > seuil_relatif) {
 				// On calcule quels point de "convol" correspondent à des décalages
 				// valides (c'est à dire provoquant une intersection entre "ref" et "obj") ;
 				// Un décalage est un vecteur (l_decal, c_decal) équivalent à (l_convol,c_convol)
 				// entre ref(nblignes-1,nbcolonnes-1) et obj(0,0)
 				//
-				//			l_obj = l_ref+l_decalage-(ref->lignes-1);       (1)
-				//			c_obj = c_ref+c_decalage-(ref->colonnes-1);     (2)
+				//			l_obj = l_ref+l_decalage-(ref.lignes-1);       (1)
+				//			c_obj = c_ref+c_decalage-(ref.colonnes-1);     (2)
                 
-				int l_decal_deb = max(0,        0-l_ref+(ref->lignes-1)); // (cf (1) inversée)
-				int c_decal_deb = max(0,        0-c_ref+(ref->colonnes-1));
-				int l_decal_fin = min(haut_convol, 	obj->lignes-l_ref+(ref->lignes-1));
-				int c_decal_fin = min(larg_convol, 	obj->colonnes-c_ref+(ref->colonnes-1));
+				int l_decal_deb = max(0,        0-l_ref+(ref.lignes-1)); // (cf (1) inversée)
+				int c_decal_deb = max(0,        0-c_ref+(ref.colonnes-1));
+				int l_decal_fin = min(haut_convol, 	obj.lignes-l_ref+(ref.lignes-1));
+				int c_decal_fin = min(larg_convol, 	obj.colonnes-c_ref+(ref.colonnes-1));
                 int haut_decal = l_decal_fin - l_decal_deb;
                 int larg_decal = c_decal_fin - c_decal_deb;
                 
                 // LES DIFFICULTÉS SONT DE TROUVER LES BONS POINTEURS INITIAUX
-                MonDouble* convol_pt = convol->ptr() + l_decal_deb*convol->colonnes + c_decal_deb;
-                int l_obj_pt_initial = l_ref+l_decal_deb-(ref->lignes-1);
-                int c_obj_pt_initial = c_ref+c_decal_deb-(ref->colonnes-1);
-                MonDouble* obj_pt = obj->ptr() + l_obj_pt_initial*obj->colonnes + c_obj_pt_initial;
-                for (int l_decal=0; l_decal < haut_decal; l_decal++) {
-                	for (int c_decal=0; c_decal < larg_decal; c_decal++) {
-                		*convol_pt += ref_pix * (*obj_pt);
+                double* correl_pt = correl + l_decal_deb*correl_colonnes + c_decal_deb;
+                int l_obj_pt_initial = l_ref+l_decal_deb-(ref.lignes-1);
+                int c_obj_pt_initial = c_ref+c_decal_deb-(ref.colonnes-1);
+                MonDouble* obj_pt = obj.ptr() + l_obj_pt_initial*obj.colonnes + c_obj_pt_initial;
+                for (int l_decal=l_decal_deb; l_decal < l_decal_fin; l_decal++) {
+                	for (int c_decal=c_decal_deb; c_decal < c_decal_fin; c_decal++) {
+                		*correl_pt += ref_pix * (*obj_pt);
                 		obj_pt += 1;
-                		convol_pt += 1;
+                		correl_pt += 1;
                 		nbboucles++;
                 	}
                 	// PUIS D'AVANCER CES POINTEURS DE LA BONNE FAÇON QUAND ON PASSE A LA LIGNE SUIVANTE
                     // On passe à la ligne suivante sur convol et obj
                 	//obj_pt += 1; // ATTENTION, le for avance de 1, donc pas besoin (en sortie de for) d'avancer de nouveau
-                	convol_pt += convol->colonnes - larg_decal; // ATTENTION, pas de +1 non plus ici
+                	correl_pt += correl_colonnes - larg_decal; // ATTENTION, pas de +1 non plus ici
                 }
 			}
 		}
@@ -464,9 +429,19 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
 #if DEBUG
 	printf ("Temps calcul = %4.2f s (%.0f boucles)\n",  (double)(clock() - temps_calcul) /CLOCKS_PER_SEC, nbboucles);
 #endif
-	delete ref;
-	convol->normaliser();
-	return convol;
+
+	// On copie la correlation dans l'image receveuse en vérifiant si elle est déjà allouée
+	if(not(this->lignes == correl_lignes && this->colonnes == correl_colonnes)) {
+		if(this->img) {
+			delete [] this->img;
+		}
+		this->lignes = correl_lignes;
+		this->colonnes = correl_colonnes;
+		this->img = new MonDouble[lignes*colonnes];
+	}
+	for(int i = 0; i < lignes*colonnes; i++) {
+		this->img[i] = (MonDouble)correl[i];
+	}
 }
 
 /**
@@ -477,13 +452,12 @@ Image* Image::correlation_rapide(Image& reference, float seuil_ref) {
  * @param seuil_ref Le seuil minimal de prise en compte des valeurs des pixles de la référence, entre 0 et 1
  * @return L'espace de corrélation
  */
-Image* Image::correlation_rapide_centree(Image& reference, float seuil_ref) {
-	Image* img = correlation_rapide(reference,seuil_ref);
+void Image::correlation_rapide_centree(const Image& obj, const Image& ref, float seuil_ref) {
+	this->correlation_rapide(obj,ref,seuil_ref);
 	// FIXME: L'image "découpée" est environ 1 à 2 pixels en dessous de l'image qu'on devrait avoir (comparaison avec algo LK)
-	Image* img_centree = new Image(*img,reference.lignes/2,reference.colonnes/2,img->lignes-(reference.lignes-1),img->colonnes - (reference.colonnes-1));
-	img_centree->versTiff("t_obj_centre.tif");
+	this->copier(*this,ref.lignes/2,ref.colonnes/2,this->lignes-(ref.lignes-1),this->colonnes - (ref.colonnes-1));
+	this->versTiff("t_obj_centre.tif");
 	delete img;
-	return img_centree;
 }
 
 #if INCLUDE_CONVOL
@@ -560,7 +534,7 @@ void Image::normaliser() {
  * @param l_max Ligne du max (ou NULL)
  * @param c_max Colonne du max (ou NULL)
  */
-void Image::minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max) {
+void Image::minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max) const {
     if(l_min && c_min)
     	*l_min = *c_min = 0;
 	if(l_max && c_max)
@@ -577,7 +551,7 @@ void Image::minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max) {
         }
     }
 }
-void Image::maxPixel(int *l, int *c) {
+void Image::maxPixel(int *l, int *c) const {
 	minMaxPixel(NULL,NULL,l,c);
 }
 
