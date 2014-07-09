@@ -355,10 +355,9 @@ void Image::correlation_rapide(const Image& obj, const Image& ref, float seuil_r
 	static double* correl = NULL;
 	static int correl_lignes = 0; // Hauteur = 0 lors de la première entrée dans la fonction
 	static int correl_colonnes = 0; // Largeur
-	if(correl
-			&& correl_lignes == obj.lignes+ref.lignes-1
-			&& correl_colonnes == obj.colonnes+ref.colonnes-1)
-	{
+	if(correl_lignes == obj.lignes+ref.lignes-1
+			&& correl_colonnes == obj.colonnes+ref.colonnes-1
+			&& correl) {
 		// On met à 0 l'ensemble du tableau
 		for (int i=0; i<correl_lignes*correl_colonnes; i++) {
 			correl[i] = 0;
@@ -376,8 +375,6 @@ void Image::correlation_rapide(const Image& obj, const Image& ref, float seuil_r
 	ref.minMaxPixel(&min_l, &min_c, &max_l, &max_c);
 	MonDouble seuil_relatif = ref.getPix(min_l, min_c)
 			+ seuil_ref*(ref.getPix(max_l, max_c)-ref.getPix(min_l, min_c));
-    
-
     
 	int haut_convol = obj.lignes+ref.lignes-1;
 	int larg_convol = obj.colonnes+ref.colonnes-1;
@@ -430,7 +427,7 @@ void Image::correlation_rapide(const Image& obj, const Image& ref, float seuil_r
 	printf ("Temps calcul = %4.2f s (%.0f boucles)\n",  (double)(clock() - temps_calcul) /CLOCKS_PER_SEC, nbboucles);
 #endif
 
-	// On copie la correlation dans l'image receveuse en vérifiant si elle est déjà allouée
+	// On vérifie si l'image receveuse est allouée ou pas
 	if(not(this->lignes == correl_lignes && this->colonnes == correl_colonnes)) {
 		if(this->img) {
 			delete [] this->img;
@@ -439,8 +436,10 @@ void Image::correlation_rapide(const Image& obj, const Image& ref, float seuil_r
 		this->colonnes = correl_colonnes;
 		this->img = new MonDouble[lignes*colonnes];
 	}
-	for(int i = 0; i < lignes*colonnes; i++) {
-		this->img[i] = (MonDouble)correl[i];
+	// Et on copie en normalisant
+	for(int i = 0; i < lignes*colonnes; i++) { // Copie et normalisation
+		this->img[i] = (MonDouble)(correl[i]);
+		//(getPix(l, c)-min)*INTENSITE_MAX/(max-min)
 	}
 }
 
