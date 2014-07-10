@@ -29,7 +29,6 @@ string emplacement_capture = "";
 Guidage::Guidage() {
 	timerConnexionAuto.setInterval(PERIODE_ENTRE_CONNEXIONS);
 	arduino = NULL;
-	img = NULL;
 
 	consigne_c = consigne_l = 0;
 	bruitsignal = 1;
@@ -95,7 +94,7 @@ void Guidage::connexionAuto() {
 }
 
 void Guidage::lancerGuidage() {
-	if (img == NULL || position_c.isEmpty() || position_l.isEmpty()) {
+	if (img.isNull() || position_c.isEmpty() || position_l.isEmpty()) {
 		emit message(
 				"Impossible de guider, aucune position précédente");
 		etatGuidage = GUIDAGE_BESOIN_POSITION;
@@ -249,7 +248,7 @@ void Guidage::envoyerCmd(int pin, int duree) {
 	}
 }
 
-void Guidage::traiterResultatsCapture(Image* img, double l, double c,
+void Guidage::traiterResultatsCapture(QImage img, double l, double c,
 		int diametre, double bruitsignal) {
 	this->diametre = diametre;
 	position_l << l;
@@ -274,7 +273,7 @@ void Guidage::traiterResultatsCapture(Image* img, double l, double c,
 }
 
 void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent) {
-	if (consigne_l == 0 || consigne_c == 0 || img == NULL) {
+	if (consigne_l == 0 || consigne_c == 0 || img.isNull()) {
 		emit message("Impossible de modifier la consigne : aucune position");
 		return;
 	}
@@ -298,9 +297,9 @@ QStringList Guidage::chercherFichiersArduino() {
 }
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
-	emit repereSoleil(position_c.last()/img->getColonnes(),
-			position_l.last()/img->getLignes(),((float)diametre)/img->getColonnes(),etatPosition);
-	emit repereConsigne(consigne_c/img->getColonnes(),
-			consigne_l/img->getLignes(),((float)diametre)/img->getColonnes(),etatConsigne);
+	emit repereSoleil(position_c.last()/img.width(),
+			position_l.last()/img.height(),((float)diametre)/img.width(),etatPosition);
+	emit repereConsigne(consigne_c/img.width(),
+			consigne_l/img.height(),((float)diametre)/img.width(),etatConsigne);
 
 }

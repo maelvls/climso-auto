@@ -146,6 +146,16 @@ bool Capture::capturerImage() {
 	return true;
 }
 
+QImage versQImage(Image* img) {
+	unsigned char *img_uchar = img->versUchar();
+	// Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
+	QImage *temp = new QImage(img_uchar, img->getColonnes(), img->getLignes(),img->getColonnes(), QImage::Format_Indexed8);
+	for(int i=0;i<256;++i) { // Pour construire une image en nuances de gris (n'existe pas sinon sous Qt)
+		temp->setColor(i, qRgb(i,i,i));
+	}
+	return *temp;
+}
+
 void Capture::trouverPosition() {
 	if(diametre == 0)
 		modifierDiametre(DIAMETRE_DEFAUT);
@@ -156,8 +166,10 @@ void Capture::trouverPosition() {
 	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, SEUIL_CORRELATION);
 	correl->maxParInterpolation(&position_l, &position_c);
 	double bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
+
 	// ENVOI DES RESULTATS
-    emit resultats(img,position_l,position_c,diametre,bruitsignal);
+    emit resultats(versQImage(img),position_l,position_c,diametre,bruitsignal);
+
 
 #if DEBUG
 	img->versTiff(emplacement+"t0_obj.tif");
@@ -204,5 +216,3 @@ void Capture::modifierDiametre(int diametre) {
 	delete ref;
 	this->diametre = diametre;
 }
-
-void Capture

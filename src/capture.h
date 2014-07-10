@@ -13,6 +13,7 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QTime>
 #include <QtCore/QMetaType>
+#include <QtGui/QImage>
 
 #include "csbigcam.h"
 #include "csbigimg.h"
@@ -59,7 +60,7 @@ signals:
 	void message(QString);
 	void stopperGuidage();
 	void envoiEtatCamera(EtatCamera);
-	void resultats(Image* img, double l, double c, int diametre, double bruitsignal);
+	void resultats(QImage img, double l, double c, int diametre, double bruitsignal);
 	void diametreSoleil(int);
 };
 

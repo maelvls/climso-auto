@@ -17,8 +17,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QTime>
 #include <QtCore/QMetaType>
+#include <QtGui/QImage>
 #include "arduino.h"
-#include "image.h"
 
 #define IMPULSION_PIXEL_H	400 // en ms, durée d'impulsion envoyée
 #define IMPULSION_PIXEL_V	800 //ms (2px pour 1sec)
@@ -74,7 +74,7 @@ private:
 
 	// Résultats des captures envoyées par Capture
 	double consigne_l, consigne_c;
-	Image* img;	// Image envoyée par la classe Capture par le signal resultat()
+	QImage img;	// Image envoyée par la classe Capture par le signal resultat()
 	QList<double> position_l, position_c; // Historique des positions
 	double bruitsignal;
 	int diametre; // Diametre du soleil en pixels pour l'affichage lorsqu'on utilisera repereSoleil(...)
@@ -104,7 +104,7 @@ public slots:
 	void lancerGuidage();
 	void stopperGuidage();
 	void modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent);
-	void traiterResultatsCapture(Image* img, double l, double c, int diametre,double bruitsignal);
+	void traiterResultatsCapture(QImage img, double l, double c, int diametre,double bruitsignal);
 	// arduino
 	void connecterArduino(QString nom);
 	void deconnecterArduino();
@@ -119,7 +119,7 @@ signals:
 	void message(QString msg);
 	void envoiEtatArduino(EtatArduino);
 	void envoiEtatGuidage(EtatGuidage);
-	void imageSoleil(Image*);
+	void imageSoleil(QImage);
 	void repereSoleil(float pourcent_x, float pourcent_y,float diametre_pourcent_x, EtatPosition);
 	void repereConsigne(float pourcent_x, float pourcent_y,float diametre_pourcent_x, EtatConsigne);
 	void signalBruit(double);

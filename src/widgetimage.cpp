@@ -24,22 +24,12 @@ WidgetImage::WidgetImage(QWidget* parent):QLabel(parent) {
 WidgetImage::~WidgetImage() {
 }
 
-void WidgetImage::afficherImageSoleil(Image* imgOrig) {
-	Image* img = new Image(*imgOrig);
-	unsigned char *img_uchar = img->versUchar();
-	this->setAutoFillBackground(true);
-	// Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
-	QImage *temp = new QImage(img_uchar, img->getColonnes(), img->getLignes(),img->getColonnes(), QImage::Format_Indexed8);
-	for(int i=0;i<256;++i) { // Pour construire une image en nuances de gris (n'existe pas sinon sous Qt)
-		temp->setColor(i, qRgb(i,i,i));
-	}
-	QImage image = temp->scaled(this->width(),this->height(),Qt::KeepAspectRatio); // FIXME fuite mémoire ???
+void WidgetImage::afficherImageSoleil(QImage img) {
+	QImage image = img.scaled(this->width(),this->height(),Qt::KeepAspectRatio); // FIXME fuite mémoire ???
 	rawImage = QPixmap::fromImage(image,Qt::AutoColor);
 	this->setPixmap(rawImage); // On affiche
-
-	delete img;
-	delete temp;
-
+	this->setAutoFillBackground(true);
+	// FIXME: faut il delete des trucs ?
 }
 
 void WidgetImage::afficherRepereConsigne(float x_pourcent, float y_pourcent, float diametre_pourcent_x,EtatConsigne etatConsigne) {

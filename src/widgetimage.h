@@ -16,7 +16,6 @@
 
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
-#include "image.h"
 #include "guidage.h"
 
 class WidgetImage: public QLabel {
@@ -28,7 +27,7 @@ public:
 	WidgetImage(QWidget *parent = 0);
 	virtual ~WidgetImage();
 public slots:
-	void afficherImageSoleil(Image* img);
+	void afficherImageSoleil(QImage img);
 	void afficherRepereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x, EtatPosition);
 	void afficherRepereConsigne(float pourcent_x, float pourcent_y, float diametre_pourcent_x, EtatConsigne);
 
