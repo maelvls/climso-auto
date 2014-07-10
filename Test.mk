@@ -1,15 +1,16 @@
-
+BIN=main_qt
+CPPFLAGS=-DDEBUG
 %.o: %.c
-	gcc -o $@ -c $< -g
+	gcc -o $@ -c $< -g $(CPPFLAGS)
 %.o: %.cpp
-	g++ -o $@ -c $< -g
+	g++ -o $@ -c $< -g $(CPPFLAGS)
 
-all: src/interpol.o src/convol.o src/image.o src/main_image.o src/exceptions.cpp
-	g++ $^ -o a.out -ltiff -lm
+all: src/interpol.o src/image.o src/main_image.o src/exceptions.cpp
+	g++ $^ -o $(BIN) -ltiff -lm
 
 clean:
 	rm -f src/*.o
-	rm -f a.out
+	rm -f $(BIN)
 
 # Les fichiers de dépendance .d (cc -E appelle le pré-processeur)
 #		$(CC) -E -MM $^ -MF leFichierDesDependances.d

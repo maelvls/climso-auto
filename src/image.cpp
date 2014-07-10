@@ -436,10 +436,15 @@ void Image::correlation_rapide(const Image& obj, const Image& ref, float seuil_r
 		this->colonnes = correl_colonnes;
 		this->img = new MonDouble[lignes*colonnes];
 	}
+	// On cherche le min et le max
+	double min = correl[0], max = correl[0];
+	for(int i = 0; i < lignes*colonnes; i++) {
+		if(correl[i] < min) min = correl[i];
+		if(correl[i] > max) max = correl[i];
+	}
 	// Et on copie en normalisant
 	for(int i = 0; i < lignes*colonnes; i++) { // Copie et normalisation
-		this->img[i] = (MonDouble)(correl[i]);
-		//(getPix(l, c)-min)*INTENSITE_MAX/(max-min)
+		this->img[i] = (MonDouble)((correl[i]-min)*INTENSITE_MAX/(max-min));
 	}
 }
 
