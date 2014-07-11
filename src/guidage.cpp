@@ -140,6 +140,21 @@ void Guidage::consigneReset() {
 	afficherImageSoleilEtReperes();
 }
 
+/**
+ * Cette méthode est appelée lorsque le nombre d'échantillons (de positions capturées)
+ * est suffisant ; ce test se fait dans la fonction qui reçoit les résultats de Capture.
+ *
+ * @note Durée d'envoi des impulsions : la méthode calcule combien de temps a duré la
+ * dernière série d'échantillons. Cette durée correspondra à la durée  maximale envoyée
+ * à l'arduino en cas de décalage trop grand.
+ *
+ * @note Arrêt automatique en cas de divergence : la méthode historise les décalages qu'elle
+ * a calculé et compare le décalage calculé il y a 10 itérations avec celui, en moyenne, entre
+ * la 9ème et l'itération courante
+ *
+ * @note Choix de la direction : en fonction des parametres orientVertiInversee et
+ * orientHorizInversee, la méthode inverse ou pas les commandes envoyées.
+ */
 void Guidage::guider() {
 	if (!arduinoConnecte()) {
 		emit message("Verifiez les connexions avec l'arduino");
@@ -211,6 +226,9 @@ void Guidage::guider() {
 
 	// La duree entre deux corrections ne doit pas depasser la durée entre
 	// deux séries d'échantillons (tempsDepuisDernierGuidage ici)
+	if(tempsDepuisDernierGuidage.elapsed() > 5000) {
+		tempsDepuisDernierGuidage.restart();
+	}
 	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed())
 		l_decal_duree = tempsDepuisDernierGuidage.elapsed();
 	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed())
