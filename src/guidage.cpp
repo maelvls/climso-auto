@@ -27,17 +27,20 @@
 string emplacement_capture = "";
 
 Guidage::Guidage() {
-	timerConnexionAuto.setInterval(PERIODE_ENTRE_CONNEXIONS);
-	arduino = NULL;
-
-	consigne_c = consigne_l = 0;
-	bruitsignal = 1;
-
-	// Paramètres de guidage
+	// Ces types doivent être enregistrés auprès de Qt pour les utiliser en signal/slot
 	qRegisterMetaType<EtatPosition>("EtatPosition");
 	qRegisterMetaType<EtatConsigne>("EtatConsigne");
 	qRegisterMetaType<EtatArduino>("EtatArduino");
 	qRegisterMetaType<EtatGuidage>("EtatGuidage");
+
+	timerConnexionAuto.setInterval(PERIODE_ENTRE_CONNEXIONS);
+	arduino = NULL;
+
+	// Résultats de guidage
+	consigne_c = consigne_l = 0;
+	bruitsignal = 1;
+
+	// Paramètres de guidage
 	etatGuidage = GUIDAGE_ARRET_NORMAL;
 	etatArduino = ARDUINO_CONNEXION_OFF;
 	etatConsigne = CONSIGNE_NON_INITIALISEE;
@@ -71,11 +74,17 @@ void Guidage::enregistrerParametres() {
 
 void Guidage::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
-	consigne_c = parametres.value("derniere-consigne-x", 0).toDouble();
+	if(consigne_c = parametres.value("derniere-consigne-x", 0).toDouble()) {
+		etatConsigne = CONSIGNE_LOIN;
+	}
+	else {
+		etatConsigne = CONSIGNE_NON_INITIALISEE;
+	}
 	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
 	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool();
 	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool();
 }
+
 
 void Guidage::connexionAuto() {
 	arduinoConnecte();
@@ -95,9 +104,9 @@ void Guidage::connexionAuto() {
 
 void Guidage::lancerGuidage() {
 	if (img.isNull() || position_c.isEmpty() || position_l.isEmpty()) {
-		emit message(
-				"Impossible de guider, aucune position précédente");
+		emit message("Impossible de guider, aucune position précédente");
 		etatGuidage = GUIDAGE_BESOIN_POSITION;
+		return;
 	}
 	else {
 		etatGuidage = GUIDAGE_MARCHE;
@@ -105,12 +114,16 @@ void Guidage::lancerGuidage() {
 	if (consigne_c == 0 || consigne_l == 0) {
 		consigneReset();
 	}
-	emit envoiEtatGuidage(etatGuidage);
+	afficherImageSoleilEtReperes();
 	tempsDepuisDernierGuidage.start();
 }
 void Guidage::stopperGuidage() {
+	if(etatGuidage != GUIDAGE_MARCHE) { // Une autre méthode a modifié etatGuidage
+		emit envoiEtatGuidage(etatGuidage);
+	} else {
+		emit envoiEtatGuidage(etatGuidage = GUIDAGE_ARRET_NORMAL);
+	}
 	decalage.clear(); // On vide l'historique des derniers décalages
-	emit envoiEtatGuidage(etatGuidage);
 }
 
 void Guidage::consigneReset() {
@@ -155,27 +168,36 @@ void Guidage::guider() {
 	// Calcul de la longueur en pixels du décalage
 	decalage << qSqrt(l_decal * l_decal + c_decal * c_decal);
 	decalageTimestamp << QTime::currentTime();
+
 	// Vérification de la divergence (les commandes n'ont pas d'effet/un effet contraire)
+	// Il y a divergence si l'échantillon t(-10) a produit un décalage
+	// supérieur à la moyenne des échantillons t(-9..0)
 	double somme = 0;
-	int indiceAncienDecalage = (decalage.length()>10)?decalage.length()-10:0;
-	for(i = indiceAncienDecalage+1; i < decalage.length(); i++) {
-		// Pour les 10 (ou moins) derniers décalages
-		somme += decalage.at(i);
-	}
-	somme = somme / (decalage.length()-(indiceAncienDecalage+1)); // Car decalage.lenght() > 0
-	if(somme > decalage.at(indiceAncienDecalage)) {
-		emit message("Les commandes envoyées ne semblent pas avoir d'effet");
-		emit envoiEtatGuidage(etatGuidage = GUIDAGE_ARRET_DIVERGE);
-		stopperGuidage();
-		afficherImageSoleilEtReperes();
+	if(decalage.length() >= 10) { // On
+		for(i = decalage.length() - 9; i >= 0 && i < decalage.length(); i++) {
+			somme += decalage.at(i);// Pour les 10 (ou moins) derniers décalages
+		}
+		somme = somme/9;
+		if(somme > decalage.at(decalage.length() - 10)) {
+			emit message("Les commandes envoyées ne semblent pas avoir d'effet");
+			emit message("Dernière commande envoyée : "+decalageTimestamp.at(decalageTimestamp.length()-1).toString("h:m:s"));
+			emit envoiEtatGuidage(etatGuidage = GUIDAGE_ARRET_DIVERGE);
+			stopperGuidage();
+			afficherImageSoleilEtReperes();
+			return;
+		}
 	}
 
-	if(decalage.length() > 100) {
+	while(decalage.length() > 10) {
 		decalage.removeFirst();
 	}
+	while(position_c.length() > 100) {
+			position_c.removeFirst();
+			position_l.removeFirst();
+	}
 
 
-	// Il y a divergence si le dernier décalage est supérieur à la somme des
+
 
 
 	emit message(
@@ -183,27 +205,24 @@ void Guidage::guider() {
 					+ QString::number(position_l.last()) + ") "
 							", (dx= " + QString::number(l_decal) + ", dy="
 					+ QString::number(c_decal) + ")");
-	position_c.clear();
-	position_l.clear();
-
 
 	int l_decal_duree = qAbs(l_decal * IMPULSION_PIXEL_V);
 	int c_decal_duree = qAbs(c_decal * IMPULSION_PIXEL_H);
 
 	// La duree entre deux corrections ne doit pas depasser la durée entre
 	// deux séries d'échantillons (tempsDepuisDernierGuidage ici)
-	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed()-100)
-		l_decal_duree = tempsDepuisDernierGuidage.elapsed()-100;
-	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed()-100)
-		c_decal_duree = tempsDepuisDernierGuidage.elapsed()-100;
+	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed())
+		l_decal_duree = tempsDepuisDernierGuidage.elapsed();
+	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed())
+		c_decal_duree = tempsDepuisDernierGuidage.elapsed();
 	tempsDepuisDernierGuidage.restart();
 
 	// Envoi des commandes
 
-	envoyerCmd((l_decal * (orientVertiInversee?-1:1)
-			> 0 ? PIN_SUD	: PIN_NORD), l_decal_duree);
-	envoyerCmd((c_decal * (orientHorizInversee?-1:1)
-			> 0 ? PIN_OUEST	: PIN_EST), c_decal_duree);
+	envoyerCmd((l_decal * (orientVertiInversee?-1:1) > 0
+			? PIN_SUD	: PIN_NORD), l_decal_duree);
+	envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
+			? PIN_OUEST	: PIN_EST), c_decal_duree);
 }
 
 void Guidage::connecterArduino(QString nom) {
@@ -248,15 +267,19 @@ void Guidage::envoyerCmd(int pin, int duree) {
 	}
 }
 
-void Guidage::traiterResultatsCapture(QImage img, double l, double c,
-		int diametre, double bruitsignal) {
+void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diametre, double bruitsignal) {
+	static int cpt = 0;
 	this->diametre = diametre;
 	position_l << l;
 	position_c << c;
-	this->img = img;
+	this->img = QImage(img);
 	this->bruitsignal = bruitsignal;
+
 	emit signalBruit(bruitsignal);
 	emit imageSoleil(img);
+	emit envoiEtatGuidage(etatGuidage);
+	afficherImageSoleilEtReperes();
+
 	if (bruitsignal > SEUIL_BRUIT_SIGNAL) {
 		stopperGuidage();
 		etatPosition = POSITION_INCOHERANTE;
@@ -265,10 +288,11 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c,
 	else {
 		etatPosition = POSITION_COHERANTE;
 	}
-	afficherImageSoleilEtReperes();
+
 	// Si l'historique des positions contient assez de poitions, on envoie le guidage
-	if(etatGuidage == GUIDAGE_MARCHE && position_l.length() > ECHANTILLONS_PAR_GUIDAGE) {
+	if(etatGuidage == GUIDAGE_MARCHE && ++cpt == ECHANTILLONS_PAR_GUIDAGE) {
 		guider();
+		cpt = 0;
 	}
 }
 

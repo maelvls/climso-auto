@@ -165,10 +165,7 @@ void Capture::trouverPosition() {
 	Image *obj_lapl = img->convoluerParDerivee();
 	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, SEUIL_CORRELATION);
 	correl->maxParInterpolation(&position_l, &position_c);
-	double bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
-
-	// ENVOI DES RESULTATS
-    emit resultats(versQImage(img),position_l,position_c,diametre,bruitsignal);
+	bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
 
 
 #if DEBUG
@@ -183,15 +180,6 @@ void Capture::trouverPosition() {
 }
 
 QTime t; // pour debug de durée de correl/capture
-
-/**
- * Cherche par recherche de minimum le diamètre le plus adapté
- */
-void Capture::trouverDiametreParRecherche() {
-	// FIXME vérifier existance img
-	// On échantillonne
-}
-
 void Capture::captureEtPosition() {
 	connexionAuto();
 	//t.start();
@@ -199,6 +187,8 @@ void Capture::captureEtPosition() {
     //cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
 	trouverPosition();
     //cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
+	// ENVOI DES RESULTATS
+    emit resultats(versQImage(img),position_l,position_c,diametre,bruitsignal);
 	}
 	timerProchaineCapture.start();
 }
@@ -215,4 +205,30 @@ void Capture::modifierDiametre(int diametre) {
 
 	delete ref;
 	this->diametre = diametre;
+}
+
+/**
+ * Recherche le meilleur diamètre pour la recherche du centre du soleil,
+ * il faut avoir déjà initialisé le diametre car ne recherche qu'autour
+ * du diamètre déjà présent (5 pixels autour)
+ * @return le diamètre
+ */
+int Capture::chercherDiametre() {
+	double bruitsignal_min = 1;
+	double diametre_optimise;
+	Image* ref;
+	for(int diam = diametre-5; diam < diametre+5; diam++) {
+		ref = Image::tracerFormeSoleil(diam);
+		if(ref_lapl) delete ref_lapl;
+		ref_lapl = ref->convoluerParDerivee();
+		delete ref;
+		trouverPosition();
+		if(bruitsignal < bruitsignal_min) {
+			bruitsignal_min = bruitsignal;
+			diametre_optimise = diam;
+		}
+	}
+	emit diametreSoleil(diametre_optimise);
+	modifierDiametre(diametre_optimise);
+	return diametre_optimise;
 }

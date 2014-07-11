@@ -8,6 +8,10 @@
 #ifndef CAPTURE_H_
 #define CAPTURE_H_
 
+
+#define DIAM_MIN_RECHERCHE		150 // Diamètre minimal lorsqu'il y a recherche du diamètre du soleil
+#define DIAM_MAX_RECHERCHE		300 // Diamètre maximal
+
 #include <QtCore/qobject.h>
 #include <QtCore/QTimer>
 #include <QtCore/QCoreApplication>
@@ -18,6 +22,8 @@
 #include "csbigcam.h"
 #include "csbigimg.h"
 #include "image.h"
+
+
 
 typedef enum {
 	CAMERA_CONNEXION_ON,
@@ -36,10 +42,9 @@ private:
 	int diametre; 	// diametre du soleil en pixels
     double position_l;
     double position_c;
+    double bruitsignal;
 
     bool cameraConnectee();
-    void capturerEtTrouverPosition();
-    void trouverDiametreParRecherche();
 public:
 	Capture();
 	virtual ~Capture();
@@ -53,6 +58,7 @@ public slots:
 	void trouverPosition();
 	void enregistrerParametres();
 	void chargerParametres();
+	int chercherDiametre();
 private slots:
 	void connexionAuto();
 	void captureEtPosition();

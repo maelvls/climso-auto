@@ -12,12 +12,12 @@
 #include <QtCore/QObject>
 #include <QtCore/QTimer>
 #include <QtCore/QThread>
-#include <QtGui/QColor>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QTime>
 #include <QtCore/QMetaType>
 #include <QtGui/QImage>
+#include <QtGui/QColor>
 #include "arduino.h"
 
 #define IMPULSION_PIXEL_H	400 // en ms, durée d'impulsion envoyée
@@ -92,7 +92,6 @@ private:
 	QTime tempsDepuisDernierGuidage;
 
 
-	void capturerImage();
 	bool arduinoConnecte();
 	void afficherImageSoleilEtReperes();
 public:

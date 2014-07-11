@@ -74,6 +74,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(&threadCapture,SIGNAL(finished()),capture,SLOT(deleteLater()));
     QObject::connect(this,SIGNAL(demanderEnregistrementParametres()),capture,SLOT(enregistrerParametres()));
     QObject::connect(this,SIGNAL(demanderChargementParametres()),capture,SLOT(chargerParametres()));
+    QObject::connect(ui->chercherDiametre,SIGNAL(clicked()),capture,SLOT(chercherDiametre()));
+
 
     // Signaux-slots entre capture et guidage
     QObject::connect(capture,SIGNAL(resultats(QImage,double,double,int,double)),guidage, SLOT(traiterResultatsCapture(QImage,double,double,int,double)));
