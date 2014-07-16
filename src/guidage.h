@@ -20,8 +20,8 @@
 #include <QtGui/QColor>
 #include "arduino.h"
 
-#define IMPULSION_PIXEL_H	400 // en ms, durée d'impulsion envoyée
-#define IMPULSION_PIXEL_V	800 //ms (2px pour 1sec)
+#define IMPULSION_PIXEL_H	600 // en ms, durée d'impulsion envoyée
+#define IMPULSION_PIXEL_V	1000 //ms (2px pour 1sec)
 #define PIN_NORD			12 // Numéro du pin sur lequel seront envoyées les commandes Nord
 #define	PIN_SUD				11 // Numéro du pin sur lequel seront envoyées les commandes Sud
 #define	PIN_EST				10 // Numéro du pin sur lequel seront envoyées les commandes Est
@@ -29,9 +29,10 @@
 #define ORIENTATION_NORD_SUD 		0 // 1 quand le nord correspond au nord, 0 sinon
 #define ORIENTATION_EST_OUEST		0 // 1 quand l'est correspond à l'est, 0 sinon
 #define SEUIL_BRUIT_SIGNAL			0.50 // Seuil Bruit/Signal au dessus lequel le guidage ne peut être effectué (nuages..)
-#define ECHANTILLONS_PAR_GUIDAGE	3 	// Nombre d'échatillons (de captures) nécessaires avant de guider
+#define ECHANTILLONS_PAR_GUIDAGE	2 	// Nombre d'échatillons (de captures) nécessaires avant de guider
 #define PERIODE_ENTRE_CONNEXIONS	1000 // Période entre deux vérifications de connexion à l'arduino
-#define SEUIL_DECALAGE_PIXELS		1.0 // Distance en pixels en dessous laquelle la position est estimée comme correcte
+#define SEUIL_DECALAGE_PIXELS		0.05 // Distance en pixels en dessous laquelle la position est estimée comme correcte
+#define DUREE_IMPULSION_MAX		10000 // en ms
 
 #define INCREMENT_LENT		0.1 // Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
 #define INCREMENT_RAPIDE	1	// Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
@@ -88,6 +89,9 @@ private:
 	EtatGuidage etatGuidage;
 	bool orientHorizInversee;
 	bool orientVertiInversee;
+	bool arretSiEloignement;
+	int gainHorizontal;
+	int gainVertical;
 
 	QTime tempsDepuisDernierGuidage;
 

@@ -20,9 +20,19 @@
  * 			on prévient et on arrête
  */
 
+/**
+ * AJOUTS:
+ * - remettre en route dès que le seuil redescend (limite de 2minutes)
+ * - L'affichage du message d'impulsions doit etre NORD/EST/SUD..
+ * - pourquoi il y a des blocages de 8sec pendant la prise de vue
+ * - pbm arduino qui est tout le temps allumé en RX TX (buffer ?)
+ */
+
+
 #include "guidage.h"
 #include <QtCore/qmath.h>
 #include <QtCore/QSettings>
+// Les paramètres sont enregistrés (sous Linux) dans ~/.config/irap/climso-auto.conf
 
 string emplacement_capture = "";
 
@@ -70,8 +80,15 @@ void Guidage::enregistrerParametres() {
 	parametres.setValue("derniere-consigne-y", consigne_l);
 	parametres.setValue("orient-nord-sud-inversee", orientVertiInversee);
 	parametres.setValue("orient-est-ouest-inversee", orientHorizInversee);
+	parametres.setValue("arret-si-eloigne", arretSiEloignement);
+	parametres.setValue("gain-horizontal", gainHorizontal);
+	parametres.setValue("gain-vertical", gainVertical);
 }
 
+/**
+ * Paramètres chargés pour le guidage (fichier ...)
+ *
+ */
 void Guidage::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
 	if(consigne_c = parametres.value("derniere-consigne-x", 0).toDouble()) {
@@ -83,6 +100,9 @@ void Guidage::chargerParametres() {
 	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
 	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool();
 	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool();
+	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
+	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
+	gainVertical = parametres.value("gain-vertical", 1000).toInt();
 }
 
 
@@ -193,7 +213,7 @@ void Guidage::guider() {
 			somme += decalage.at(i);// Pour les 10 (ou moins) derniers décalages
 		}
 		somme = somme/9;
-		if(somme > decalage.at(decalage.length() - 10)) {
+		if(somme > decalage.at(decalage.length() - 10) && arretSiEloignement) {
 			emit message("Les commandes envoyées ne semblent pas avoir d'effet");
 			emit message("Dernière commande envoyée : "+decalageTimestamp.at(decalageTimestamp.length()-1).toString("h:m:s"));
 			emit envoiEtatGuidage(etatGuidage = GUIDAGE_ARRET_DIVERGE);
@@ -203,44 +223,43 @@ void Guidage::guider() {
 		}
 	}
 
-	while(decalage.length() > 10) {
+	while(decalage.length() > 100) {
 		decalage.removeFirst();
+		decalageTimestamp.removeFirst();
 	}
 	while(position_c.length() > 100) {
-			position_c.removeFirst();
-			position_l.removeFirst();
+		position_c.removeFirst();
+		position_l.removeFirst();
 	}
-
-
-
-
 
 	emit message(
 			"(x= " + QString::number(position_c.last()) + ", y="
-					+ QString::number(position_l.last()) + ") "
-							", (dx= " + QString::number(l_decal) + ", dy="
-					+ QString::number(c_decal) + ")");
+			+ QString::number(position_l.last()) + ") "
+			", (dx= " + QString::number(l_decal) + ", dy="
+			+ QString::number(c_decal) + ")");
 
 	int l_decal_duree = qAbs(l_decal * IMPULSION_PIXEL_V);
 	int c_decal_duree = qAbs(c_decal * IMPULSION_PIXEL_H);
 
 	// La duree entre deux corrections ne doit pas depasser la durée entre
 	// deux séries d'échantillons (tempsDepuisDernierGuidage ici)
-	if(tempsDepuisDernierGuidage.elapsed() > 5000) {
-		tempsDepuisDernierGuidage.restart();
-	}
-	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed())
-		l_decal_duree = tempsDepuisDernierGuidage.elapsed();
-	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed())
-		c_decal_duree = tempsDepuisDernierGuidage.elapsed();
-	tempsDepuisDernierGuidage.restart();
+	// NOTE: on évite les décalages > 5000ms
+	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed()
+			|| l_decal_duree > DUREE_IMPULSION_MAX)
+		l_decal_duree = min(tempsDepuisDernierGuidage.elapsed(),DUREE_IMPULSION_MAX);
+	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed()
+			|| c_decal_duree > DUREE_IMPULSION_MAX)
+		c_decal_duree = min(tempsDepuisDernierGuidage.elapsed(),DUREE_IMPULSION_MAX);
 
 	// Envoi des commandes
 
-	envoyerCmd((l_decal * (orientVertiInversee?-1:1) > 0
-			? PIN_SUD	: PIN_NORD), l_decal_duree);
-	envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
-			? PIN_OUEST	: PIN_EST), c_decal_duree);
+	// Si le décalage est suffisamment grand
+		envoyerCmd((l_decal * (orientVertiInversee?-1:1) > 0
+				? PIN_SUD	: PIN_NORD), l_decal_duree);
+	// Si le décalage est suffisamment grand
+		envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
+				? PIN_OUEST	: PIN_EST), c_decal_duree);
+	tempsDepuisDernierGuidage.restart();
 }
 
 void Guidage::connecterArduino(QString nom) {
@@ -286,7 +305,7 @@ void Guidage::envoyerCmd(int pin, int duree) {
 }
 
 void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diametre, double bruitsignal) {
-	static int cpt = 0;
+	static int cptEchantillons = 0;
 	this->diametre = diametre;
 	position_l << l;
 	position_c << c;
@@ -308,9 +327,9 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 	}
 
 	// Si l'historique des positions contient assez de poitions, on envoie le guidage
-	if(etatGuidage == GUIDAGE_MARCHE && ++cpt == ECHANTILLONS_PAR_GUIDAGE) {
+	if(etatGuidage == GUIDAGE_MARCHE && ++cptEchantillons == ECHANTILLONS_PAR_GUIDAGE) {
 		guider();
-		cpt = 0;
+		cptEchantillons = 0;
 	}
 }
 
