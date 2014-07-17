@@ -6,36 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>709</width>
-    <height>746</height>
+    <width>704</width>
+    <height>737</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Climso-auto</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="WidgetImage" name="imageCamera">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>0</y>
-      <width>701</width>
-      <height>531</height>
-     </rect>
-    </property>
-    <property name="sizePolicy">
-     <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
-     </sizepolicy>
-    </property>
-    <property name="autoFillBackground">
-     <bool>false</bool>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
    <widget class="QLabel" name="statutCamera">
     <property name="geometry">
      <rect>
@@ -63,25 +41,6 @@
       <width>301</width>
       <height>101</height>
      </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="statutArduino">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>510</y>
-      <width>511</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::RightToLeft</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
     </property>
    </widget>
    <widget class="QGroupBox" name="choixVitesse">
@@ -201,6 +160,15 @@
       <string>Nord</string>
      </property>
     </widget>
+    <zorder>vitesseDecalageLent</zorder>
+    <zorder>vitesseDecalageRapide</zorder>
+    <zorder>consigneBas</zorder>
+    <zorder>consigneReset</zorder>
+    <zorder>consigneDroite</zorder>
+    <zorder>consigneGauche</zorder>
+    <zorder>consigneHaut</zorder>
+    <zorder>messages</zorder>
+    <zorder>widget</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
@@ -299,6 +267,10 @@
       <string>Arrêt</string>
      </property>
     </widget>
+    <zorder>lancerGuidage</zorder>
+    <zorder>statutGuidage</zorder>
+    <zorder>stopperGuidage</zorder>
+    <zorder>gridLayoutWidget</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
@@ -439,21 +411,127 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="widgetPositionConsigne" native="true">
+   <widget class="QWidget" name="widget" native="true">
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>30</y>
-      <width>691</width>
-      <height>21</height>
+      <x>0</x>
+      <y>0</y>
+      <width>701</width>
+      <height>531</height>
      </rect>
     </property>
-    <widget class="QLabel" name="positionConsigne">
+    <widget class="WidgetImage" name="imageCamera">
      <property name="geometry">
       <rect>
-       <x>210</x>
+       <x>0</x>
        <y>0</y>
-       <width>481</width>
+       <width>701</width>
+       <height>531</height>
+      </rect>
+     </property>
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+    <widget class="QWidget" name="widgetPositionCourante" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>691</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <widget class="QLabel" name="positionCourante">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>0</y>
+        <width>481</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>161</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Position courante</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="widgetPositionConsigne" native="true">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>20</y>
+       <width>691</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <widget class="QLabel" name="positionConsigne">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>0</y>
+        <width>481</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::RightToLeft</enum>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>161</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Position de la consigne</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QLabel" name="statutArduino">
+     <property name="geometry">
+      <rect>
+       <x>160</x>
+       <y>510</y>
+       <width>541</width>
        <height>20</height>
       </rect>
      </property>
@@ -467,69 +545,26 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QLabel" name="label_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>161</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Position de la consigne</string>
-     </property>
-    </widget>
+    <zorder>widgetPositionCourante</zorder>
+    <zorder>widgetPositionConsigne</zorder>
+    <zorder>statutArduino</zorder>
+    <zorder>imageCamera</zorder>
+    <zorder>statutCamera</zorder>
    </widget>
-   <widget class="QWidget" name="widgetPositionCourante" native="true">
-    <property name="geometry">
-     <rect>
-      <x>10</x>
-      <y>10</y>
-      <width>691</width>
-      <height>21</height>
-     </rect>
-    </property>
-    <widget class="QLabel" name="positionCourante">
-     <property name="geometry">
-      <rect>
-       <x>210</x>
-       <y>0</y>
-       <width>481</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::RightToLeft</enum>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="label">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>0</y>
-       <width>161</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Position courante</string>
-     </property>
-    </widget>
-   </widget>
+   <zorder>messages</zorder>
+   <zorder>choixVitesse</zorder>
+   <zorder>groupBox</zorder>
+   <zorder>groupBox_2</zorder>
+   <zorder>groupBox_3</zorder>
+   <zorder>widget</zorder>
+   <zorder>statutCamera</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>709</width>
+     <width>704</width>
      <height>21</height>
     </rect>
    </property>
@@ -538,7 +573,6 @@
      <string>Menu</string>
     </property>
     <addaction name="ouvrirParametres"/>
-    <addaction name="actionAide"/>
    </widget>
    <addaction name="menuMenu"/>
   </widget>
