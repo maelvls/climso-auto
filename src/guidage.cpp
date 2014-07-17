@@ -87,6 +87,7 @@ void Guidage::enregistrerParametres() {
 	parametres.setValue("gain-horizontal", gainHorizontal);
 	parametres.setValue("gain-vertical", gainVertical);
 	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal/1000);
+	parametres.setValue("seuil-bruit-signal",seuilBruitSurSignal);
 }
 
 /**
@@ -95,12 +96,7 @@ void Guidage::enregistrerParametres() {
  */
 void Guidage::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
-	if((consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble())) {
-		etatConsigne = CONSIGNE_LOIN;
-	}
-	else {
-		etatConsigne = CONSIGNE_NON_INITIALISEE;
-	}
+
 	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
 	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool();
 	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool();
@@ -108,6 +104,8 @@ void Guidage::chargerParametres() {
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
 	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 12).toInt()*1000;
+	consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble();
+	seuilBruitSurSignal = parametres.value("seuil-bruit-signal",0.30).toDouble();
 }
 
 
@@ -327,7 +325,7 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 
 	// Si le bruit/signal est trop fort, il est possible qu'il s'agisse de nuages passagers.
 	// On va donc passer au mode GUIDAGE_MARCHE_MAIS_BRUIT
-	if (bruitsignal > SEUIL_BRUIT_SIGNAL) {
+	if (bruitsignal > seuilBruitSurSignal) {
 		etatPosition = POSITION_INCOHERANTE;
 		if(etatGuidage == GUIDAGE_MARCHE) { // Bruit/signal vient d'etre dépassé
 			etatGuidage = GUIDAGE_MARCHE_MAIS_BRUIT;
@@ -339,7 +337,7 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 	}
 
 	if(etatGuidage == GUIDAGE_MARCHE_MAIS_BRUIT) { // Attente d'un bruit/signal plus faible
-		if(bruitsignal < SEUIL_BRUIT_SIGNAL) {
+		if(bruitsignal < seuilBruitSurSignal) {
 			// Le guidage peut reprendre
 			etatGuidage = GUIDAGE_MARCHE;
 		} else if(tempsDernierePositionCoherente.elapsed() > dureeApresMauvaisBruitSignal) {
