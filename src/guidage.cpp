@@ -24,9 +24,11 @@
  * AJOUTS:
  * - remettre en route dès que le seuil redescend (limite de 2minutes)
  * - L'affichage du message d'impulsions doit etre NORD/EST/SUD..
+ * - implémenter diam_soleil
  * - pourquoi il y a des blocages de 8sec pendant la prise de vue
  * - pbm arduino qui est tout le temps allumé en RX TX (buffer ?)
  * - ajout fichier config bruitSeuil
+ * - SegFault quand le soleil est trop loin
  */
 
 
@@ -84,7 +86,7 @@ void Guidage::enregistrerParametres() {
 	parametres.setValue("arret-si-eloigne", arretSiEloignement);
 	parametres.setValue("gain-horizontal", gainHorizontal);
 	parametres.setValue("gain-vertical", gainVertical);
-	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal);
+	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal/1000);
 }
 
 /**
@@ -105,7 +107,7 @@ void Guidage::chargerParametres() {
 	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
-	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 120000).toInt();
+	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 12).toInt()*1000;
 }
 
 
@@ -119,6 +121,7 @@ void Guidage::connexionAuto() {
 		} else {
 			emit envoiEtatArduino(ARDUINO_FICHIER_INTROUV);
 		}
+		// XXX Pbm etatGuidage = GUIDAGE_ARRET_PANNE;
 		stopperGuidage(); // car il y a eu un arrêt de guidage
 	} else {
 		emit envoiEtatArduino(ARDUINO_CONNEXION_ON);

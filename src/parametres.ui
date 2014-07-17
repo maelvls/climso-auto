@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
-    <height>269</height>
+    <width>559</width>
+    <height>485</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>320</x>
-     <y>230</y>
+     <x>370</x>
+     <y>450</y>
      <width>181</width>
      <height>32</height>
     </rect>
@@ -126,6 +126,84 @@
     </property>
     <property name="text">
      <string>Inverse (l'Est est à gauche)</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="choixDureeAvantArret">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>200</y>
+     <width>541</width>
+     <height>111</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Durée d'attente d'un bruit/signal moins élevé </string>
+   </property>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>461</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Avant de s'arrêter automatiquement après avoir détecté un bruit/signal trop fort, le programme attend cette durée en espérant que le bruit/signal descende.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QSpinBox" name="dureeAvantArretSiIncoherence">
+    <property name="geometry">
+     <rect>
+      <x>370</x>
+      <y>0</y>
+      <width>131</width>
+      <height>27</height>
+     </rect>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QGroupBox" name="choixArretCasDeDivergence">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>300</y>
+     <width>541</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="title">
+    <string>Arrêt si  les corrections ne semblent pas avoir d'effet</string>
+   </property>
+   <widget class="QRadioButton" name="arretDivergenceOn">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>20</y>
+      <width>281</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Arrêt si les corrections n'ont pas d'effet</string>
+    </property>
+   </widget>
+   <widget class="QRadioButton" name="arretDivergenceOff">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>40</y>
+      <width>107</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Pas d'arrêt </string>
     </property>
    </widget>
   </widget>
