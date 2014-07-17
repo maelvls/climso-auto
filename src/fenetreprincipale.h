@@ -54,6 +54,7 @@ public slots:
     void modifierStatutCamera(EtatCamera);
     void modifierStatutArduino(EtatArduino);
     void modifierStatutGuidage(EtatGuidage);
+    void modifierStatutPosition(EtatPosition);
 
 signals:
 	void lancerGuidage();

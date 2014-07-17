@@ -23,18 +23,11 @@
  */
 
 #include <QtCore/QSettings>
+// Les paramètres sont enregistrés (sous Linux) dans ~/.config/irap/climso-auto.conf
+
 #include "capture.h"
 #include "diametre_soleil.h"
 
-#define SEUIL_CORRELATION		0.85 	// entre 0 et 1 (% du max de ref) au dessus duquel les valeurs de ref. sont correlées
-#define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
-#define DUREE_ENTRE_CAPTURES 	100 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
-#define DUREE_EXPOSITION		10 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
-
-// ACTIVER LE DEBUG: ./configure CPPFLAGS="-DDEBUG=1" (si autotools) ou gcc -DDEBUG=1 sinon
-#if DEBUG // Il faut activer la macro DEBUG pour enregistrer les images capturées et traitées en .tif
-string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
-#endif
 
 Capture::Capture() {
 	cam = NULL;
@@ -169,10 +162,9 @@ void Capture::trouverPosition() {
 
 
 #if DEBUG
-	img->versTiff(emplacement+"t0_obj.tif");
-	correl->versTiff(emplacement+"t0_correl.tif");
-	obj_lapl->versTiff(emplacement+"t0_obj_lapl.tif");
-	ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
+	img->versTiff(emplacement+"t_obj.tif");
+	correl->versTiff(emplacement+"t_correl.tif");
+	obj_lapl->versTiff(emplacement+"t_obj_lapl.tif");
 #endif
 
 	delete correl;
@@ -182,13 +174,13 @@ void Capture::trouverPosition() {
 QTime t; // pour debug de durée de correl/capture
 void Capture::captureEtPosition() {
 	connexionAuto();
-	//t.start();
+	t.start();
 	if(capturerImage() && ref_lapl) {
-    //cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
-	trouverPosition();
-    //cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
-	// ENVOI DES RESULTATS
-    emit resultats(versQImage(img),position_l,position_c,diametre,bruitsignal);
+		cout << "Temps ecoulé après capture : " << t.elapsed() << "ms" <<endl;
+		trouverPosition();
+		cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
+		// ENVOI DES RESULTATS
+		emit resultats(versQImage(img),position_l,position_c,diametre,bruitsignal);
 	}
 	timerProchaineCapture.start();
 }
@@ -199,8 +191,8 @@ void Capture::modifierDiametre(int diametre) {
 	ref_lapl = ref->convoluerParDerivee();
 
 #if DEBUG
-	ref->versTiff(emplacement+"t0_ref.tif");
-	ref_lapl->versTiff(emplacement+"t0_ref_lapl.tif");
+	ref->versTiff(emplacement+"t_ref.tif");
+	ref_lapl->versTiff(emplacement+"t_ref_lapl.tif");
 #endif
 
 	delete ref;

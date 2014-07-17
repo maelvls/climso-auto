@@ -55,6 +55,7 @@ typedef enum {
 } EtatArduino;
 typedef enum {
 	GUIDAGE_MARCHE, // Le guidage est en marche
+	GUIDAGE_MARCHE_MAIS_BRUIT, // Le guidage marche toujours mais en attente d'un retour à un signal/bruit plus faible
 	GUIDAGE_BESOIN_POSITION, // Le guidage a besoin d'une position courante du soleil
 	GUIDAGE_ARRET_BRUIT, // Le guidage s'est arrêté pour cause de non-fiabilité (bruit/signal élevé)
 	GUIDAGE_ARRET_NORMAL, // Le guidage s'est arrêté à la demande de l'utilisateur
@@ -92,7 +93,10 @@ private:
 	bool arretSiEloignement;
 	int gainHorizontal;
 	int gainVertical;
+	int seuilBruitSurSignal;
+	int dureeApresMauvaisBruitSignal; // Durée en secondes
 
+	QTime tempsDernierePositionCoherente;
 	QTime tempsDepuisDernierGuidage;
 
 
@@ -122,6 +126,7 @@ signals:
 	void message(QString msg);
 	void envoiEtatArduino(EtatArduino);
 	void envoiEtatGuidage(EtatGuidage);
+	void envoiEtatPosition(EtatPosition);
 	void imageSoleil(QImage);
 	void repereSoleil(float pourcent_x, float pourcent_y,float diametre_pourcent_x, EtatPosition);
 	void repereConsigne(float pourcent_x, float pourcent_y,float diametre_pourcent_x, EtatConsigne);

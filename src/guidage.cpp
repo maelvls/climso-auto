@@ -26,6 +26,7 @@
  * - L'affichage du message d'impulsions doit etre NORD/EST/SUD..
  * - pourquoi il y a des blocages de 8sec pendant la prise de vue
  * - pbm arduino qui est tout le temps allumé en RX TX (buffer ?)
+ * - ajout fichier config bruitSeuil
  */
 
 
@@ -83,6 +84,7 @@ void Guidage::enregistrerParametres() {
 	parametres.setValue("arret-si-eloigne", arretSiEloignement);
 	parametres.setValue("gain-horizontal", gainHorizontal);
 	parametres.setValue("gain-vertical", gainVertical);
+	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal);
 }
 
 /**
@@ -103,6 +105,7 @@ void Guidage::chargerParametres() {
 	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
+	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 120000).toInt();
 }
 
 
@@ -253,12 +256,11 @@ void Guidage::guider() {
 
 	// Envoi des commandes
 
-	// Si le décalage est suffisamment grand
-		envoyerCmd((l_decal * (orientVertiInversee?-1:1) > 0
-				? PIN_SUD	: PIN_NORD), l_decal_duree);
-	// Si le décalage est suffisamment grand
-		envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
-				? PIN_OUEST	: PIN_EST), c_decal_duree);
+	envoyerCmd((l_decal * (orientVertiInversee?-1:1) > 0
+			? PIN_SUD	: PIN_NORD), l_decal_duree);
+	envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
+			? PIN_OUEST	: PIN_EST), c_decal_duree);
+
 	tempsDepuisDernierGuidage.restart();
 }
 
@@ -312,19 +314,35 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 	this->img = QImage(img);
 	this->bruitsignal = bruitsignal;
 
-	emit signalBruit(bruitsignal);
-	emit imageSoleil(img);
-	emit envoiEtatGuidage(etatGuidage);
-	afficherImageSoleilEtReperes();
 
+	// Si le bruit/signal est trop fort, il est possible qu'il s'agisse de nuages passagers.
+	// On va donc passer au mode GUIDAGE_MARCHE_MAIS_BRUIT
 	if (bruitsignal > SEUIL_BRUIT_SIGNAL) {
-		stopperGuidage();
 		etatPosition = POSITION_INCOHERANTE;
-		etatGuidage = GUIDAGE_ARRET_BRUIT;
+		if(etatGuidage == GUIDAGE_MARCHE) { // Bruit/signal vient d'etre dépassé
+			etatGuidage = GUIDAGE_MARCHE_MAIS_BRUIT;
+			tempsDernierePositionCoherente.start();
+		}
 	}
 	else {
 		etatPosition = POSITION_COHERANTE;
 	}
+
+	if(etatGuidage == GUIDAGE_MARCHE_MAIS_BRUIT) { // Attente d'un bruit/signal plus faible
+		if(bruitsignal < SEUIL_BRUIT_SIGNAL) {
+			// Le guidage peut reprendre
+			etatGuidage = GUIDAGE_MARCHE;
+		} else if(tempsDernierePositionCoherente.elapsed() > dureeApresMauvaisBruitSignal) {
+			// Le temps maximal attendu après un mauvais bruit/signal est écoulé
+			etatGuidage = GUIDAGE_ARRET_BRUIT;
+		}
+	}
+
+	emit imageSoleil(img);
+	emit envoiEtatGuidage(etatGuidage);
+	emit signalBruit(bruitsignal);
+	emit envoiEtatPosition(etatPosition);
+	afficherImageSoleilEtReperes();
 
 	// Si l'historique des positions contient assez de poitions, on envoie le guidage
 	if(etatGuidage == GUIDAGE_MARCHE && ++cptEchantillons == ECHANTILLONS_PAR_GUIDAGE) {

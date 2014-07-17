@@ -111,6 +111,9 @@
      <property name="text">
       <string>Lent</string>
      </property>
+     <property name="checked">
+      <bool>true</bool>
+     </property>
     </widget>
     <widget class="QRadioButton" name="vitesseDecalageRapide">
      <property name="geometry">
@@ -125,7 +128,7 @@
       <string>Rapide</string>
      </property>
      <property name="checked">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QPushButton" name="consigneBas">
@@ -364,7 +367,7 @@
      <x>0</x>
      <y>0</y>
      <width>701</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">

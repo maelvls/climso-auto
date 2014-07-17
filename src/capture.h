@@ -9,8 +9,12 @@
 #define CAPTURE_H_
 
 
-#define DIAM_MIN_RECHERCHE		150 // Diamètre minimal lorsqu'il y a recherche du diamètre du soleil
-#define DIAM_MAX_RECHERCHE		300 // Diamètre maximal
+#define SEUIL_CORRELATION		0.85 	// entre 0 et 1 (% du max de ref) au dessus duquel les valeurs de ref. sont correlées
+#define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
+#define DUREE_ENTRE_CAPTURES 	100 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
+#define DUREE_EXPOSITION		10 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
+
+
 
 #include <QtCore/qobject.h>
 #include <QtCore/QTimer>
@@ -23,7 +27,10 @@
 #include "csbigimg.h"
 #include "image.h"
 
-
+// ACTIVER LE DEBUG: ./configure CPPFLAGS="-DDEBUG=1" (si autotools) ou gcc -DDEBUG=1 sinon
+#if DEBUG // Il faut activer la macro DEBUG pour enregistrer les images capturées et traitées en .tif
+string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
+#endif
 
 typedef enum {
 	CAMERA_CONNEXION_ON,

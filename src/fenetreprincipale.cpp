@@ -57,6 +57,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // Signaux-slots entre fenetreprincipale et guidage
     QObject::connect(guidage,SIGNAL(envoiEtatArduino(EtatArduino)),this,SLOT(modifierStatutArduino(EtatArduino)));
     QObject::connect(guidage,SIGNAL(envoiEtatGuidage(EtatGuidage)),this,SLOT(modifierStatutGuidage(EtatGuidage)));
+    QObject::connect(guidage,SIGNAL(envoiEtatPosition(EtatPosition)),this,SLOT(modifierStatutPosition(EtatPosition)));
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
     QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
@@ -95,7 +96,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // après le début des threads
 
     // Le mode de décalage rapide est par défaut
-    ui->vitesseDecalageRapide->setChecked(true);
+    ui->vitesseDecalageRapide->setChecked(false);
 
     // Pour capturer les touches directionnelles du clavier pour controler la consigne,
     // on met un filtre sur toutes les parties de l'interface, et on redéfinit la méthode
@@ -166,6 +167,10 @@ void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
 		ui->statutGuidage->setPalette(paletteTexteVert);
 		ui->statutGuidage->setText("Guidage en marche");
 		break;
+	case GUIDAGE_MARCHE_MAIS_BRUIT:
+		ui->statutGuidage->setPalette(paletteTexteJaune);
+		ui->statutGuidage->setText("Pause: bruit/signal doit redescendre");
+		break;
 	case GUIDAGE_BESOIN_POSITION:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Pas de position du soleil");
@@ -187,6 +192,19 @@ void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
 		ui->statutGuidage->setText("Arrêt: caméra ou arduino HS");
 		break;
 
+	default:
+		break;
+	}
+}
+
+void FenetrePrincipale::modifierStatutPosition(EtatPosition statut) {
+	switch (statut) {
+	case POSITION_COHERANTE:
+		ui->ratioSignalBruit->setPalette(paletteTexteVert);
+		break;
+	case POSITION_INCOHERANTE:
+		ui->ratioSignalBruit->setPalette(paletteTexteRouge);
+		break;
 	default:
 		break;
 	}
@@ -291,4 +309,5 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
          return QMainWindow::eventFilter(obj, event);
      }
 }
+
 
