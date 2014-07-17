@@ -22,13 +22,15 @@
 
 /**
  * AJOUTS:
- * - remettre en route dès que le seuil redescend (limite de 2minutes)
+ * OK à tester - remettre en route dès que le seuil redescend (limite de 2minutes)
  * - L'affichage du message d'impulsions doit etre NORD/EST/SUD..
  * - implémenter diam_soleil
  * - pourquoi il y a des blocages de 8sec pendant la prise de vue
- * - pbm arduino qui est tout le temps allumé en RX TX (buffer ?)
+ * OK - pbm arduino qui est tout le temps allumé en RX TX (buffer ?)
+ * 			-> les cmd envoyées par l'arduino ne sont pas lues
  * - ajout fichier config bruitSeuil
  * - SegFault quand le soleil est trop loin
+ * - remettre un seuil et l'ajouter comme parametre
  */
 
 
@@ -36,8 +38,6 @@
 #include <QtCore/qmath.h>
 #include <QtCore/QSettings>
 // Les paramètres sont enregistrés (sous Linux) dans ~/.config/irap/climso-auto.conf
-
-string emplacement_capture = "";
 
 Guidage::Guidage() {
 	// Ces types doivent être enregistrés auprès de Qt pour les utiliser en signal/slot
@@ -95,7 +95,7 @@ void Guidage::enregistrerParametres() {
  */
 void Guidage::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
-	if(consigne_c = parametres.value("derniere-consigne-x", 0).toDouble()) {
+	if((consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble())) {
 		etatConsigne = CONSIGNE_LOIN;
 	}
 	else {
@@ -112,20 +112,21 @@ void Guidage::chargerParametres() {
 
 
 void Guidage::connexionAuto() {
-	arduinoConnecte();
 	if (!arduinoConnecte()) {
-		emit envoiEtatArduino(ARDUINO_CONNEXION_OFF);
 		QStringList l = chercherFichiersArduino();
 		if (l.length() > 0) {
 			connecterArduino(l.first());
 		} else {
-			emit envoiEtatArduino(ARDUINO_FICHIER_INTROUV);
+			etatArduino = ARDUINO_FICHIER_INTROUV;
 		}
-		// XXX Pbm etatGuidage = GUIDAGE_ARRET_PANNE;
-		stopperGuidage(); // car il y a eu un arrêt de guidage
 	} else {
-		emit envoiEtatArduino(ARDUINO_CONNEXION_ON);
+		etatArduino = ARDUINO_CONNEXION_ON;
 	}
+	if(etatArduino != ARDUINO_CONNEXION_ON) {
+		etatGuidage = GUIDAGE_ARRET_PANNE;
+		stopperGuidage(); // car il y a eu un arrêt de guidage
+	}
+	emit envoiEtatArduino(etatArduino);
 }
 
 void Guidage::lancerGuidage() {
@@ -263,6 +264,7 @@ void Guidage::guider() {
 			? PIN_SUD	: PIN_NORD), l_decal_duree);
 	envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
 			? PIN_OUEST	: PIN_EST), c_decal_duree);
+	// XXX LIRE LES RESULTATS
 
 	tempsDepuisDernierGuidage.restart();
 }
@@ -277,15 +279,16 @@ void Guidage::connecterArduino(QString nom) {
 	arduino = new Arduino(nom.toStdString());
 	if (arduino->getErreur() != NO_ERR) {
 		if(arduino->getErreur() == ERR_OUVERTURE_FICHIER) {
-			emit envoiEtatArduino(ARDUINO_FICHIER_INTROUV);
+			etatArduino = ARDUINO_FICHIER_INTROUV;
 		} else {
-			emit envoiEtatArduino(ARDUINO_CONNEXION_OFF);
+			etatArduino = ARDUINO_CONNEXION_OFF;
 		}
 		emit message(QString::fromStdString(arduino->getDerniereErreurMessage()));
 	} else {
-		emit envoiEtatArduino(ARDUINO_CONNEXION_ON);
+		etatArduino = ARDUINO_CONNEXION_ON;
 		emit message("Arduino connecte ("+ QString::fromStdString(arduino->getPath()) + ")");
 	}
+	emit envoiEtatArduino(etatArduino);
 }
 
 void Guidage::deconnecterArduino() {
@@ -303,8 +306,12 @@ bool Guidage::arduinoConnecte() {
 }
 
 void Guidage::envoyerCmd(int pin, int duree) {
+	string rep;
 	if (arduinoConnecte()) {
 		arduino->EnvoyerCmd(pin, duree);
+		// l'arduino envoie des réponses aux commandes ; si on ne vide pas le buffer entrant,
+		// l'arduino va se mettre à bloquer (TX et RX allumés en permanance) donc on flush
+		arduino->Flush();
 		emit message("Envoi impulsion pin " + QString::number(pin) + " et duree "+ QString::number(duree));
 	}
 }
@@ -345,6 +352,9 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 	emit envoiEtatGuidage(etatGuidage);
 	emit signalBruit(bruitsignal);
 	emit envoiEtatPosition(etatPosition);
+	emit envoiPositionCourante(position_c.last(),position_l.last());
+	emit envoiEtatConsigne(etatConsigne);
+	emit envoiPositionConsigne(consigne_c, consigne_l);
 	afficherImageSoleilEtReperes();
 
 	// Si l'historique des positions contient assez de poitions, on envoie le guidage
@@ -361,6 +371,8 @@ void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLe
 	}
 	consigne_l = consigne_l+ deltaLigne* (decalageLent?INCREMENT_LENT:INCREMENT_RAPIDE);
 	consigne_c = consigne_c+ deltaColonne* (decalageLent?INCREMENT_LENT:INCREMENT_RAPIDE);
+	emit envoiEtatConsigne(etatConsigne);
+	emit envoiPositionConsigne(consigne_c, consigne_l);
 	afficherImageSoleilEtReperes();
 }
 
@@ -379,7 +391,7 @@ QStringList Guidage::chercherFichiersArduino() {
 }
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
-	emit repereSoleil(position_c.last()/img.width(),
+	emit repereCourant(position_c.last()/img.width(),
 			position_l.last()/img.height(),((float)diametre)/img.width(),etatPosition);
 	emit repereConsigne(consigne_c/img.width(),
 			consigne_l/img.height(),((float)diametre)/img.width(),etatConsigne);

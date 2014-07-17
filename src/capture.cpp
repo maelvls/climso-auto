@@ -120,6 +120,18 @@ void Capture::lancerCapture() {
 void Capture::stopperCapture() {
 	timerProchaineCapture.stop();
 }
+
+
+QImage versQImage(Image* img) {
+	unsigned char *img_uchar = img->versUchar();
+	// Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
+	QImage *temp = new QImage(img_uchar, img->getColonnes(), img->getLignes(),img->getColonnes(), QImage::Format_Indexed8);
+	for(int i=0;i<256;++i) { // Pour construire une image en nuances de gris (n'existe pas sinon sous Qt)
+		temp->setColor(i, qRgb(i,i,i));
+	}
+	return *temp;
+}
+
 bool Capture::capturerImage() {
     if (!cameraConnectee()) {
         emit message("La camera n'est pas connectee");
@@ -135,19 +147,11 @@ bool Capture::capturerImage() {
 
     if(img) delete img; // On supprime la derniere image
     img = img_temp->reduire(2);
+    imgPourAffichage = versQImage(img);
 	delete img_temp;
 	return true;
 }
 
-QImage versQImage(Image* img) {
-	unsigned char *img_uchar = img->versUchar();
-	// Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
-	QImage *temp = new QImage(img_uchar, img->getColonnes(), img->getLignes(),img->getColonnes(), QImage::Format_Indexed8);
-	for(int i=0;i<256;++i) { // Pour construire une image en nuances de gris (n'existe pas sinon sous Qt)
-		temp->setColor(i, qRgb(i,i,i));
-	}
-	return *temp;
-}
 
 void Capture::trouverPosition() {
 	if(diametre == 0)
@@ -180,7 +184,7 @@ void Capture::captureEtPosition() {
 		trouverPosition();
 		cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
 		// ENVOI DES RESULTATS
-		emit resultats(versQImage(img),position_l,position_c,diametre,bruitsignal);
+		emit resultats(imgPourAffichage,position_l,position_c,diametre,bruitsignal);
 	}
 	timerProchaineCapture.start();
 }

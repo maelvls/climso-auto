@@ -127,8 +127,11 @@ signals:
 	void envoiEtatArduino(EtatArduino);
 	void envoiEtatGuidage(EtatGuidage);
 	void envoiEtatPosition(EtatPosition);
+	void envoiEtatConsigne(EtatConsigne);
+	void envoiPositionCourante(double x, double y);
+	void envoiPositionConsigne(double x, double y);
 	void imageSoleil(QImage);
-	void repereSoleil(float pourcent_x, float pourcent_y,float diametre_pourcent_x, EtatPosition);
+	void repereCourant(float pourcent_x, float pourcent_y,float diametre_pourcent_x, EtatPosition);
 	void repereConsigne(float pourcent_x, float pourcent_y,float diametre_pourcent_x, EtatConsigne);
 	void signalBruit(double);
 };

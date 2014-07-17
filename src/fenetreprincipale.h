@@ -31,6 +31,7 @@ private:
     QPalette paletteTexteVert;
     QPalette paletteTexteRouge;
     QPalette paletteTexteJaune;
+    QPalette paletteTexteGris;
 
 public:
     explicit FenetrePrincipale(QWidget *parent = 0);
@@ -55,7 +56,9 @@ public slots:
     void modifierStatutArduino(EtatArduino);
     void modifierStatutGuidage(EtatGuidage);
     void modifierStatutPosition(EtatPosition);
-
+    void modifierStatutConsigne(EtatConsigne);
+    void afficherPositionConsigne(double x, double y);
+    void afficherPositionCourante(double x, double y);
 signals:
 	void lancerGuidage();
 	void stopperGuidage();

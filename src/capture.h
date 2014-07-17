@@ -29,7 +29,7 @@
 
 // ACTIVER LE DEBUG: ./configure CPPFLAGS="-DDEBUG=1" (si autotools) ou gcc -DDEBUG=1 sinon
 #if DEBUG // Il faut activer la macro DEBUG pour enregistrer les images capturées et traitées en .tif
-string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
+static string emplacement = ""; // Emplacement des images du debug caméra et corrélation (et laplacien)
 #endif
 
 typedef enum {
@@ -46,6 +46,7 @@ private:
 	//CSBIGImg* img_sbig;
 	Image* img;
 	Image* ref_lapl;// laplacien de la ref de l'image du soleil
+	QImage imgPourAffichage; // Image non binnée pour envoi à Guidage
 	int diametre; 	// diametre du soleil en pixels
     double position_l;
     double position_c;

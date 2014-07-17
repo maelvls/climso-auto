@@ -45,6 +45,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     paletteTexteVert.setColor(QPalette::WindowText, Qt::green);
     paletteTexteRouge.setColor(QPalette::WindowText, Qt::red);
     paletteTexteJaune.setColor(QPalette::WindowText, Qt::yellow);
+    paletteTexteGris.setColor(QPalette::WindowText, Qt::gray);
 
     // Faire en sorte que les chaines statiques "C-strings" soient considérées comme UTF-8
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
@@ -58,6 +59,9 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(guidage,SIGNAL(envoiEtatArduino(EtatArduino)),this,SLOT(modifierStatutArduino(EtatArduino)));
     QObject::connect(guidage,SIGNAL(envoiEtatGuidage(EtatGuidage)),this,SLOT(modifierStatutGuidage(EtatGuidage)));
     QObject::connect(guidage,SIGNAL(envoiEtatPosition(EtatPosition)),this,SLOT(modifierStatutPosition(EtatPosition)));
+    QObject::connect(guidage,SIGNAL(envoiEtatConsigne(EtatConsigne)),this,SLOT(modifierStatutConsigne(EtatConsigne)));
+    QObject::connect(guidage,SIGNAL(envoiPositionCourante(double,double)),this,SLOT(afficherPositionCourante(double,double)));
+    QObject::connect(guidage,SIGNAL(envoiPositionConsigne(double,double)),this,SLOT(afficherPositionConsigne(double,double)));
     QObject::connect(guidage,SIGNAL(message(QString)),this,SLOT(afficherMessage(QString)));
     QObject::connect(this,SIGNAL(lancerGuidage()),guidage,SLOT(lancerGuidage()));
     QObject::connect(this,SIGNAL(stopperGuidage()),guidage,SLOT(stopperGuidage()));
@@ -85,7 +89,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // Signaux-slots entre les éléments de l'interface
     QObject::connect(guidage,SIGNAL(imageSoleil(QImage)),ui->imageCamera,SLOT(afficherImageSoleil(QImage)));
     QObject::connect(guidage,SIGNAL(repereConsigne(float,float,float,EtatConsigne)),ui->imageCamera,SLOT(afficherRepereConsigne(float,float,float,EtatConsigne)));
-    QObject::connect(guidage,SIGNAL(repereSoleil(float,float,float,EtatPosition)),ui->imageCamera,SLOT(afficherRepereSoleil(float,float,float,EtatPosition)));
+    QObject::connect(guidage,SIGNAL(repereCourant(float,float,float,EtatPosition)),ui->imageCamera,SLOT(afficherRepereCourant(float,float,float,EtatPosition)));
 
 
 
@@ -189,7 +193,7 @@ void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
 		break;
 	case GUIDAGE_ARRET_PANNE:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
-		ui->statutGuidage->setText("Arrêt: caméra ou arduino HS");
+		ui->statutGuidage->setText("Arrêt: caméra ou arduino off");
 		break;
 
 	default:
@@ -201,11 +205,27 @@ void FenetrePrincipale::modifierStatutPosition(EtatPosition statut) {
 	switch (statut) {
 	case POSITION_COHERANTE:
 		ui->ratioSignalBruit->setPalette(paletteTexteVert);
+		ui->widgetPositionCourante->setPalette(paletteTexteVert);
 		break;
 	case POSITION_INCOHERANTE:
 		ui->ratioSignalBruit->setPalette(paletteTexteRouge);
+		ui->widgetPositionCourante->setPalette(paletteTexteGris);
 		break;
 	default:
+		break;
+	}
+}
+
+void FenetrePrincipale::modifierStatutConsigne(EtatConsigne statut) {
+	switch (statut) {
+	case CONSIGNE_OK:
+		ui->widgetPositionConsigne->setPalette(paletteTexteJaune);
+		break;
+	case CONSIGNE_LOIN:
+		ui->widgetPositionConsigne->setPalette(paletteTexteJaune);
+		break;
+	default:
+		ui->widgetPositionConsigne->setPalette(paletteTexteJaune);
 		break;
 	}
 }
@@ -310,4 +330,10 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
      }
 }
 
+void FenetrePrincipale::afficherPositionConsigne(double x, double y) {
+	ui->positionConsigne->setText("x="+QString::number(x)+", y="+QString::number(y));
+}
 
+void FenetrePrincipale::afficherPositionCourante(double x, double y) {
+	ui->positionCourante->setText("x="+QString::number(x)+", y="+QString::number(y));
+}

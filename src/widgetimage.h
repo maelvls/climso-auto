@@ -28,7 +28,7 @@ public:
 	virtual ~WidgetImage();
 public slots:
 	void afficherImageSoleil(QImage img);
-	void afficherRepereSoleil(float pourcent_x, float pourcent_y, float diametre_pourcent_x, EtatPosition);
+	void afficherRepereCourant(float pourcent_x, float pourcent_y, float diametre_pourcent_x, EtatPosition);
 	void afficherRepereConsigne(float pourcent_x, float pourcent_y, float diametre_pourcent_x, EtatConsigne);
 
 
