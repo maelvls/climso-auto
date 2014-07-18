@@ -8,7 +8,13 @@
 #ifndef CAPTURE_H_
 #define CAPTURE_H_
 
+/* 	Pour les paramètres: certains paramètres sont à configurer dans le fichier
+ * 		~/.config/irap/climso-auto.conf (ou directement depuis menu > paramètres)
+ * 	Paramètres par défaut: concernant ces réglages peuvent se trouver dans
+ * 		la fonction chargerParametres()
+ */
 
+// Paramètres "en dur" ne pouvant être modifiés que par la recompilation :
 #define SEUIL_CORRELATION		0.90 	// entre 0 et 1 (% du max de ref) au dessus duquel les valeurs de ref. sont correlées
 #define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
 #define DUREE_ENTRE_CAPTURES 	100 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
@@ -51,6 +57,7 @@ private:
     double position_l;
     double position_c;
     double bruitsignal;
+    EtatCamera etatCamera;
 
     bool cameraConnectee();
 public:
@@ -58,15 +65,13 @@ public:
 	virtual ~Capture();
 public slots:
 	void modifierDiametre(int diametre);
-	void lancerCapture();
-	void stopperCapture();
 	void connecterCamera();
 	void deconnecterCamera();
 	bool capturerImage();
 	void trouverPosition();
 	void enregistrerParametres();
 	void chargerParametres();
-	int chercherDiametre();
+	int chercherDiametreProche();
 private slots:
 	void connexionAuto();
 	void captureEtPosition();

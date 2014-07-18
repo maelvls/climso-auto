@@ -37,7 +37,40 @@
 #include "guidage.h"
 #include <QtCore/qmath.h>
 #include <QtCore/QSettings>
-// Les paramètres sont enregistrés (sous Linux) dans ~/.config/irap/climso-auto.conf
+
+/**
+ * Paramètres chargés pour le guidage (fichier ~/.config/irap/climso-auto.conf sous linux)
+ * On peut modifier les paramètres par défaut en modifiant la valeur du
+ * second paramètres de value(): value("le-nom-du-parametre",valeurParDéfaut)
+ * Certains de ces paramètres sont aussi modifiables depuis le logiciel (menu > paramètres)
+ */
+void Guidage::chargerParametres() {
+	QSettings parametres("irap", "climso-auto");
+
+	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
+	consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble();
+	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool(); // 1 quand le nord correspond au nord, 0 sinon
+	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool(); // 1 quand l'est correspond à l'est, 0 sinon
+	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
+	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
+	gainVertical = parametres.value("gain-vertical", 1000).toInt();
+	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 2).toInt()*1000*60;
+	seuilBruitSurSignal = parametres.value("seuil-bruit-signal",0.30).toDouble(); // Seuil Bruit/Signal au dessus lequel le guidage ne peut être effectué (nuages..)
+	if(consigne_l > 0) etatConsigne = CONSIGNE_LOIN;
+}
+
+void Guidage::enregistrerParametres() {
+	QSettings parametres("irap", "climso-auto");
+	parametres.setValue("derniere-consigne-x", consigne_c);
+	parametres.setValue("derniere-consigne-y", consigne_l);
+	parametres.setValue("orient-nord-sud-inversee", orientVertiInversee);
+	parametres.setValue("orient-est-ouest-inversee", orientHorizInversee);
+	parametres.setValue("arret-si-eloigne", arretSiEloignement);
+	parametres.setValue("gain-horizontal", gainHorizontal);
+	parametres.setValue("gain-vertical", gainVertical);
+	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal/1000/60);
+	parametres.setValue("seuil-bruit-signal",seuilBruitSurSignal);
+}
 
 Guidage::Guidage() {
 	// Ces types doivent être enregistrés auprès de Qt pour les utiliser en signal/slot
@@ -59,17 +92,15 @@ Guidage::Guidage() {
 	etatConsigne = CONSIGNE_NON_INITIALISEE;
 	etatPosition = POSITION_NON_INITIALISEE;
 
-	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,SLOT(connexionAuto()));
-
-	connexionAuto(); // lancer les connexions au démarrage
+	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,SLOT(connexionParTimer()));
+	connexionParTimer(); // lancer les connexions au démarrage
 	timerConnexionAuto.start();
-
-	// Test sauvegarde
 	chargerParametres();
+
+	// Ouverture du fichier de log (format : dd-MM-yyyy_hh-mm pos_x pos_y consigne_x consigne_y)
+	// Il y a une entrée dans le log à chaque modification de la consigne
 	fichier_log = new QFile("log_"+QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy")+".log");
-	if(!fichier_log->open(QIODevice::Text | QIODevice::ReadWrite)) {
-		cout << "Erreur ouverture fichier de log" << endl;
-	}
+	fichier_log->open(QIODevice::Text | QIODevice::ReadWrite);
 	logPositions = new QTextStream(fichier_log);
 }
 
@@ -84,40 +115,11 @@ Guidage::~Guidage() {
 	fichier_log->close();
 }
 
-void Guidage::enregistrerParametres() {
-	QSettings parametres("irap", "climso-auto");
-	parametres.setValue("derniere-consigne-x", consigne_c);
-	parametres.setValue("derniere-consigne-y", consigne_l);
-	parametres.setValue("orient-nord-sud-inversee", orientVertiInversee);
-	parametres.setValue("orient-est-ouest-inversee", orientHorizInversee);
-	parametres.setValue("arret-si-eloigne", arretSiEloignement);
-	parametres.setValue("gain-horizontal", gainHorizontal);
-	parametres.setValue("gain-vertical", gainVertical);
-	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal/1000/60);
-	parametres.setValue("seuil-bruit-signal",seuilBruitSurSignal);
-}
-
 /**
- * Paramètres chargés pour le guidage (fichier ...)
- *
+ * Méthode appelée régulièrement (à travers le timer timerConnexionAuto)
+ * et vérifiant l'état de la connexion avec l'arduino
  */
-void Guidage::chargerParametres() {
-	QSettings parametres("irap", "climso-auto");
-
-	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
-	consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble();
-	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool();
-	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool();
-	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
-	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
-	gainVertical = parametres.value("gain-vertical", 1000).toInt();
-	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 2).toInt()*1000*60;
-	seuilBruitSurSignal = parametres.value("seuil-bruit-signal",0.30).toDouble();
-	if(consigne_l > 0) etatConsigne = CONSIGNE_LOIN;
-}
-
-
-void Guidage::connexionAuto() {
+void Guidage::connexionParTimer() {
 	if (!arduinoConnecte()) {
 		QStringList l = chercherFichiersArduino();
 		if (l.length() > 0) {
@@ -135,6 +137,9 @@ void Guidage::connexionAuto() {
 	emit envoiEtatArduino(etatArduino);
 }
 
+/**
+ * Demande de lancement du guidage
+ */
 void Guidage::lancerGuidage() {
 	if (img.isNull() || position_c.isEmpty() || position_l.isEmpty()) {
 		emit message("Impossible de guider, aucune position précédente");
@@ -150,6 +155,10 @@ void Guidage::lancerGuidage() {
 	afficherImageSoleilEtReperes();
 	tempsDepuisDernierGuidage.start();
 }
+
+/**
+ * Demande d'arrêt du guidage
+ */
 void Guidage::stopperGuidage() {
 	if(etatGuidage != GUIDAGE_MARCHE) { // Une autre méthode a modifié etatGuidage
 		emit envoiEtatGuidage(etatGuidage);
@@ -159,6 +168,9 @@ void Guidage::stopperGuidage() {
 	decalage.clear(); // On vide l'historique des derniers décalages
 }
 
+/**
+ * Recentrage de la consigne sur la position courante
+ */
 void Guidage::consigneReset() {
 	if (position_c.isEmpty() || position_l.isEmpty()) {
 		emit message("Impossible, aucune position précédente");
@@ -274,6 +286,10 @@ void Guidage::guider() {
 	tempsDepuisDernierGuidage.restart();
 }
 
+/**
+ * Connexion au fichier système "nom"
+ * @param nom
+ */
 void Guidage::connecterArduino(QString nom) {
 	if (nom.length() == 0) {
 		emit message("Le nom est vide");
@@ -296,6 +312,9 @@ void Guidage::connecterArduino(QString nom) {
 	emit envoiEtatArduino(etatArduino);
 }
 
+/**
+ * Déconnexion au fichier système
+ */
 void Guidage::deconnecterArduino() {
 	if (arduino != NULL) {
 		emit message("Le fichier " + QString::fromStdString(arduino->getPath())+ " a ete ferme");
@@ -305,11 +324,25 @@ void Guidage::deconnecterArduino() {
 		emit message("Aucun fichier n'etait ouvert");
 }
 
+/**
+ * Vérifie la bonne connexion avec l'arduino
+ * @note on pourrait utiliser arduino->verifierConnexion
+ * qui envoie un caractère ENQ et attend un caractère ACK
+ * pour vérifier si la connexion tient toujours ;
+ * arduino->getErreur() permet seulement de savoir l'état du
+ * fichier système
+ * @return Si c'est connecté
+ */
 bool Guidage::arduinoConnecte() {
 	return arduino && arduino->getErreur() == NO_ERR;
 	// FIXME return arduino && arduino->verifierConnexion();
 }
 
+/**
+ * Envoi d'une commande à l'arduino
+ * @param pin
+ * @param duree
+ */
 void Guidage::envoyerCmd(int pin, int duree) {
 	string rep;
 	if (arduinoConnecte()) {
@@ -321,6 +354,16 @@ void Guidage::envoyerCmd(int pin, int duree) {
 	}
 }
 
+/**
+ * Cette méthode est un slot recevant le signal Capture::resultats(...)
+ * envoyé par Capture dès qu'une image a été capturée et la position trouvée.
+ * Chaque résultat est appelé "échantillon".
+ * @param img L'image envoyée par Capture
+ * @param l
+ * @param c
+ * @param diametre
+ * @param bruitsignal
+ */
 void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diametre, double bruitsignal) {
 	static int cptEchantillons = 0;
 	this->diametre = diametre;
@@ -367,10 +410,14 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 		guider();
 		cptEchantillons = 0;
 	}
-
-	// On note ça dans le log
 }
 
+/**
+ * Méthode "slot" permettant de changer la position de la consigne
+ * @param deltaLigne
+ * @param deltaColonne
+ * @param decalageLent
+ */
 void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent) {
 	if (consigne_l == 0 || consigne_c == 0 || img.isNull()) {
 		emit message("Impossible de modifier la consigne : aucune position");
@@ -386,6 +433,11 @@ void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLe
 			<< " "<< consigne_c << " "<< consigne_l << "\n";
 }
 
+/**
+ * Méthode pour chercher le nom du fichier système correspondant à l'arduino ;
+ * on appelera ensuite connecterArduino() sur le premier de la liste
+ * @return
+ */
 QStringList Guidage::chercherFichiersArduino() {
 	// FIXME: il faut pouvoir distinguer le cas de fichier inexistant et le cas
 	// du fichier dont les droits de lecture sont insuffisants !
@@ -399,11 +451,15 @@ QStringList Guidage::chercherFichiersArduino() {
 	}
 	return resultat;
 }
+
+/**
+ * Envoie un signal vers la fenêtre principale en demandant l'affichage
+ * de l'image dans le WidgetImage
+ */
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
 	emit repereCourant(position_c.last()/img.width(),
 			position_l.last()/img.height(),((float)diametre)/img.width(),etatPosition);
 	emit repereConsigne(consigne_c/img.width(),
 			consigne_l/img.height(),((float)diametre)/img.width(),etatConsigne);
-
 }

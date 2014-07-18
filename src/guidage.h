@@ -21,22 +21,26 @@
 #include <QtGui/QColor>
 #include "arduino.h"
 
+/* 	Pour les paramètres: certains paramètres sont à configurer dans le fichier
+ * 		~/.config/irap/climso-auto.conf (ou directement depuis menu > paramètres)
+ * 	Paramètres par défaut: concernant ces réglages peuvent se trouver dans
+ * 		la fonction chargerParametres()
+ */
+
+// Paramètres "en dur" ne pouvant être modifiés que par la recompilation :
 #define IMPULSION_PIXEL_H	600 // en ms, durée d'impulsion envoyée
 #define IMPULSION_PIXEL_V	1000 //ms (2px pour 1sec)
 #define PIN_NORD			12 // Numéro du pin sur lequel seront envoyées les commandes Nord
 #define	PIN_SUD				11 // Numéro du pin sur lequel seront envoyées les commandes Sud
 #define	PIN_EST				10 // Numéro du pin sur lequel seront envoyées les commandes Est
 #define PIN_OUEST			9 // Numéro du pin sur lequel seront envoyées les commandes Ouest
-#define ORIENTATION_NORD_SUD 		0 // 1 quand le nord correspond au nord, 0 sinon
-#define ORIENTATION_EST_OUEST		0 // 1 quand l'est correspond à l'est, 0 sinon
-#define SEUIL_BRUIT_SIGNAL			0.50 // Seuil Bruit/Signal au dessus lequel le guidage ne peut être effectué (nuages..)
 #define ECHANTILLONS_PAR_GUIDAGE	2 	// Nombre d'échatillons (de captures) nécessaires avant de guider
 #define PERIODE_ENTRE_CONNEXIONS	1000 // Période entre deux vérifications de connexion à l'arduino
-#define SEUIL_DECALAGE_PIXELS		0.05 // Distance en pixels en dessous laquelle la position est estimée comme correcte
 #define DUREE_IMPULSION_MAX		10000 // en ms
-
 #define INCREMENT_LENT		0.1 // Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
 #define INCREMENT_RAPIDE	1	// Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
+//#define SEUIL_DECALAGE_PIXELS		0.05 // Distance en pixels en dessous laquelle la position est estimée comme correcte
+
 
 typedef enum {
 	POSITION_COHERANTE, // La position courante est fiable vis à vis du bruit/signal
@@ -123,7 +127,7 @@ public slots:
 	void chargerParametres();
 private slots:
 	void guider();
-	void connexionAuto();
+	void connexionParTimer();
 signals:
 	void message(QString msg);
 	void envoiEtatArduino(EtatArduino);

@@ -28,6 +28,23 @@
 #include "capture.h"
 #include "diametre_soleil.h"
 
+/**
+ * Paramètres chargés pour la capture (fichier ~/.config/irap/climso-auto.conf sous linux)
+ * On peut modifier les paramètres par défaut en modifiant la valeur du
+ * second paramètres de value(): value("le-nom-du-parametre",valeurParDéfaut)
+ * Certains de ces paramètres sont aussi modifiables depuis le logiciel (menu > paramètres)
+ */
+void Capture::chargerParametres() {
+	QSettings parametres("irap", "climso-auto");
+	diametre = parametres.value("diametre-soleil-en-pixel", DIAMETRE_DEFAUT).toInt();
+	modifierDiametre(diametre);
+	emit diametreSoleil(diametre);
+}
+
+void Capture::enregistrerParametres() {
+	QSettings parametres("irap", "climso-auto");
+	parametres.setValue("diametre-soleil-en-pixel", diametre);
+}
 
 Capture::Capture() {
 	cam = NULL;
@@ -52,18 +69,9 @@ Capture::~Capture() {
 	// FIXME: Quand on a fait le quit(), les events sont tous traités ?
 }
 
-void Capture::enregistrerParametres() {
-	QSettings parametres("irap", "climso-auto");
-	parametres.setValue("diametre-soleil-en-pixel", diametre);
-}
-
-void Capture::chargerParametres() {
-	QSettings parametres("irap", "climso-auto");
-	diametre = parametres.value("diametre-soleil-en-pixel", DIAMETRE_DEFAUT).toInt();
-	modifierDiametre(diametre);
-	emit diametreSoleil(diametre);
-}
-
+/**
+ * Connecte la caméra
+ */
 void Capture::connecterCamera() {
     PAR_ERROR err;
     if(cam != NULL)
@@ -71,11 +79,11 @@ void Capture::connecterCamera() {
     cam = new CSBIGCam(DEV_USB); // Creation du device USB
     if ((err = cam->GetError()) != CE_NO_ERROR) {
         emit message("Erreur avec la camera lors de la creation de l'objet camera : "+QString::fromStdString(cam->GetErrorString()));
-        emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
+        etatCamera = CAMERA_CONNEXION_OFF;
     }
     else if ((err=cam->EstablishLink()) != CE_NO_ERROR) { // Connexion à la camera
         emit message("Erreur avec la camera lors de l'etablissement du lien: "+QString::fromStdString(cam->GetErrorString()));
-        emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
+        etatCamera = CAMERA_CONNEXION_OFF;
     }
     else { // Pas d'erreurs, on met en binning 3x3
         cam->SetReadoutMode(RM_3X3);
@@ -84,44 +92,56 @@ void Capture::connecterCamera() {
         cam->SetABGState((ABG_STATE7)ABG_LOW7);
 
         emit message("Camera connectee");
-        emit envoiEtatCamera(CAMERA_CONNEXION_ON);
+        etatCamera = CAMERA_CONNEXION_ON;
     }
+    emit envoiEtatCamera(etatCamera);
 }
 
+/**
+ * Déconnecte la caméra
+ */
 void Capture::deconnecterCamera() {
     if(cam) {
         cam->CloseDevice();
         emit message("Camera deconnectee");
         delete cam; cam = NULL;
-        emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
+        etatCamera = CAMERA_CONNEXION_OFF;
     }
     else {
         emit message("Aucune camera n'est connectee");
+        etatCamera = CAMERA_CONNEXION_OFF;
     }
+    emit envoiEtatCamera(etatCamera);
 }
 
+/**
+ * Vérifie la bonne connexion avec la caméra
+ * @return
+ */
 bool Capture::cameraConnectee() {
     return cam && cam->EstablishLink() == CE_NO_ERROR;
 }
 
+/**
+ * Méthode appelée régulièrement et permettant de reconnecter
+ * la caméra dans le cas d'une déconnexion
+ */
 void Capture::connexionAuto() {
 	if(!cameraConnectee()) {
-		emit envoiEtatCamera(CAMERA_CONNEXION_OFF);
+		etatCamera = CAMERA_CONNEXION_OFF;
 		emit stopperGuidage();
 		connecterCamera();
 	} else {
-		emit envoiEtatCamera(CAMERA_CONNEXION_ON);
+		etatCamera = CAMERA_CONNEXION_ON;
 	}
+	emit envoiEtatCamera(etatCamera);
 }
 
-void Capture::lancerCapture() {
-	timerProchaineCapture.start();
-}
-void Capture::stopperCapture() {
-	timerProchaineCapture.stop();
-}
-
-
+/**
+ * Conversion d'une Image en QImage pour l'affichage dans la fenêtre principale
+ * @param img
+ * @return
+ */
 QImage versQImage(Image* img) {
 	unsigned char *img_uchar = img->versUchar();
 	// Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
@@ -132,6 +152,10 @@ QImage versQImage(Image* img) {
 	return *temp;
 }
 
+/**
+ * Etape de capture d'une image et de binning 2x2
+ * @return
+ */
 bool Capture::capturerImage() {
     if (!cameraConnectee()) {
         emit message("La camera n'est pas connectee");
@@ -153,6 +177,9 @@ bool Capture::capturerImage() {
 }
 
 
+/**
+ * Etape de recherche de position
+ */
 void Capture::trouverPosition() {
 	if(diametre == 0)
 		modifierDiametre(DIAMETRE_DEFAUT);
@@ -163,7 +190,6 @@ void Capture::trouverPosition() {
 	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, SEUIL_CORRELATION);
 	correl->maxParInterpolation(&position_l, &position_c);
 	bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
-
 
 #if DEBUG
 	img->versTiff(emplacement+"t_obj.tif");
@@ -176,6 +202,11 @@ void Capture::trouverPosition() {
 }
 
 QTime t; // pour debug de durée de correl/capture
+/**
+ * Méthode appelée régulièrement par un timer et lançant
+ * la capture puis la recherche de position, et envoyant
+ * ensuite le résultat à l'instance de la classe Guidage
+ */
 void Capture::captureEtPosition() {
 	connexionAuto();
 	t.start();
@@ -189,6 +220,10 @@ void Capture::captureEtPosition() {
 	timerProchaineCapture.start();
 }
 
+/**
+ * Slot de modification du diamètre du soleil
+ * @param diametre
+ */
 void Capture::modifierDiametre(int diametre) {
 	if(ref_lapl) delete ref_lapl;
 	Image *ref = Image::tracerFormeSoleil(diametre);
@@ -209,7 +244,7 @@ void Capture::modifierDiametre(int diametre) {
  * du diamètre déjà présent (5 pixels autour)
  * @return le diamètre
  */
-int Capture::chercherDiametre() {
+int Capture::chercherDiametreProche() {
 	double bruitsignal_min = 1;
 	double diametre_optimise;
 	Image* ref;
