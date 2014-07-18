@@ -80,7 +80,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>secondes</string>
+     <string>minutes</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>

@@ -43,7 +43,7 @@ void Parametres::chargerParametres() {
 	ui->orientationVerticaleInverse->setChecked(param.value("orient-nord-sud-inversee",false).toBool());
 	ui->orientationHorizontaleInverse->setChecked(param.value("orient-est-ouest-inversee",false).toBool());
 	ui->arretSiDivergenceOn->setChecked(param.value("arret-si-eloigne",false).toBool());
-	ui->dureeAvantArretSiIncoherence->setValue(param.value("duree-attente-avant-arret",12).toInt());
+	ui->dureeAvantArretSiIncoherence->setValue(param.value("duree-attente-avant-arret",2).toInt());
 	ui->seuilBruitSignal->setValue(param.value("seuil-bruit-signal",0.30).toDouble());
 }
 

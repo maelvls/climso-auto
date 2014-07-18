@@ -22,15 +22,15 @@
 
 /**
  * AJOUTS:
- * OK à tester - remettre en route dès que le seuil redescend (limite de 2minutes)
+ * OK - remettre en route dès que le seuil redescend (limite de 2minutes)
  * - L'affichage du message d'impulsions doit etre NORD/EST/SUD..
  * - implémenter diam_soleil
- * - pourquoi il y a des blocages de 8sec pendant la prise de vue
+ * NE LE FAIT PLUS - pourquoi il y a des blocages de 8sec pendant la prise de vue
  * OK - pbm arduino qui est tout le temps allumé en RX TX (buffer ?)
  * 			-> les cmd envoyées par l'arduino ne sont pas lues
- * - ajout fichier config bruitSeuil
- * - SegFault quand le soleil est trop loin
- * - remettre un seuil et l'ajouter comme parametre
+ * OK - ajout fichier config bruitSeuil
+ * ?? - SegFault quand le soleil est trop loin
+ * OK - remettre un seuil et l'ajouter comme parametre
  */
 
 
@@ -66,6 +66,11 @@ Guidage::Guidage() {
 
 	// Test sauvegarde
 	chargerParametres();
+	fichier_log = new QFile("log_"+QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy")+".log");
+	if(!fichier_log->open(QIODevice::Text | QIODevice::ReadWrite)) {
+		cout << "Erreur ouverture fichier de log" << endl;
+	}
+	logPositions = new QTextStream(fichier_log);
 }
 
 Guidage::~Guidage() {
@@ -75,6 +80,8 @@ Guidage::~Guidage() {
 //	if(img) delete img; img=NULL;
 	cout << "Arduino déconnecté" << endl;
 	// FIXME: Quand on a fait le quit(), les events sont tous traités ?
+	logPositions->flush();
+	fichier_log->close();
 }
 
 void Guidage::enregistrerParametres() {
@@ -86,7 +93,7 @@ void Guidage::enregistrerParametres() {
 	parametres.setValue("arret-si-eloigne", arretSiEloignement);
 	parametres.setValue("gain-horizontal", gainHorizontal);
 	parametres.setValue("gain-vertical", gainVertical);
-	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal/1000);
+	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal/1000/60);
 	parametres.setValue("seuil-bruit-signal",seuilBruitSurSignal);
 }
 
@@ -98,14 +105,15 @@ void Guidage::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
 
 	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
+	consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble();
 	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool();
 	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool();
 	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
-	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 12).toInt()*1000;
-	consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble();
+	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 2).toInt()*1000*60;
 	seuilBruitSurSignal = parametres.value("seuil-bruit-signal",0.30).toDouble();
+	if(consigne_l > 0) etatConsigne = CONSIGNE_LOIN;
 }
 
 
@@ -262,7 +270,6 @@ void Guidage::guider() {
 			? PIN_SUD	: PIN_NORD), l_decal_duree);
 	envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
 			? PIN_OUEST	: PIN_EST), c_decal_duree);
-	// XXX LIRE LES RESULTATS
 
 	tempsDepuisDernierGuidage.restart();
 }
@@ -360,6 +367,8 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 		guider();
 		cptEchantillons = 0;
 	}
+
+	// On note ça dans le log
 }
 
 void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLent) {
@@ -372,6 +381,9 @@ void Guidage::modifierConsigne(int deltaLigne, int deltaColonne, bool decalageLe
 	emit envoiEtatConsigne(etatConsigne);
 	emit envoiPositionConsigne(consigne_c, consigne_l);
 	afficherImageSoleilEtReperes();
+	*logPositions << QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy_hh-mm")
+			<< " "<< position_c.last() << " "<< position_l.last()
+			<< " "<< consigne_c << " "<< consigne_l << "\n";
 }
 
 QStringList Guidage::chercherFichiersArduino() {

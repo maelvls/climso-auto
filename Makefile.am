@@ -23,16 +23,16 @@ include autotroll.mk
 ACLOCAL_AMFLAGS = -I m4
 
 # Nom des executables à compiler
-bin_PROGRAMS=main_qt
+bin_PROGRAMS=climsoauto
 
 # Fichiers source (.c, .cpp, .h ou tout autre fichier utile aux étapes de compilation)
-main_qt_SOURCES=\
+climsoauto_SOURCES=\
 	src/arduino.cpp\
 	src/interpol.c\
 	src/csbigcam.cpp src/csbigimg.cpp\
 	src/exceptions.cpp  src/image.cpp\
 	src/fenetreprincipale.cpp src/fenetreprincipale.moc.cpp\
-	src/main_qt_gui.cpp\
+	src/main_gui.cpp\
 	src/guidage.cpp src/guidage.moc.cpp\
 	src/widgetimage.cpp src/widgetimage.moc.cpp \
 	src/capture.cpp src/capture.moc.cpp src/diametre_soleil.c\
@@ -55,10 +55,10 @@ main_qt_SOURCES=\
 # -O0 désactive l'optimisation  	
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
 CXXFLAGS=-g -O2
-main_qt_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
-main_qt_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
-main_qt_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
-main_qt_LDADD    = $(QT_LIBS) $(LDADD)
+climsoauto_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
+climsoauto_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
+climsoauto_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
+climsoauto_LDADD    = $(QT_LIBS) $(LDADD)
 
 # Fichiers qui devront être compilés par uic ou moc avant la compilation
 # Voir CONCERNANT Qt au dessus

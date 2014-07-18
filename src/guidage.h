@@ -16,6 +16,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QTime>
 #include <QtCore/QMetaType>
+#include <QtCore/QTextStream>
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 #include "arduino.h"
@@ -93,9 +94,10 @@ private:
 	bool arretSiEloignement;
 	int gainHorizontal;
 	int gainVertical;
-	int seuilBruitSurSignal;
-	int dureeApresMauvaisBruitSignal; // Durée en secondes
-
+	double seuilBruitSurSignal;
+	int dureeApresMauvaisBruitSignal; // Durée en minutes
+	QFile* fichier_log; // Fichier de log pour noter les positions et consignes
+	QTextStream* logPositions;
 	QTime tempsDernierePositionCoherente;
 	QTime tempsDepuisDernierGuidage;
 

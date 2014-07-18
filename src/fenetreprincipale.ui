@@ -14,32 +14,13 @@
    <string>Climso-auto</string>
   </property>
   <widget class="QWidget" name="centralWidget">
-   <widget class="QLabel" name="statutCamera">
-    <property name="geometry">
-     <rect>
-      <x>180</x>
-      <y>490</y>
-      <width>511</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="layoutDirection">
-     <enum>Qt::RightToLeft</enum>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-    </property>
-   </widget>
    <widget class="QTextBrowser" name="messages">
     <property name="geometry">
      <rect>
       <x>10</x>
       <y>590</y>
       <width>301</width>
-      <height>101</height>
+      <height>121</height>
      </rect>
     </property>
    </widget>
@@ -131,7 +112,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Est</string>
+      <string>Ouest</string>
      </property>
     </widget>
     <widget class="QPushButton" name="consigneGauche">
@@ -144,7 +125,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Ouest</string>
+      <string>Est</string>
      </property>
     </widget>
     <widget class="QPushButton" name="consigneHaut">
@@ -160,15 +141,6 @@
       <string>Nord</string>
      </property>
     </widget>
-    <zorder>vitesseDecalageLent</zorder>
-    <zorder>vitesseDecalageRapide</zorder>
-    <zorder>consigneBas</zorder>
-    <zorder>consigneReset</zorder>
-    <zorder>consigneDroite</zorder>
-    <zorder>consigneGauche</zorder>
-    <zorder>consigneHaut</zorder>
-    <zorder>messages</zorder>
-    <zorder>widget</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox">
     <property name="geometry">
@@ -267,10 +239,6 @@
       <string>Arrêt</string>
      </property>
     </widget>
-    <zorder>lancerGuidage</zorder>
-    <zorder>statutGuidage</zorder>
-    <zorder>stopperGuidage</zorder>
-    <zorder>gridLayoutWidget</zorder>
    </widget>
    <widget class="QGroupBox" name="groupBox_2">
     <property name="geometry">
@@ -411,7 +379,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QWidget" name="widget" native="true">
+   <widget class="QWidget" name="haut" native="true">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -446,7 +414,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>0</y>
+       <y>10</y>
        <width>691</width>
        <height>21</height>
       </rect>
@@ -488,7 +456,7 @@
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>20</y>
+       <y>30</y>
        <width>691</width>
        <height>21</height>
       </rect>
@@ -529,9 +497,9 @@
     <widget class="QLabel" name="statutArduino">
      <property name="geometry">
       <rect>
-       <x>160</x>
-       <y>510</y>
-       <width>541</width>
+       <x>200</x>
+       <y>500</y>
+       <width>491</width>
        <height>20</height>
       </rect>
      </property>
@@ -545,19 +513,31 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <zorder>widgetPositionCourante</zorder>
-    <zorder>widgetPositionConsigne</zorder>
-    <zorder>statutArduino</zorder>
+    <widget class="QLabel" name="statutCamera">
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>480</y>
+       <width>491</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
     <zorder>imageCamera</zorder>
     <zorder>statutCamera</zorder>
+    <zorder>statutArduino</zorder>
+    <zorder>widgetPositionCourante</zorder>
+    <zorder>widgetPositionConsigne</zorder>
    </widget>
-   <zorder>messages</zorder>
-   <zorder>choixVitesse</zorder>
-   <zorder>groupBox</zorder>
-   <zorder>groupBox_2</zorder>
-   <zorder>groupBox_3</zorder>
-   <zorder>widget</zorder>
-   <zorder>statutCamera</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
