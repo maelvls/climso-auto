@@ -40,6 +40,6 @@ void Parametres::chargerParametres() {
 	QSettings param("irap", "climso-auto");
 	ui->arretSiDivergenceOn->setChecked(param.value("arret-si-eloigne",false).toBool());
 	ui->dureeAvantArretSiIncoherence->setValue(param.value("duree-attente-avant-arret",2).toInt());
-	ui->seuilSignalBruit->setValue(param.value("seuil-signal-bruit",20).toDouble());
+	ui->seuilSignalBruit->setValue(param.value("seuil-signal-bruit",10).toDouble());
 }
 
