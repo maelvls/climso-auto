@@ -36,7 +36,7 @@
  */
 void Capture::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
-	diametre = parametres.value("diametre-soleil-en-pixel", DIAMETRE_DEFAUT).toInt();
+	diametre = parametres.value("diametre-soleil-en-pixel", 275).toInt(); // diamètre du soleil en pixels
 	modifierDiametre(diametre);
 	emit diametreSoleil(diametre);
 }
@@ -181,8 +181,6 @@ bool Capture::capturerImage() {
  * Etape de recherche de position
  */
 void Capture::trouverPosition() {
-	if(diametre == 0)
-		modifierDiametre(DIAMETRE_DEFAUT);
 	if(img == NULL) {
 		return;
 	}

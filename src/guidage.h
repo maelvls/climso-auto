@@ -28,13 +28,11 @@
  */
 
 // Paramètres "en dur" ne pouvant être modifiés que par la recompilation :
-#define IMPULSION_PIXEL_H	600 // en ms, durée d'impulsion envoyée
-#define IMPULSION_PIXEL_V	1000 //ms (2px pour 1sec)
 #define PIN_NORD			12 // Numéro du pin sur lequel seront envoyées les commandes Nord
 #define	PIN_SUD				11 // Numéro du pin sur lequel seront envoyées les commandes Sud
 #define	PIN_EST				10 // Numéro du pin sur lequel seront envoyées les commandes Est
 #define PIN_OUEST			9 // Numéro du pin sur lequel seront envoyées les commandes Ouest
-#define ECHANTILLONS_PAR_GUIDAGE	2 	// Nombre d'échatillons (de captures) nécessaires avant de guider
+#define POSITIONS_PAR_GUIDAGE	2 	// Nombre de positions (donc de captures) nécessaires avant de guider
 #define PERIODE_ENTRE_CONNEXIONS	1000 // Période entre deux vérifications de connexion à l'arduino
 #define DUREE_IMPULSION_MAX		10000 // en ms
 #define INCREMENT_LENT		0.1 // Vitesse de déplacement de la consigne à chaque déplacement en nombre de pixels
@@ -85,25 +83,33 @@ private:
 	QList<double> position_l, position_c; // Historique des positions
 	double bruitsignal;
 	int diametre; // Diametre du soleil en pixels pour l'affichage lorsqu'on utilisera repereSoleil(...)
+
+	// Variables pour le guidage
+	QTime tempsDernierePositionCoherente;
+	QTime tempsDepuisDernierGuidage;
 	QList<double> decalage; // Vecteur décalage entre la consigne et la position
 	QList<QTime> decalageTimestamp;
+
 
 	// Paramètres de guidage
 	EtatArduino etatArduino;
 	EtatConsigne etatConsigne;
 	EtatPosition etatPosition;
 	EtatGuidage etatGuidage;
-	bool orientHorizInversee;
-	bool orientVertiInversee;
-	bool arretSiEloignement;
-	int gainHorizontal;
-	int gainVertical;
-	double seuilBruitSurSignal;
-	int dureeApresMauvaisBruitSignal; // Durée en minutes
+	bool orientHorizInversee; // Paramètre
+	bool orientVertiInversee; // Paramètre
+	bool arretSiEloignement; // Paramètre
+	int gainHorizontal; // Paramètre
+	int gainVertical; // Paramètre
+	double seuilBruitSurSignal; // Paramètre
+	int dureeApresMauvaisBruitSignal; // Paramètre de durée en minutes
+
+	// Autres paramètres
 	QFile* fichier_log; // Fichier de log pour noter les positions et consignes
 	QTextStream* logPositions;
-	QTime tempsDernierePositionCoherente;
-	QTime tempsDepuisDernierGuidage;
+	bool afficherLesReperesDePosition; // Paramètre pour afficher les repères (cercle et croix centrale)
+
+
 
 
 	bool arduinoConnecte();
@@ -125,6 +131,7 @@ public slots:
 	void consigneReset();
 	void enregistrerParametres();
 	void chargerParametres();
+	void afficherReperesPositions(bool); // Permet d'afficher ou masquer les repères des positions
 private slots:
 	void guider();
 	void connexionParTimer();

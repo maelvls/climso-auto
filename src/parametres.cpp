@@ -31,8 +31,6 @@ Parametres::~Parametres()
 
 void Parametres::enregistrerParametres() {
 	QSettings param("irap", "climso-auto");
-	param.setValue("orient-nord-sud-inversee",  ui->orientationVerticaleInverse->isChecked());
-	param.setValue("orient-est-ouest-inversee", ui->orientationHorizontaleInverse->isChecked());
 	param.setValue("arret-si-eloigne", ui->arretSiDivergenceOn->isChecked());
 	param.setValue("duree-attente-avant-arret", ui->dureeAvantArretSiIncoherence->value());
 	param.setValue("seuil-bruit-signal", ui->seuilBruitSignal->value());
@@ -40,8 +38,6 @@ void Parametres::enregistrerParametres() {
 
 void Parametres::chargerParametres() {
 	QSettings param("irap", "climso-auto");
-	ui->orientationVerticaleInverse->setChecked(param.value("orient-nord-sud-inversee",false).toBool());
-	ui->orientationHorizontaleInverse->setChecked(param.value("orient-est-ouest-inversee",false).toBool());
 	ui->arretSiDivergenceOn->setChecked(param.value("arret-si-eloigne",false).toBool());
 	ui->dureeAvantArretSiIncoherence->setValue(param.value("duree-attente-avant-arret",2).toInt());
 	ui->seuilBruitSignal->setValue(param.value("seuil-bruit-signal",0.30).toDouble());

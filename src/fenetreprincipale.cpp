@@ -44,7 +44,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // Couleurs de texte
     paletteTexteVert.setColor(QPalette::WindowText, Qt::green);
     paletteTexteRouge.setColor(QPalette::WindowText, Qt::red);
-    paletteTexteJaune.setColor(QPalette::WindowText, Qt::yellow);
+    paletteTexteJaune.setColor(QPalette::WindowText, Qt::red);
     paletteTexteGris.setColor(QPalette::WindowText, Qt::gray);
 
     // Faire en sorte que les chaines statiques "C-strings" soient considérées comme UTF-8
@@ -71,6 +71,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
     QObject::connect(this,SIGNAL(demanderEnregistrementParametres()),guidage,SLOT(enregistrerParametres()));
     QObject::connect(this,SIGNAL(demanderChargementParametres()),guidage,SLOT(chargerParametres()));
+    QObject::connect(ui->affichageReperesPositions,SIGNAL(toggled(bool)),guidage,SLOT(afficherReperesPositions(bool)));
 
     // Signaux-slots entre fenetreprincipale et capture
     QObject::connect(capture,SIGNAL(envoiEtatCamera(EtatCamera)),this,SLOT(modifierStatutCamera(EtatCamera)));

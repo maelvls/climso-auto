@@ -14,7 +14,7 @@
  *
  * FONCTIONNEMENT DU GUIDAGE:
  * 		- Echantillon toutes les 1 secondes (on garde les positions)
- * 		- Guidage tous les 3-4 échantillons récoltés
+ * 		- Guidage tous les 3-4 positions calculées
  * 		- On envoie des impulsions et on garde l'historique des décalages ;
  * 			Si on constate (comment?) que le décalage augmente ou est égal,
  * 			on prévient et on arrête
@@ -49,8 +49,8 @@ void Guidage::chargerParametres() {
 
 	consigne_l = parametres.value("derniere-consigne-y", 0).toDouble();
 	consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble();
-	orientVertiInversee = parametres.value("orient-nord-sud-inversee", false).toBool(); // 1 quand le nord correspond au nord, 0 sinon
-	orientHorizInversee = parametres.value("orient-est-ouest-inversee", false).toBool(); // 1 quand l'est correspond à l'est, 0 sinon
+	orientVertiInversee = parametres.value("orient-nord-sud-inversee", true).toBool(); // 1 quand le nord correspond au nord, 0 sinon
+	orientHorizInversee = parametres.value("orient-est-ouest-inversee", true).toBool(); // 1 quand l'est correspond à l'est, 0 sinon
 	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
@@ -85,6 +85,7 @@ Guidage::Guidage() {
 	// Résultats de guidage
 	consigne_c = consigne_l = 0;
 	bruitsignal = 1;
+	afficherLesReperesDePosition = true;
 
 	// Paramètres de guidage
 	etatGuidage = GUIDAGE_ARRET_NORMAL;
@@ -113,6 +114,14 @@ Guidage::~Guidage() {
 	// FIXME: Quand on a fait le quit(), les events sont tous traités ?
 	logPositions->flush();
 	fichier_log->close();
+}
+
+/**
+ * Permet d'afficher ou masquer les repères (cercle avec une croix centrale)
+ * @param afficher
+ */
+void Guidage::afficherReperesPositions(bool afficher) {
+	afficherLesReperesDePosition = afficher;
 }
 
 /**
@@ -186,11 +195,11 @@ void Guidage::consigneReset() {
 }
 
 /**
- * Cette méthode est appelée lorsque le nombre d'échantillons (de positions capturées)
+ * Cette méthode est appelée lorsque le nombre de positions (et donc d'images capturées)
  * est suffisant ; ce test se fait dans la fonction qui reçoit les résultats de Capture.
  *
  * @note Durée d'envoi des impulsions : la méthode calcule combien de temps a duré la
- * dernière série d'échantillons. Cette durée correspondra à la durée  maximale envoyée
+ * dernière série de positions. Cette durée correspondra à la durée  maximale envoyée
  * à l'arduino en cas de décalage trop grand.
  *
  * @note Arrêt automatique en cas de divergence : la méthode historise les décalages qu'elle
@@ -230,8 +239,8 @@ void Guidage::guider() {
 	decalageTimestamp << QTime::currentTime();
 
 	// Vérification de la divergence (les commandes n'ont pas d'effet/un effet contraire)
-	// Il y a divergence si l'échantillon t(-10) a produit un décalage
-	// supérieur à la moyenne des échantillons t(-9..0)
+	// Il y a divergence si la position t(-10) a produit un décalage
+	// supérieur à la moyenne des positions t(-9..0)
 	double somme = 0;
 	if(decalage.length() >= 10) { // On
 		for(i = decalage.length() - 9; i >= 0 && i < decalage.length(); i++) {
@@ -263,11 +272,11 @@ void Guidage::guider() {
 			", (dx= " + QString::number(l_decal) + ", dy="
 			+ QString::number(c_decal) + ")");
 
-	int l_decal_duree = qAbs(l_decal * IMPULSION_PIXEL_V);
-	int c_decal_duree = qAbs(c_decal * IMPULSION_PIXEL_H);
+	int l_decal_duree = qAbs(l_decal * gainVertical);
+	int c_decal_duree = qAbs(c_decal * gainHorizontal);
 
 	// La duree entre deux corrections ne doit pas depasser la durée entre
-	// deux séries d'échantillons (tempsDepuisDernierGuidage ici)
+	// deux séries de positions (tempsDepuisDernierGuidage ici)
 	// NOTE: on évite les décalages > 5000ms
 	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed()
 			|| l_decal_duree > DUREE_IMPULSION_MAX)
@@ -357,7 +366,7 @@ void Guidage::envoyerCmd(int pin, int duree) {
 /**
  * Cette méthode est un slot recevant le signal Capture::resultats(...)
  * envoyé par Capture dès qu'une image a été capturée et la position trouvée.
- * Chaque résultat est appelé "échantillon".
+ * Chaque résultat est appelé "position".
  * @param img L'image envoyée par Capture
  * @param l
  * @param c
@@ -365,7 +374,7 @@ void Guidage::envoyerCmd(int pin, int duree) {
  * @param bruitsignal
  */
 void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diametre, double bruitsignal) {
-	static int cptEchantillons = 0;
+	static int cptPositions = 0;
 	this->diametre = diametre;
 	position_l << l;
 	position_c << c;
@@ -406,9 +415,9 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 	afficherImageSoleilEtReperes();
 
 	// Si l'historique des positions contient assez de poitions, on envoie le guidage
-	if(etatGuidage == GUIDAGE_MARCHE && ++cptEchantillons == ECHANTILLONS_PAR_GUIDAGE) {
+	if(etatGuidage == GUIDAGE_MARCHE && ++cptPositions == POSITIONS_PAR_GUIDAGE) {
 		guider();
-		cptEchantillons = 0;
+		cptPositions = 0;
 	}
 }
 
@@ -458,8 +467,10 @@ QStringList Guidage::chercherFichiersArduino() {
  */
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
-	emit repereCourant(position_c.last()/img.width(),
+	if(afficherLesReperesDePosition) {
+		emit repereCourant(position_c.last()/img.width(),
 			position_l.last()/img.height(),((float)diametre)/img.width(),etatPosition);
-	emit repereConsigne(consigne_c/img.width(),
+		emit repereConsigne(consigne_c/img.width(),
 			consigne_l/img.height(),((float)diametre)/img.width(),etatConsigne);
+	}
 }

@@ -16,9 +16,8 @@
 
 // Paramètres "en dur" ne pouvant être modifiés que par la recompilation :
 #define SEUIL_CORRELATION		0.90 	// entre 0 et 1 (% du max de ref) au dessus duquel les valeurs de ref. sont correlées
-#define DIAMETRE_DEFAUT			200  	// diamètre du soleil en pixels (par défaut)
 #define DUREE_ENTRE_CAPTURES 	100 	// en ms, il faut aussi compter le temps passé à capturer ! (1100ms environ)
-#define DUREE_EXPOSITION		10 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 100ms)
+#define DUREE_EXPOSITION		120 	// en ms (FIXME: j'ai l'impression que cela ne change rien pour < 120ms)
 
 
 
