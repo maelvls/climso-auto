@@ -44,7 +44,7 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // Couleurs de texte
     paletteTexteVert.setColor(QPalette::WindowText, Qt::green);
     paletteTexteRouge.setColor(QPalette::WindowText, Qt::red);
-    paletteTexteJaune.setColor(QPalette::WindowText, Qt::red);
+    paletteTexteJaune.setColor(QPalette::WindowText, Qt::yellow);
     paletteTexteGris.setColor(QPalette::WindowText, Qt::gray);
 
     // Faire en sorte que les chaines statiques "C-strings" soient considérées comme UTF-8
@@ -354,9 +354,10 @@ bool FenetrePrincipale::eventFilter(QObject *obj, QEvent *event)
 }
 
 void FenetrePrincipale::afficherPositionConsigne(double x, double y) {
-	ui->positionConsigne->setText("x="+QString::number(x)+", y="+QString::number(y));
+	ui->positionConsigneX->setText("x="+QString::number(x));
+	ui->positionConsigneY->setText("y="+QString::number(y));
 }
 
 void FenetrePrincipale::afficherPositionCourante(double x, double y) {
-	ui->positionCourante->setText("x="+QString::number(x)+", y="+QString::number(y));
-}
+	ui->positionCouranteX->setText("x="+QString::number(x));
+	ui->positionCouranteY->setText("y="+QString::number(y));}
