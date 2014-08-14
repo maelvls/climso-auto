@@ -801,7 +801,7 @@ void Image::maxParInterpolation(double *l, double *c) {
  * @param c Coordonnée colonnedu point_donné
  * @return ratio moyenne_alentours/point_donné ou -1 si aucune valeur possible
  */
-double Image::calculerHauteurRelativeAutour(int l_point, int c_point) {
+double Image::calculerSignalSurBruit(int l_point, int c_point) {
 	const int taille_carre_externe = 100;
 	const int taille_carre_interne = 50;
 
@@ -825,9 +825,12 @@ double Image::calculerHauteurRelativeAutour(int l_point, int c_point) {
 		}
 	}
 	double point = getPix(l_point,c_point);
-	if(compteur > 0 && point > 0) {
+	if(compteur > 0) {
 		double moyenne = somme/compteur;
-		return moyenne/point;
+		if(moyenne > 0) {
+			return point/moyenne; // Calcul du signal/bruit
+		}
+		else return -1;
 	}
 	else return -1;
 }

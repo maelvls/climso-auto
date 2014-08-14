@@ -21,16 +21,11 @@
  */
 
 /**
- * AJOUTS:
- * OK - remettre en route dès que le seuil redescend (limite de 2minutes)
- * - L'affichage du message d'impulsions doit etre NORD/EST/SUD..
- * - implémenter diam_soleil
- * NE LE FAIT PLUS - pourquoi il y a des blocages de 8sec pendant la prise de vue
- * OK - pbm arduino qui est tout le temps allumé en RX TX (buffer ?)
- * 			-> les cmd envoyées par l'arduino ne sont pas lues
- * OK - ajout fichier config bruitSeuil
- * ?? - SegFault quand le soleil est trop loin
- * OK - remettre un seuil et l'ajouter comme parametre
+ * TODO:
+ * 		- implémenter diam_soleil
+ * ?? 	- pourquoi il y a des blocages de 8sec pendant la prise de vue
+ * OK 	- ajout fichier config seuilBruit
+ * ?? 	- SegFault quand le soleil est trop loin
  */
 
 
@@ -54,8 +49,8 @@ void Guidage::chargerParametres() {
 	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
-	dureeApresMauvaisBruitSignal = parametres.value("duree-attente-avant-arret", 2).toInt()*1000*60;
-	seuilBruitSurSignal = parametres.value("seuil-bruit-signal",0.30).toDouble(); // Seuil Bruit/Signal au dessus lequel le guidage ne peut être effectué (nuages..)
+	dureeApresMauvaisSignalBruit = parametres.value("duree-attente-avant-arret", 2).toInt()*1000*60;
+	seuilSignalSurBruit = parametres.value("seuil-signal-bruit",20).toDouble(); // Seuil Signal/bruit au dessous duquel le guidage ne peut être effectué (nuages..)
 	if(consigne_l > 0) etatConsigne = CONSIGNE_LOIN;
 }
 
@@ -68,8 +63,8 @@ void Guidage::enregistrerParametres() {
 	parametres.setValue("arret-si-eloigne", arretSiEloignement);
 	parametres.setValue("gain-horizontal", gainHorizontal);
 	parametres.setValue("gain-vertical", gainVertical);
-	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisBruitSignal/1000/60);
-	parametres.setValue("seuil-bruit-signal",seuilBruitSurSignal);
+	parametres.setValue("duree-attente-avant-arret", dureeApresMauvaisSignalBruit/1000/60);
+	parametres.setValue("seuil-signal-bruit",seuilSignalSurBruit);
 }
 
 Guidage::Guidage() {
@@ -84,7 +79,7 @@ Guidage::Guidage() {
 
 	// Résultats de guidage
 	consigne_c = consigne_l = 0;
-	bruitsignal = 1;
+	signalbruit = 1;
 	afficherLesReperesDePosition = true;
 
 	// Paramètres de guidage
@@ -371,22 +366,22 @@ void Guidage::envoyerCmd(int pin, int duree) {
  * @param l
  * @param c
  * @param diametre
- * @param bruitsignal
+ * @param signalBruit
  */
-void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diametre, double bruitsignal) {
+void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diametre, double signalbruit) {
 	static int cptPositions = 0;
 	this->diametre = diametre;
 	position_l << l;
 	position_c << c;
 	this->img = QImage(img);
-	this->bruitsignal = bruitsignal;
+	this->signalbruit = signalbruit;
 
 
-	// Si le bruit/signal est trop fort, il est possible qu'il s'agisse de nuages passagers.
+	// Si le signal/bruit est trop faible, il est possible qu'il s'agisse de nuages passagers.
 	// On va donc passer au mode GUIDAGE_MARCHE_MAIS_BRUIT
-	if (bruitsignal > seuilBruitSurSignal) {
+	if (signalbruit < seuilSignalSurBruit) {
 		etatPosition = POSITION_INCOHERANTE;
-		if(etatGuidage == GUIDAGE_MARCHE) { // Bruit/signal vient d'etre dépassé
+		if(etatGuidage == GUIDAGE_MARCHE) { // Signal/bruit vient de passer en dessous de la limite
 			etatGuidage = GUIDAGE_MARCHE_MAIS_BRUIT;
 			tempsDernierePositionCoherente.start();
 		}
@@ -395,11 +390,11 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 		etatPosition = POSITION_COHERANTE;
 	}
 
-	if(etatGuidage == GUIDAGE_MARCHE_MAIS_BRUIT) { // Attente d'un bruit/signal plus faible
-		if(bruitsignal < seuilBruitSurSignal) {
+	if(etatGuidage == GUIDAGE_MARCHE_MAIS_BRUIT) { // Attente d'un signal/bruit plus élevé
+		if(signalbruit > seuilSignalSurBruit) {
 			// Le guidage peut reprendre
 			etatGuidage = GUIDAGE_MARCHE;
-		} else if(tempsDernierePositionCoherente.elapsed() > dureeApresMauvaisBruitSignal) {
+		} else if(tempsDernierePositionCoherente.elapsed() > dureeApresMauvaisSignalBruit) {
 			// Le temps maximal attendu après un mauvais bruit/signal est écoulé
 			etatGuidage = GUIDAGE_ARRET_BRUIT;
 		}
@@ -407,7 +402,7 @@ void Guidage::traiterResultatsCapture(QImage img, double l, double c, int diamet
 
 	emit imageSoleil(img);
 	emit envoiEtatGuidage(etatGuidage);
-	emit signalBruit(bruitsignal);
+	emit signalBruit(signalbruit);
 	emit envoiEtatPosition(etatPosition);
 	emit envoiPositionCourante(position_c.last(),position_l.last());
 	emit envoiEtatConsigne(etatConsigne);

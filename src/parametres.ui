@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>579</width>
-    <height>469</height>
+    <width>563</width>
+    <height>367</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QDialogButtonBox" name="buttonBox">
    <property name="geometry">
     <rect>
-     <x>390</x>
-     <y>460</y>
+     <x>370</x>
+     <y>330</y>
      <width>181</width>
      <height>32</height>
     </rect>
@@ -91,9 +91,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>80</y>
+     <y>100</y>
      <width>541</width>
-     <height>61</height>
+     <height>41</height>
     </rect>
    </property>
    <property name="title">
@@ -118,8 +118,8 @@
    <widget class="QRadioButton" name="arretSiDivergenceOff">
     <property name="geometry">
      <rect>
-      <x>0</x>
-      <y>40</y>
+      <x>320</x>
+      <y>20</y>
       <width>107</width>
       <height>20</height>
      </rect>
@@ -136,13 +136,13 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>150</y>
+     <y>160</y>
      <width>541</width>
      <height>71</height>
     </rect>
    </property>
    <property name="title">
-    <string>Seuil bruit/signal</string>
+    <string>Seuil signal/bruit </string>
    </property>
    <widget class="QLabel" name="label_4">
     <property name="geometry">
@@ -160,17 +160,17 @@
      <bool>true</bool>
     </property>
    </widget>
-   <widget class="QDoubleSpinBox" name="seuilBruitSignal">
+   <widget class="QDoubleSpinBox" name="seuilSignalBruit">
     <property name="geometry">
      <rect>
       <x>130</x>
       <y>0</y>
-      <width>61</width>
+      <width>101</width>
       <height>21</height>
      </rect>
     </property>
     <property name="maximum">
-     <double>1.000000000000000</double>
+     <double>1000.000000000000000</double>
     </property>
     <property name="singleStep">
      <double>0.010000000000000</double>
@@ -179,14 +179,14 @@
    <widget class="QLabel" name="label_5">
     <property name="geometry">
      <rect>
-      <x>200</x>
+      <x>240</x>
       <y>0</y>
-      <width>341</width>
-      <height>20</height>
+      <width>301</width>
+      <height>16</height>
      </rect>
     </property>
     <property name="text">
-     <string>Entre 0 et 1. Plus le seuil est haut, plus il est sensible</string>
+     <string>Plus le seuil est bas, moins l'arrêt est sensible</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
@@ -197,9 +197,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>240</y>
+     <y>250</y>
      <width>541</width>
-     <height>101</height>
+     <height>61</height>
     </rect>
    </property>
    <property name="title">
@@ -221,6 +221,58 @@
      <bool>true</bool>
     </property>
    </widget>
+  </widget>
+  <widget class="Line" name="line_2">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>230</y>
+     <width>541</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_3">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>140</y>
+     <width>541</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_4">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>80</y>
+     <width>541</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="Line" name="line_5">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>310</y>
+     <width>541</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
   </widget>
  </widget>
  <resources/>

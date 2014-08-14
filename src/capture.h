@@ -55,7 +55,7 @@ private:
 	int diametre; 	// diametre du soleil en pixels
     double position_l;
     double position_c;
-    double bruitsignal;
+    double signalbruit;
     EtatCamera etatCamera;
 
     bool cameraConnectee();

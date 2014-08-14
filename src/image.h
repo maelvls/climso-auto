@@ -77,7 +77,7 @@ public:
     Image* convoluer(const int *noyau, int taille);
     Image* convoluerParDerivee();
     Image* deriveeCarre();
-    double calculerHauteurRelativeAutour(int l, int c);
+    double calculerSignalSurBruit(int l, int c);
 
     // Entrées/sorties (depuis/vers)
     unsigned char* versUchar();

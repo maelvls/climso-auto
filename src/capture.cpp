@@ -187,7 +187,7 @@ void Capture::trouverPosition() {
 	Image *obj_lapl = img->convoluerParDerivee();
 	Image *correl = obj_lapl->correlation_rapide_centree(*ref_lapl, SEUIL_CORRELATION);
 	correl->maxParInterpolation(&position_l, &position_c);
-	bruitsignal = correl->calculerHauteurRelativeAutour(position_l,position_c);
+	signalbruit = correl->calculerSignalSurBruit(position_l,position_c);
 
 #if DEBUG
 	img->versTiff(emplacement+"t_obj.tif");
@@ -213,7 +213,7 @@ void Capture::captureEtPosition() {
 		trouverPosition();
 		cout << "Temps ecoulé après corrélation : " << t.elapsed() << "ms" <<endl;
 		// ENVOI DES RESULTATS
-		emit resultats(imgPourAffichage,position_l,position_c,diametre,bruitsignal);
+		emit resultats(imgPourAffichage,position_l,position_c,diametre,signalbruit);
 	}
 	timerProchaineCapture.start();
 }
@@ -243,7 +243,7 @@ void Capture::modifierDiametre(int diametre) {
  * @return le diamètre
  */
 int Capture::chercherDiametreProche() {
-	double bruitsignal_min = 1;
+	double signalbruit_max = 0; // On recherche le meilleur signal/bruit possible
 	double diametre_optimise;
 	Image* ref;
 	for(int diam = diametre-5; diam < diametre+5; diam++) {
@@ -252,8 +252,8 @@ int Capture::chercherDiametreProche() {
 		ref_lapl = ref->convoluerParDerivee();
 		delete ref;
 		trouverPosition();
-		if(bruitsignal < bruitsignal_min) {
-			bruitsignal_min = bruitsignal;
+		if(signalbruit > signalbruit_max) {
+			signalbruit_max = signalbruit;
 			diametre_optimise = diam;
 		}
 	}

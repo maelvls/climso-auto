@@ -81,7 +81,7 @@ private:
 	double consigne_l, consigne_c;
 	QImage img;	// Image envoyée par la classe Capture par le signal resultat()
 	QList<double> position_l, position_c; // Historique des positions
-	double bruitsignal;
+	double signalbruit;
 	int diametre; // Diametre du soleil en pixels pour l'affichage lorsqu'on utilisera repereSoleil(...)
 
 	// Variables pour le guidage
@@ -101,8 +101,8 @@ private:
 	bool arretSiEloignement; // Paramètre
 	int gainHorizontal; // Paramètre
 	int gainVertical; // Paramètre
-	double seuilBruitSurSignal; // Paramètre
-	int dureeApresMauvaisBruitSignal; // Paramètre de durée en minutes
+	double seuilSignalSurBruit; // Paramètre
+	int dureeApresMauvaisSignalBruit; // Paramètre de durée en minutes
 
 	// Autres paramètres
 	QFile* fichier_log; // Fichier de log pour noter les positions et consignes

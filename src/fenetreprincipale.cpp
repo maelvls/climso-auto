@@ -154,11 +154,11 @@ void FenetrePrincipale::modifierStatutArduino(EtatArduino etat) {
 		break;
 	case ARDUINO_CONNEXION_OFF:
 		ui->statutArduino->setPalette(paletteTexteRouge);
-		ui->statutArduino->setText("Arduino déconnecté");
+		ui->statutArduino->setText("Arduino déconnecté (c'est la carte de contrôle des relais branchée en USB)");
 		break;
 	case ARDUINO_FICHIER_INTROUV:
 		ui->statutArduino->setPalette(paletteTexteRouge);
-		ui->statutArduino->setText("Arduino introuvable");
+		ui->statutArduino->setText("Arduino introuvable (c'est la carte de contrôle des relais branchée en USB)");
 	}
 }
 
@@ -173,16 +173,16 @@ void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
 		ui->statutGuidage->setText("Guidage en marche");
 		break;
 	case GUIDAGE_MARCHE_MAIS_BRUIT:
-		ui->statutGuidage->setPalette(paletteTexteJaune);
-		ui->statutGuidage->setText("Pause: bruit/signal doit redescendre");
+		ui->statutGuidage->setPalette(paletteTexteRouge);
+		ui->statutGuidage->setText("Pause: signal/bruit trop faible");
 		break;
 	case GUIDAGE_BESOIN_POSITION:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
-		ui->statutGuidage->setText("Pas de position du soleil");
+		ui->statutGuidage->setText("Arrêt: Pas de position du soleil");
 		break;
 	case GUIDAGE_ARRET_BRUIT:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
-		ui->statutGuidage->setText("Arrêt: bruit/signal trop fort");
+		ui->statutGuidage->setText("Arrêt: signal/bruit trop faible");
 		break;
 	case GUIDAGE_ARRET_NORMAL:
 		ui->statutGuidage->setPalette(paletteTexteRouge);

@@ -33,13 +33,13 @@ void Parametres::enregistrerParametres() {
 	QSettings param("irap", "climso-auto");
 	param.setValue("arret-si-eloigne", ui->arretSiDivergenceOn->isChecked());
 	param.setValue("duree-attente-avant-arret", ui->dureeAvantArretSiIncoherence->value());
-	param.setValue("seuil-bruit-signal", ui->seuilBruitSignal->value());
+	param.setValue("seuil-signal-bruit", ui->seuilSignalBruit->value());
 }
 
 void Parametres::chargerParametres() {
 	QSettings param("irap", "climso-auto");
 	ui->arretSiDivergenceOn->setChecked(param.value("arret-si-eloigne",false).toBool());
 	ui->dureeAvantArretSiIncoherence->setValue(param.value("duree-attente-avant-arret",2).toInt());
-	ui->seuilBruitSignal->setValue(param.value("seuil-bruit-signal",0.30).toDouble());
+	ui->seuilSignalBruit->setValue(param.value("seuil-signal-bruit",20).toDouble());
 }
 
