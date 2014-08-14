@@ -32,6 +32,7 @@
 #include "guidage.h"
 #include <QtCore/qmath.h>
 #include <QtCore/QSettings>
+#include <cmath>
 
 /**
  * Paramètres chargés pour le guidage (fichier ~/.config/irap/climso-auto.conf sous linux)
@@ -46,7 +47,7 @@ void Guidage::chargerParametres() {
 	consigne_c = parametres.value("derniere-consigne-x", 0.0).toDouble();
 	orientVertiInversee = parametres.value("orient-nord-sud-inversee", true).toBool(); // 1 quand le nord correspond au nord, 0 sinon
 	orientHorizInversee = parametres.value("orient-est-ouest-inversee", true).toBool(); // 1 quand l'est correspond à l'est, 0 sinon
-	arretSiEloignement = parametres.value("arret-si-eloigne", false).toBool();
+	arretSiEloignement = parametres.value("arret-si-eloigne", true).toBool();
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
 	dureeApresMauvaisSignalBruit = parametres.value("duree-attente-avant-arret", 2).toInt()*1000*60;
@@ -243,18 +244,24 @@ void Guidage::guider() {
 	decalage << qSqrt(l_decal * l_decal + c_decal * c_decal);
 	decalageTimestamp << QTime::currentTime();
 
-	// Vérification de la divergence (les commandes n'ont pas d'effet/un effet contraire)
-	// Il y a divergence si la position t(-10) a produit un décalage
-	// supérieur à la moyenne des positions t(-9..0)
-	double somme = 0;
-	if(decalage.length() >= 10) { // On
-		for(i = decalage.length() - 9; i >= 0 && i < decalage.length(); i++) {
-			somme += decalage.at(i);// Pour les 10 (ou moins) derniers décalages
-		}
-		somme = somme/9;
-		if(somme > decalage.at(decalage.length() - 10) && arretSiEloignement) {
-			emit message("Les commandes envoyées ne semblent pas avoir d'effet");
-			emit message("Dernière commande envoyée : "+decalageTimestamp.at(decalageTimestamp.length()-1).toString("h:m:s"));
+	/* Vérification de la divergence (les commandes n'ont pas d'effet/un effet contraire)
+	 * 	Soit D(t) le décalage au temps t). On considère qu'il y a divergence ssi :
+	 *			D(n) > 3 px
+	 *		et	D(n) >= D(n-1)
+	 *		et 	D(n-1) >= D(n-2)
+	 *		et  D(n-2) >= D(n-3)
+	 * supérieur à la moyenne des positions t(-9..0)
+	 */
+	if(arretSiEloignement && decalage.length() > 4) { // Nécessite 5 décalages succéssifs
+		int n = decalage.length()-1; // On part de D(n), le décalage le plus récent
+		if(decalage.at(n) > 3
+			&& std::abs(decalage.at(n)-decalage.at(n-1)) >= std::abs(decalage.at(n-1) - decalage.at(n-2))
+			&& std::abs(decalage.at(n-1)-decalage.at(n-2)) >= std::abs(decalage.at(n-2) - decalage.at(n-3))
+			&& std::abs(decalage.at(n-2)-decalage.at(n-3)) >= std::abs(decalage.at(n-3) - decalage.at(n-4))
+		) {	// Il y a divergence : on arrête le guidage
+			emit message("Les commandes envoyées ne semblent pas avoir d'effet (divergence du guidage)");
+			emit message("Dernière commande envoyée : "
+					+decalageTimestamp.at(decalageTimestamp.length()-1).toString("h:m:s"));
 			emit envoiEtatGuidage(etatGuidage = GUIDAGE_ARRET_DIVERGE);
 			stopperGuidage();
 			afficherImageSoleilEtReperes();

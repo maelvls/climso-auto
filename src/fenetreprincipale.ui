@@ -17,11 +17,17 @@
    <widget class="QTextBrowser" name="messages">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>0</x>
       <y>590</y>
-      <width>301</width>
+      <width>311</width>
       <height>121</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Abyssinica SIL</family>
+      <pointsize>8</pointsize>
+     </font>
     </property>
    </widget>
    <widget class="QGroupBox" name="choixVitesse">
