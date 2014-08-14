@@ -45,6 +45,8 @@ private slots:
     void on_consigneDroite_clicked();
     void on_consigneGauche_clicked();
     void on_ouvrirParametres_triggered();
+    void on_afficherPositionConsigne_clicked();
+    void on_afficherPositionCourante_clicked();
 
     void closeEvent(QCloseEvent *event);
     void keyPressEvent(QKeyEvent* event);
@@ -67,6 +69,8 @@ signals:
 	void diametreSoleil(int);
 	void demanderEnregistrementParametres();
 	void demanderChargementParametres();
+	void changerAffichageRepereConsigne(bool);
+	void changerAffichageRepereCourant(bool);
 };
 
 #endif // FENETREPRINCIPALE_H

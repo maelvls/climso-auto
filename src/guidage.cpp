@@ -50,7 +50,7 @@ void Guidage::chargerParametres() {
 	gainHorizontal = parametres.value("gain-horizontal", 600).toInt();
 	gainVertical = parametres.value("gain-vertical", 1000).toInt();
 	dureeApresMauvaisSignalBruit = parametres.value("duree-attente-avant-arret", 2).toInt()*1000*60;
-	seuilSignalSurBruit = parametres.value("seuil-signal-bruit",20).toDouble(); // Seuil Signal/bruit au dessous duquel le guidage ne peut être effectué (nuages..)
+	seuilSignalSurBruit = parametres.value("seuil-signal-bruit",10).toDouble(); // Seuil Signal/bruit au dessous duquel le guidage ne peut être effectué (nuages..)
 	if(consigne_l > 0) etatConsigne = CONSIGNE_LOIN;
 }
 
@@ -80,7 +80,8 @@ Guidage::Guidage() {
 	// Résultats de guidage
 	consigne_c = consigne_l = 0;
 	signalbruit = 1;
-	afficherLesReperesDePosition = true;
+	etatAffichageRepereConsigne = true;
+	etatAffichageRepereCourant = true;
 
 	// Paramètres de guidage
 	etatGuidage = GUIDAGE_ARRET_NORMAL;
@@ -112,11 +113,20 @@ Guidage::~Guidage() {
 }
 
 /**
- * Permet d'afficher ou masquer les repères (cercle avec une croix centrale)
+ * Permet d'afficher ou masquer le repère courant
+ * (cercle avec une croix centrale)
  * @param afficher
  */
-void Guidage::afficherReperesPositions(bool afficher) {
-	afficherLesReperesDePosition = afficher;
+void Guidage::afficherRepereCourant(bool afficher) {
+	etatAffichageRepereCourant = afficher;
+}
+/**
+ * Permet d'afficher ou masquer le repère de la consigne
+ * (cercle avec une croix centrale)
+ * @param afficher
+ */
+void Guidage::afficherRepereConsigne(bool afficher) {
+	etatAffichageRepereConsigne = afficher;
 }
 
 /**
@@ -462,9 +472,11 @@ QStringList Guidage::chercherFichiersArduino() {
  */
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
-	if(afficherLesReperesDePosition) {
+	if(etatAffichageRepereCourant) {
 		emit repereCourant(position_c.last()/img.width(),
 			position_l.last()/img.height(),((float)diametre)/img.width(),etatPosition);
+	}
+	if(etatAffichageRepereConsigne) {
 		emit repereConsigne(consigne_c/img.width(),
 			consigne_l/img.height(),((float)diametre)/img.width(),etatConsigne);
 	}

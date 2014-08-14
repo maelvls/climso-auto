@@ -71,7 +71,6 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(&threadGuidage,SIGNAL(finished()),guidage,SLOT(deleteLater()));
     QObject::connect(this,SIGNAL(demanderEnregistrementParametres()),guidage,SLOT(enregistrerParametres()));
     QObject::connect(this,SIGNAL(demanderChargementParametres()),guidage,SLOT(chargerParametres()));
-    QObject::connect(ui->affichageReperesPositions,SIGNAL(toggled(bool)),guidage,SLOT(afficherReperesPositions(bool)));
 
     // Signaux-slots entre fenetreprincipale et capture
     QObject::connect(capture,SIGNAL(envoiEtatCamera(EtatCamera)),this,SLOT(modifierStatutCamera(EtatCamera)));
@@ -81,6 +80,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     QObject::connect(this,SIGNAL(demanderEnregistrementParametres()),capture,SLOT(enregistrerParametres()));
     QObject::connect(this,SIGNAL(demanderChargementParametres()),capture,SLOT(chargerParametres()));
     QObject::connect(ui->chercherDiametre,SIGNAL(clicked()),capture,SLOT(chercherDiametreProche()));
+    QObject::connect(this,SIGNAL(changerAffichageRepereConsigne(bool)),guidage,SLOT(afficherRepereConsigne(bool)));
+    QObject::connect(this,SIGNAL(changerAffichageRepereCourant(bool)),guidage,SLOT(afficherRepereCourant(bool)));
 
 
     // Signaux-slots entre capture et guidage
@@ -267,6 +268,27 @@ void FenetrePrincipale::on_ouvrirParametres_triggered() {
 	fenetreParametres.exec();
 	emit demanderChargementParametres();
 }
+void FenetrePrincipale::on_afficherPositionConsigne_clicked() {
+	static bool etatBouton = true; // Initialisée qu'au lancement de la méthode
+	if(etatBouton) { // Si le bouton affichait "On"
+		ui->afficherPositionConsigne->setText("Off");
+		emit changerAffichageRepereConsigne(etatBouton = false);
+	} else { // Si le bouton affichait "Off"
+		ui->afficherPositionConsigne->setText("On");
+		emit changerAffichageRepereConsigne(etatBouton = true);
+	}
+}
+void FenetrePrincipale::on_afficherPositionCourante_clicked() {
+	static bool etatBouton = true; // Initialisée qu'au lancement de la méthode
+	if(etatBouton) { // Si le bouton affichait "On"
+		ui->afficherPositionCourante->setText("Off");
+		emit changerAffichageRepereCourant(etatBouton = false);
+	} else { // Si le bouton affichait "Off"
+		ui->afficherPositionCourante->setText("On");
+		emit changerAffichageRepereCourant(etatBouton = true);
+	}
+}
+
 
 
 

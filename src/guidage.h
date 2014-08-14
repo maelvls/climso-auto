@@ -106,10 +106,9 @@ private:
 
 	// Autres paramètres
 	QFile* fichier_log; // Fichier de log pour noter les positions et consignes
-	QTextStream* logPositions;
-	bool afficherLesReperesDePosition; // Paramètre pour afficher les repères (cercle et croix centrale)
-
-
+	QTextStream* logPositions; // Fichier stream lié à fichier_log pour noter positions et consignes
+	bool etatAffichageRepereCourant; // Paramètre pour afficher le repère (cercle et croix centrale)
+	bool etatAffichageRepereConsigne; // Paramètre pour afficher le repère (cercle et croix centrale)
 
 
 	bool arduinoConnecte();
@@ -131,7 +130,8 @@ public slots:
 	void consigneReset();
 	void enregistrerParametres();
 	void chargerParametres();
-	void afficherReperesPositions(bool); // Permet d'afficher ou masquer les repères des positions
+	void afficherRepereConsigne(bool); // Permet d'afficher ou masquer les repères des positions
+	void afficherRepereCourant(bool); // Permet d'afficher ou masquer les repères des positions
 private slots:
 	void guider();
 	void connexionParTimer();

@@ -441,14 +441,27 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>50</x>
         <y>0</y>
         <width>161</width>
-        <height>16</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
        <string>Position courante</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="afficherPositionCourante">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>On</string>
       </property>
      </widget>
     </widget>
@@ -483,14 +496,27 @@
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>50</x>
         <y>0</y>
         <width>161</width>
-        <height>16</height>
+        <height>21</height>
        </rect>
       </property>
       <property name="text">
        <string>Position de la consigne</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="afficherPositionConsigne">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>0</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>On</string>
       </property>
      </widget>
     </widget>
@@ -532,57 +558,11 @@
       <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
      </property>
     </widget>
-    <widget class="QWidget" name="affichagePositions" native="true">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>50</y>
-       <width>171</width>
-       <height>41</height>
-      </rect>
-     </property>
-     <widget class="QRadioButton" name="masquageReperesPositions">
-      <property name="enabled">
-       <bool>true</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>20</y>
-        <width>171</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Masquer positions</string>
-      </property>
-      <property name="checked">
-       <bool>false</bool>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="affichageReperesPositions">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>171</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Afficher positions</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </widget>
     <zorder>imageCamera</zorder>
     <zorder>statutCamera</zorder>
     <zorder>statutArduino</zorder>
     <zorder>widgetPositionCourante</zorder>
     <zorder>widgetPositionConsigne</zorder>
-    <zorder>affichagePositions</zorder>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
