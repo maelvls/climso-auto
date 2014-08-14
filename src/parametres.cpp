@@ -34,6 +34,7 @@ void Parametres::enregistrerParametres() {
 	param.setValue("arret-si-eloigne", ui->arretSiDivergenceOn->isChecked());
 	param.setValue("duree-attente-avant-arret", ui->dureeAvantArretSiIncoherence->value());
 	param.setValue("seuil-signal-bruit", ui->seuilSignalBruit->value());
+	param.setValue("normaliser-image-affichee",ui->normaliser->isChecked());
 }
 
 void Parametres::chargerParametres() {
@@ -41,5 +42,6 @@ void Parametres::chargerParametres() {
 	ui->arretSiDivergenceOn->setChecked(param.value("arret-si-eloigne",true).toBool());
 	ui->dureeAvantArretSiIncoherence->setValue(param.value("duree-attente-avant-arret",2).toInt());
 	ui->seuilSignalBruit->setValue(param.value("seuil-signal-bruit",10).toDouble());
+	ui->normaliser->setChecked(param.value("normaliser-image-affichee",true).toBool());
 }
 

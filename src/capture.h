@@ -57,8 +57,10 @@ private:
     double position_c;
     double signalbruit;
     EtatCamera etatCamera;
+    bool normaliserImageAffichee;
 
     bool cameraConnectee();
+    QImage versQImage(Image*);
 public:
 	Capture();
 	virtual ~Capture();

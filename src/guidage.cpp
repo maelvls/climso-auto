@@ -259,7 +259,7 @@ void Guidage::guider() {
 			&& std::abs(decalage.at(n-1)-decalage.at(n-2)) >= std::abs(decalage.at(n-2) - decalage.at(n-3))
 			&& std::abs(decalage.at(n-2)-decalage.at(n-3)) >= std::abs(decalage.at(n-3) - decalage.at(n-4))
 		) {	// Il y a divergence : on arrête le guidage
-			emit message("Les commandes envoyées ne semblent pas avoir d'effet (divergence du guidage)");
+			emit message("Les commandes envoyées ne semblent pas avoir d'effet (divergence du guidage). Pour désactiver cette fonction, allez dans Menu > Paramètres");
 			emit message("Dernière commande envoyée : "
 					+decalageTimestamp.at(decalageTimestamp.length()-1).toString("h:m:s"));
 			emit envoiEtatGuidage(etatGuidage = GUIDAGE_ARRET_DIVERGE);

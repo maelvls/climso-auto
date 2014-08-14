@@ -37,6 +37,7 @@
 void Capture::chargerParametres() {
 	QSettings parametres("irap", "climso-auto");
 	diametre = parametres.value("diametre-soleil-en-pixel", 275).toInt(); // diamètre du soleil en pixels
+	normaliserImageAffichee = parametres.value("normaliser-image-affichee", true).toBool();
 	modifierDiametre(diametre);
 	emit diametreSoleil(diametre);
 }
@@ -44,6 +45,7 @@ void Capture::chargerParametres() {
 void Capture::enregistrerParametres() {
 	QSettings parametres("irap", "climso-auto");
 	parametres.setValue("diametre-soleil-en-pixel", diametre);
+	parametres.setValue("normaliser-image-affichee",normaliserImageAffichee);
 }
 
 Capture::Capture() {
@@ -143,10 +145,14 @@ void Capture::connexionAuto() {
  * @param img
  * @return
  */
-QImage versQImage(Image* img) {
+QImage Capture::versQImage(Image* img) {
 	static unsigned char *img_uchar = NULL;
 	if(img_uchar) delete img_uchar;
-	img_uchar = img->versUchar();
+	if(normaliserImageAffichee) {
+		img_uchar = img->versUcharEtNormaliser();
+	} else {
+		img_uchar = img->versUchar();
+	}
 	// Creation de l'index (34 va donner 34...) car Qt ne gère pas les nuances de gris
 	QImage *temp = new QImage(img_uchar, img->getColonnes(), img->getLignes(),img->getColonnes(), QImage::Format_Indexed8);
 	for(int i=0;i<256;++i) { // Pour construire une image en nuances de gris (n'existe pas sinon sous Qt)

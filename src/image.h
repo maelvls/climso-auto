@@ -89,6 +89,7 @@ public:
 
     // Entrées/sorties (depuis/vers)
     unsigned char* versUchar();
+    unsigned char* versUcharEtNormaliser();
 #if INCLUDE_TIFF
     static Image* depuisTiff(string fichierEntree);
     void versTiff(string fichierSortie);

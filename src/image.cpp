@@ -260,10 +260,27 @@ double** Image::versTableauDeDouble() {
 	return tab;
 }
 /**
- * @return Tableau linéaire : tableau[lignes * colonnes]
+ * Traduit l'image en tableau linéaire sans normalisation
+ * @return Tableau de uchar : tableau[lignes * colonnes]
  * Doit être supprimé avec delete [] tab;
  */
-unsigned char* Image::versUchar() { // FIXME : vérifier si "tab" est delete
+unsigned char* Image::versUchar() {
+	 double coef = 255./INTENSITE_MAX;
+	unsigned char *tab = new unsigned char[lignes*colonnes];
+	for (int lign=0; lign < lignes; lign++) {
+	for (int col=0; col < colonnes; col++) {
+	tab[lign*colonnes + col] = getPix(lign, col)*coef;
+	}
+	}
+	return tab;
+}
+
+/**
+ * Traduit l'image en tableau linéaire avec normalisation
+ * @return Tableau de uchar : tableau[lignes * colonnes]
+ * Doit être supprimé avec delete [] tab;
+ */
+unsigned char* Image::versUcharEtNormaliser() {
     // dst(l,c) = ((src(l,c) - min)* coef + 0)
 	// coef = (255 - 0)/(max-min)
     MonDouble valMin = valeurMin(), valMax = valeurMax();
