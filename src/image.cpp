@@ -59,6 +59,7 @@ Image::Image() {
     lignes = 0;
     colonnes = 0;
     img = NULL;
+    max_c = max_l = min_c = min_l = -1;
 }
 
 /**
@@ -70,6 +71,7 @@ Image::Image(int hauteur, int largeur) {
     lignes = hauteur;
     colonnes = largeur;
     img = new MonDouble[lignes*colonnes];
+    max_c = max_l = min_c = min_l = -1;
 }
 
 /**
@@ -80,6 +82,7 @@ Image::Image(Image& src) {
 	lignes = src.lignes;
     colonnes = src.colonnes;
     img = new MonDouble[lignes*colonnes];
+    max_c = max_l = min_c = min_l = -1;
 
     copier(src);
 }
@@ -97,6 +100,7 @@ Image::Image(Image& src, int ligne_0, int col_0, int hauteur, int largeur) {
     colonnes = largeur;
     img = new MonDouble[lignes*colonnes];
     this->copier(src,ligne_0,col_0,hauteur,largeur);
+    max_c = max_l = min_c = min_l = -1;
 }
 
 /**
@@ -259,12 +263,15 @@ double** Image::versTableauDeDouble() {
  * @return Tableau linéaire : tableau[lignes * colonnes]
  * Doit être supprimé avec delete [] tab;
  */
-unsigned char* Image::versUchar() {
-    double coef = 255./INTENSITE_MAX;
+unsigned char* Image::versUchar() { // FIXME : vérifier si "tab" est delete
+    // dst(l,c) = ((src(l,c) - min)* coef + 0)
+	// coef = (255 - 0)/(max-min)
+    MonDouble valMin = valeurMin(), valMax = valeurMax();
+    double coef = (255. - 0.)/(valMax - valMin);
     unsigned char *tab = new unsigned char[lignes*colonnes];
     for (int lign=0; lign < lignes; lign++) {
         for (int col=0; col < colonnes; col++) {
-            tab[lign*colonnes + col] = getPix(lign, col)*coef;
+            tab[lign*colonnes + col] = (getPix(lign, col) - valMin) * coef;
         }
     }
     return tab;
@@ -496,7 +503,7 @@ Image* Image::correlation_rapide_centree(Image& reference, float seuil_ref) {
  */
 Image* Image::correlation(Image& reference, float seuil_ref) {
 	int min_l, min_c, max_l, max_c;
-	reference.minMaxPixel(&min_l, &min_c, &max_l, &max_c);
+	reference.minMaxPosition(&min_l, &min_c, &max_l, &max_c);
 	MonDouble seuil_relatif = reference.getPix(min_l, min_c)
 			+ seuil_ref*(reference.getPix(max_l, max_c)-reference.getPix(min_l, min_c));
 
@@ -541,44 +548,48 @@ void Image::afficher() {
  * Normalise l'image receveuse à [0, INTENSITE_MAX]
  */
 void Image::normaliser() {
-    int l_min, c_min, l_max, c_max;
-    minMaxPixel(&l_min, &c_min, &l_max, &c_max);
-    MonDouble min = getPix(l_min, c_min);
-    MonDouble max = getPix(l_max, c_max);
+    normaliser(0,INTENSITE_MAX);
+}
+
+/**
+ * Normalise l'image receveuse à [minSortie, maxSortie]
+ */
+void Image::normaliser(MonDouble minSortie, MonDouble maxSortie) {
+    MonDouble min = getPix(posMinLigne(), posMinColonne());
+    MonDouble max = getPix(posMaxLigne(), posMaxColonne());
     for (int l=0; l < lignes; l++) {
         for (int c=0; c < colonnes; c++) {
-            // dst(l,c) = ((src(l,c) - min)*INTENSITE_MAX /(max-min)
-            setPix(l, c,(getPix(l, c)-min)*INTENSITE_MAX/(max-min));
+            // dst(l,c) = ((src(l,c) - min)*(MAX_SORTIE - MIN_SORTIE)/(max-min) + MIN_SORTIE)
+            setPix(l, c,(getPix(l, c)-min)*(maxSortie - minSortie)/(max - min) + minSortie);
         }
     }
 }
 
 /**
- * Trouve les positions des min, max
- * @param l_min Ligne du min  (ou NULL)
- * @param c_min Colonne du min (ou NULL)
- * @param l_max Ligne du max (ou NULL)
- * @param c_max Colonne du max (ou NULL)
+ * Détermine les min et max en interne, si valMax, valMin,
+ * posMax* ou posMin* demandé
+ * @return Si la recherche a été effectuée ou non (dans le cas où une recherche minmax
+ * a déjà été effectuée)
  */
-void Image::minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max) {
-    if(l_min && c_min)
-    	*l_min = *c_min = 0;
-	if(l_max && c_max)
-		*l_max = *c_max = 0;
-
+bool Image::determinerMinMax() {
+	// On vérifie si les min et max n'ont pas déjà été trouvés
+	if(max_c!=-1 && max_l!=-1 && min_c!=-1 && min_l!=-1) {
+		return false;
+	}
+    max_c = max_l = min_c = min_l = 0;
     for (int l=0; l < lignes; l++) {
         for (int c=0; c < colonnes; c++) {
-            if(l_min && c_min && getPix(l,c) < getPix(*l_min, *c_min)) {
-                *l_min = l; *c_min = c;
+            if(getPix(l,c) < getPix(min_l, min_c)) {
+                min_l = l;
+                min_c = c;
             }
-            if(l_max && c_max && getPix(l,c) > getPix(*l_max, *c_max)) {
-                *l_max = l; *c_max = c;
+            if(getPix(l,c) > getPix(max_l, max_c)) {
+                max_l = l;
+                max_c = c;
             }
         }
     }
-}
-void Image::maxPixel(int *l, int *c) {
-	minMaxPixel(NULL,NULL,l,c);
+    return true;
 }
 
 /**
@@ -777,18 +788,10 @@ Image* Image::interpolerAutourDeCePoint(int l, int c) {
 void Image::maxParInterpolation(double *l, double *c) {
 	const int taille = 20; // carré de 20 de pixels ; le max est au centre
 	const float pas_interp = 1/8.0; // le pas d'interpolation
-
-	int l_max, c_max;
-	this->maxPixel(&l_max, &c_max);
-
-	Image *interp = this->interpolerAutourDeCePoint(l_max, c_max, pas_interp, taille);
-	
-	int l_max_interp, c_max_interp;
-	interp->maxPixel(&l_max_interp, &c_max_interp);
-	
+	Image *interp = this->interpolerAutourDeCePoint(posMaxLigne(), posMaxColonne(), pas_interp, taille);
 	// On retrouve maintenant la position sub-pixel dans "this"
-	*l = l_max - taille/2.0 + l_max_interp * pas_interp;
-	*c = c_max - taille/2.0 + c_max_interp * pas_interp;
+	*l = posMaxLigne() - taille/2.0 + interp->posMaxLigne() * pas_interp;
+	*c = posMaxColonne() - taille/2.0 + interp->posMaxColonne() * pas_interp;
 	delete interp;
 }
 #endif
@@ -857,4 +860,46 @@ Image* Image::convoluerParDerivee() {
 		}
 	}
 	return img;
+}
+
+MonDouble Image::valeurMin() {
+	if(max_c==-1 || max_l==-1 || min_c==-1 || min_l==-1) {
+		determinerMinMax();
+	}
+	return getPix(min_l,min_c);
+}
+
+MonDouble Image::valeurMax() {
+	if(max_c==-1 || max_l==-1 || min_c==-1 || min_l==-1) {
+		determinerMinMax();
+	}
+	return getPix(max_l,max_c);
+}
+
+int Image::posMinLigne() {
+	if(max_c==-1 || max_l==-1 || min_c==-1 || min_l==-1) {
+		determinerMinMax();
+	}
+	return min_l;
+}
+
+int Image::posMinColonne() {
+	if(max_c==-1 || max_l==-1 || min_c==-1 || min_l==-1) {
+		determinerMinMax();
+	}
+	return min_c;
+}
+
+int Image::posMaxLigne() {
+	if(max_c==-1 || max_l==-1 || min_c==-1 || min_l==-1) {
+		determinerMinMax();
+	}
+	return max_l;
+}
+
+int Image::posMaxColonne() {
+	if(max_c==-1 || max_l==-1 || min_c==-1 || min_l==-1) {
+		determinerMinMax();
+	}
+	return max_c;
 }

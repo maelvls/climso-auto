@@ -52,6 +52,9 @@ class Image {
 private:
     int lignes, colonnes; // hauteur, largeur
     MonDouble *img; // Des pixels nuances de gris sur 16 bits
+    int max_c, max_l;
+    int min_c, min_l;
+    bool determinerMinMax();
 public:
     Image();
     Image(int hauteur, int largeur);
@@ -64,9 +67,14 @@ public:
     void copier(Image& src);
     void init(int val);
     void normaliser();
+    void normaliser(MonDouble minSortie, MonDouble maxSortie);
     Image* reduire(int facteur_binning);
-    void minMaxPixel(int *l_min, int *c_min, int *l_max, int *c_max);
-    void maxPixel(int *l, int *c);
+    MonDouble valeurMin();
+    MonDouble valeurMax();
+    int posMinLigne();
+    int posMinColonne();
+    int posMaxLigne();
+    int posMaxColonne();
     void tracerDonut(int l_centre, int c_centre, double freq_min, double marge_int, double freq_max, double marge_ext);
     static Image* tracerFormeSoleil(int diametre);
 
