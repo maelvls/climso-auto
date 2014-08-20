@@ -461,290 +461,290 @@
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-arduino.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-arduino.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-arduino.o</buildTarget>
+				<buildTarget>src/climsoauto-arduino.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-arduino.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-arduino.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-arduino.obj</buildTarget>
+				<buildTarget>src/climsoauto-arduino.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-capture.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-capture.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-capture.moc.o</buildTarget>
+				<buildTarget>src/climsoauto-capture.moc.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-capture.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-capture.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-capture.moc.obj</buildTarget>
+				<buildTarget>src/climsoauto-capture.moc.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-capture.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-capture.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-capture.o</buildTarget>
+				<buildTarget>src/climsoauto-capture.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-capture.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-capture.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-capture.obj</buildTarget>
+				<buildTarget>src/climsoauto-capture.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-csbigcam.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-csbigcam.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-csbigcam.o</buildTarget>
+				<buildTarget>src/climsoauto-csbigcam.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-csbigcam.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-csbigcam.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-csbigcam.obj</buildTarget>
+				<buildTarget>src/climsoauto-csbigcam.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-csbigimg.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-csbigimg.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-csbigimg.o</buildTarget>
+				<buildTarget>src/climsoauto-csbigimg.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-csbigimg.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-csbigimg.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-csbigimg.obj</buildTarget>
+				<buildTarget>src/climsoauto-csbigimg.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-diametre_soleil.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-diametre_soleil.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-diametre_soleil.o</buildTarget>
+				<buildTarget>src/climsoauto-diametre_soleil.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-diametre_soleil.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-diametre_soleil.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-diametre_soleil.obj</buildTarget>
+				<buildTarget>src/climsoauto-diametre_soleil.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-exceptions.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-exceptions.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-exceptions.o</buildTarget>
+				<buildTarget>src/climsoauto-exceptions.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-exceptions.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-exceptions.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-exceptions.obj</buildTarget>
+				<buildTarget>src/climsoauto-exceptions.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-fenetreprincipale.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-fenetreprincipale.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-fenetreprincipale.moc.o</buildTarget>
+				<buildTarget>src/climsoauto-fenetreprincipale.moc.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-fenetreprincipale.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-fenetreprincipale.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-fenetreprincipale.moc.obj</buildTarget>
+				<buildTarget>src/climsoauto-fenetreprincipale.moc.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-fenetreprincipale.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-fenetreprincipale.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-fenetreprincipale.o</buildTarget>
+				<buildTarget>src/climsoauto-fenetreprincipale.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-fenetreprincipale.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-fenetreprincipale.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-fenetreprincipale.obj</buildTarget>
+				<buildTarget>src/climsoauto-fenetreprincipale.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-guidage.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-guidage.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-guidage.moc.o</buildTarget>
+				<buildTarget>src/climsoauto-guidage.moc.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-guidage.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-guidage.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-guidage.moc.obj</buildTarget>
+				<buildTarget>src/climsoauto-guidage.moc.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-guidage.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-guidage.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-guidage.o</buildTarget>
+				<buildTarget>src/climsoauto-guidage.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-guidage.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-guidage.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-guidage.obj</buildTarget>
+				<buildTarget>src/climsoauto-guidage.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-image.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-image.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-image.o</buildTarget>
+				<buildTarget>src/climsoauto-image.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-image.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-image.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-image.obj</buildTarget>
+				<buildTarget>src/climsoauto-image.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-interpol.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-interpol.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-interpol.o</buildTarget>
+				<buildTarget>src/climsoauto-interpol.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-interpol.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-interpol.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-interpol.obj</buildTarget>
+				<buildTarget>src/climsoauto-interpol.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-main_qt_gui.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-main_gui.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-main_qt_gui.o</buildTarget>
+				<buildTarget>src/climsoauto-main_gui.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-main_qt_gui.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-main_gui.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-main_qt_gui.obj</buildTarget>
+				<buildTarget>src/climsoauto-main_gui.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-parametres.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-parametres.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-parametres.moc.o</buildTarget>
+				<buildTarget>src/climsoauto-parametres.moc.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-parametres.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-parametres.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-parametres.moc.obj</buildTarget>
+				<buildTarget>src/climsoauto-parametres.moc.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-parametres.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-parametres.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-parametres.o</buildTarget>
+				<buildTarget>src/climsoauto-parametres.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-parametres.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-parametres.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-parametres.obj</buildTarget>
+				<buildTarget>src/climsoauto-parametres.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-widgetimage.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-widgetimage.moc.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-widgetimage.moc.o</buildTarget>
+				<buildTarget>src/climsoauto-widgetimage.moc.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-widgetimage.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-widgetimage.moc.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-widgetimage.moc.obj</buildTarget>
+				<buildTarget>src/climsoauto-widgetimage.moc.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-widgetimage.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-widgetimage.o" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-widgetimage.o</buildTarget>
+				<buildTarget>src/climsoauto-widgetimage.o</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
 			</target>
-			<target name="src/main_qt-widgetimage.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
+			<target name="src/climsoauto-widgetimage.obj" path="" targetID="org.eclipse.cdt.build.MakeTargetBuilder">
 				<buildCommand>make</buildCommand>
 				<buildArguments/>
-				<buildTarget>src/main_qt-widgetimage.obj</buildTarget>
+				<buildTarget>src/climsoauto-widgetimage.obj</buildTarget>
 				<stopOnError>true</stopOnError>
 				<useDefaultCommand>true</useDefaultCommand>
 				<runAllBuilders>false</runAllBuilders>
