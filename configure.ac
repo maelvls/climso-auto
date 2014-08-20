@@ -27,6 +27,8 @@ AM_INIT_AUTOMAKE([foreign subdir-objects])
 
 # Vérifie si la librairie Qt est présente
 AT_WITH_QT
+# Vérifie que la version de qt est > 4
+AT_REQUIRE_QT_VERSION(4)
 
 # Checks for programs.
 AC_PROG_CXX
