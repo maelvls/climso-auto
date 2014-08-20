@@ -20,14 +20,6 @@
  * 			on prévient et on arrête
  */
 
-/**
- * TODO:
- * 		- implémenter diam_soleil
- * ?? 	- pourquoi il y a des blocages de 8sec pendant la prise de vue
- * OK 	- ajout fichier config seuilBruit
- * ?? 	- SegFault quand le soleil est trop loin
- */
-
 
 #include "guidage.h"
 #include <QtCore/qmath.h>

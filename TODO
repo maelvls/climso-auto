@@ -1,6 +1,8 @@
 TODO
  Created on: 14 juin 2014
      Author: mael65
-
-	- implémenter la fonction correlation à travers convol.c
-	- 
+	
+	- implémenter diam_soleil dans le programme
+?? 	- pourquoi il y a des blocages de 8sec pendant la prise de vue
+OK 	- ajout fichier config seuilBruit
+?? 	- SegFault quand le soleil est trop loin
