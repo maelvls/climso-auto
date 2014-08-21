@@ -155,11 +155,11 @@ void FenetrePrincipale::modifierStatutArduino(EtatArduino etat) {
 		break;
 	case ARDUINO_CONNEXION_OFF:
 		ui->statutArduino->setPalette(paletteTexteRouge);
-		ui->statutArduino->setText("Arduino déconnecté (c'est la carte de contrôle des relais branchée en USB)");
+		ui->statutArduino->setText("Arduino déconnecté");
 		break;
 	case ARDUINO_FICHIER_INTROUV:
 		ui->statutArduino->setPalette(paletteTexteRouge);
-		ui->statutArduino->setText("Arduino introuvable (c'est la carte de contrôle des relais branchée en USB)");
+		ui->statutArduino->setText("Arduino introuvable");
 	}
 }
 
@@ -168,34 +168,46 @@ void FenetrePrincipale::modifierStatutArduino(EtatArduino etat) {
  * @param statut True pour guidage en marche
  */
 void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
+	ui->instructionsGuidage->setText("");
+	ui->instructionsDeplacementConsigne->setText("");
 	switch (statut) {
 	case GUIDAGE_MARCHE:
 		ui->statutGuidage->setPalette(paletteTexteVert);
 		ui->statutGuidage->setText("Guidage en marche");
+		ui->instructionsDeplacementConsigne->setText("N'utilisez pas le joystick pour bouger le Soleil. À la place, utilisez ces touches (ou les flèches du clavier).");
 		break;
 	case GUIDAGE_MARCHE_MAIS_BRUIT:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Pause: signal/bruit trop faible");
+		ui->instructionsGuidage->setText("Le soleil est trop peu visible. L'autoguidage attend que le signal/bruit remonte.");
 		break;
 	case GUIDAGE_BESOIN_POSITION:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: Pas de position du soleil");
+		ui->instructionsGuidage->setText("Aucune image n'a pu être effectuée, et donc aucune position courante n'est disponible.");
+		ui->instructionsDeplacementConsigne->setText("");
 		break;
 	case GUIDAGE_ARRET_BRUIT:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: signal/bruit trop faible");
+		ui->instructionsGuidage->setText("Le soleil était trop peu visible pendant trop longtemps (durée réglable dans menu > paramètres)");
+		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
 		break;
 	case GUIDAGE_ARRET_NORMAL:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: tout est normal");
+		ui->instructionsGuidage->setText("Utilisez le joystick pour centrer le Soleil puis appuyez sur 'Recentrer' et lancez l'autoguidage.");
+		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
 		break;
 	case GUIDAGE_ARRET_DIVERGE:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: guidage sans effet");
+		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
 		break;
 	case GUIDAGE_ARRET_PANNE:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: caméra ou arduino off");
+		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
 		break;
 
 	default:
@@ -208,10 +220,13 @@ void FenetrePrincipale::modifierStatutPosition(EtatPosition statut) {
 	case POSITION_COHERANTE:
 		ui->ratioSignalBruit->setPalette(paletteTexteVert);
 		ui->widgetPositionCourante->setPalette(paletteTexteVert);
+		ui->instructionsSignalBruit->setText("Le Soleil est suffisemment visible, la position courante est fiable.");
+
 		break;
 	case POSITION_INCOHERANTE:
 		ui->ratioSignalBruit->setPalette(paletteTexteRouge);
 		ui->widgetPositionCourante->setPalette(paletteTexteGris);
+		ui->instructionsSignalBruit->setText("Le Soleil est peu visible, la position courante n'est pas fiable.");
 		break;
 	default:
 		break;
