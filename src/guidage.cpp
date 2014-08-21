@@ -167,6 +167,10 @@ void Guidage::lancerGuidage() {
  * Demande d'arrêt du guidage
  */
 void Guidage::stopperGuidage() {
+	envoyerCmd(PIN_NORD, 1); // On remet à 0 les pins
+	envoyerCmd(PIN_SUD, 1);
+	envoyerCmd(PIN_EST, 1);
+	envoyerCmd(PIN_OUEST, 1);
 	if(etatGuidage != GUIDAGE_MARCHE) { // Une autre méthode a modifié etatGuidage
 		emit envoiEtatGuidage(etatGuidage);
 	} else {
@@ -279,15 +283,13 @@ void Guidage::guider() {
 	int l_decal_duree = qAbs(l_decal * gainVertical);
 	int c_decal_duree = qAbs(c_decal * gainHorizontal);
 
-	// La duree entre deux corrections ne doit pas depasser la durée entre
-	// deux séries de positions (tempsDepuisDernierGuidage ici)
+	// La duree entre deux corrections ne doit pas depasser la limite fixée
+	// dans le micro-code de l'arduino.
 	// NOTE: on évite les décalages > 5000ms
-	if (l_decal_duree > tempsDepuisDernierGuidage.elapsed()
-			|| l_decal_duree > DUREE_IMPULSION_MAX)
-		l_decal_duree = min(tempsDepuisDernierGuidage.elapsed(),DUREE_IMPULSION_MAX);
-	if (c_decal_duree > tempsDepuisDernierGuidage.elapsed()
-			|| c_decal_duree > DUREE_IMPULSION_MAX)
-		c_decal_duree = min(tempsDepuisDernierGuidage.elapsed(),DUREE_IMPULSION_MAX);
+	if (l_decal_duree > DUREE_IMPULSION_MAX)
+		l_decal_duree = DUREE_IMPULSION_MAX;
+	if (c_decal_duree > DUREE_IMPULSION_MAX)
+		c_decal_duree = DUREE_IMPULSION_MAX;
 
 	// Envoi des commandes
 
@@ -363,7 +365,9 @@ void Guidage::envoyerCmd(int pin, int duree) {
 		// l'arduino envoie des réponses aux commandes ; si on ne vide pas le buffer entrant,
 		// l'arduino va se mettre à bloquer (TX et RX allumés en permanance) donc on flush
 		arduino->Flush();
-		emit message("Envoi impulsion pin " + QString::number(pin) + " et duree "+ QString::number(duree));
+		if(duree > 0) {
+			emit message("Envoi impulsion pin " + QString::number(pin) + " et duree "+ QString::number(duree));
+		}
 	}
 }
 
