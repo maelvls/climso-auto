@@ -250,7 +250,7 @@ void Guidage::guider() {
 	 */
 	if(arretSiEloignement && decalage.length() > 4) { // Nécessite 5 décalages succéssifs
 		int n = decalage.length()-1; // On part de D(n), le décalage le plus récent
-		if(decalage.at(n) > 3
+		if(decalage.at(n) > 20
 			&& std::abs(decalage.at(n)-decalage.at(n-1)) >= std::abs(decalage.at(n-1) - decalage.at(n-2))
 			&& std::abs(decalage.at(n-1)-decalage.at(n-2)) >= std::abs(decalage.at(n-2) - decalage.at(n-3))
 			&& std::abs(decalage.at(n-2)-decalage.at(n-3)) >= std::abs(decalage.at(n-3) - decalage.at(n-4))
@@ -286,13 +286,14 @@ void Guidage::guider() {
 	// La duree entre deux corrections ne doit pas depasser la limite fixée
 	// dans le micro-code de l'arduino.
 	// NOTE: on évite les décalages > 5000ms
-	if (l_decal_duree > DUREE_IMPULSION_MAX)
-		l_decal_duree = DUREE_IMPULSION_MAX;
-	if (c_decal_duree > DUREE_IMPULSION_MAX)
-		c_decal_duree = DUREE_IMPULSION_MAX;
+	if (l_decal_duree > DUREE_IMPULSION_MAX) l_decal_duree = DUREE_IMPULSION_MAX;
+	if (c_decal_duree > DUREE_IMPULSION_MAX) c_decal_duree = DUREE_IMPULSION_MAX;
+
+
+	// Si la/les dernière commande est opposée à la nouvelle, on envoie
+	// d'abord une commande d'arrêt du pin concerné
 
 	// Envoi des commandes
-
 	envoyerCmd((l_decal * (orientVertiInversee?-1:1) > 0
 			? PIN_SUD	: PIN_NORD), l_decal_duree);
 	envoyerCmd((c_decal * (orientHorizInversee?-1:1) > 0
@@ -475,7 +476,7 @@ QStringList Guidage::chercherFichiersArduino() {
  */
 void Guidage::afficherImageSoleilEtReperes() {
 	emit imageSoleil(img);
-	if(etatAffichageRepereCourant) {
+	if(etatAffichageRepereCourant && signalbruit >= seuilSignalSurBruit) {
 		emit repereCourant(position_c.last()/img.width(),
 			position_l.last()/img.height(),((float)diametre)/img.width(),etatPosition);
 	}

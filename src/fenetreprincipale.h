@@ -36,10 +36,10 @@ private:
 public:
     explicit FenetrePrincipale(QWidget *parent = 0);
     ~FenetrePrincipale();
+    bool etatBoutonMarche;
 
 private slots:
     void on_lancerGuidage_clicked();
-    void on_stopperGuidage_clicked();
     void on_consigneHaut_clicked();
     void on_consigneBas_clicked();
     void on_consigneDroite_clicked();

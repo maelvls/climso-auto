@@ -104,6 +104,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     // Le mode de décalage rapide est par défaut
     ui->vitesseDecalageRapide->setChecked(false);
 
+    etatBoutonMarche = true; // True pour "Marche", false pour "Arrêt"
+
     // Pour capturer les touches directionnelles du clavier pour controler la consigne,
     // on met un filtre sur toutes les parties de l'interface, et on redéfinit la méthode
     // eventFilter() (voir plus bas)
@@ -133,14 +135,17 @@ void FenetrePrincipale::afficherMessage(QString msg) {
 }
 
 void FenetrePrincipale::modifierStatutCamera(EtatCamera etat) {
+
 	switch (etat) {
 		case CAMERA_CONNEXION_ON:
 			ui->statutCamera->setPalette(paletteTexteVert);
 			ui->statutCamera->setText("Caméra connectée");
+			ui->cadreGestionGuidage->setEnabled(true);
 			break;
 		case CAMERA_CONNEXION_OFF:
 			ui->statutCamera->setPalette(paletteTexteRouge);
 			ui->statutCamera->setText("Caméra déconnectée");
+			ui->cadreGestionGuidage->setEnabled(false);
 			break;
 		default:
 			break;
@@ -152,14 +157,17 @@ void FenetrePrincipale::modifierStatutArduino(EtatArduino etat) {
 	case ARDUINO_CONNEXION_ON:
 		ui->statutArduino->setPalette(paletteTexteVert);
 		ui->statutArduino->setText("Arduino connecté");
+		ui->cadreGestionGuidage->setEnabled(true);
 		break;
 	case ARDUINO_CONNEXION_OFF:
 		ui->statutArduino->setPalette(paletteTexteRouge);
 		ui->statutArduino->setText("Arduino déconnecté");
+		ui->cadreGestionGuidage->setEnabled(false);
 		break;
 	case ARDUINO_FICHIER_INTROUV:
 		ui->statutArduino->setPalette(paletteTexteRouge);
 		ui->statutArduino->setText("Arduino introuvable");
+		ui->cadreGestionGuidage->setEnabled(false);
 	}
 }
 
@@ -169,12 +177,17 @@ void FenetrePrincipale::modifierStatutArduino(EtatArduino etat) {
  */
 void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
 	ui->instructionsGuidage->setText("");
-	ui->instructionsDeplacementConsigne->setText("");
+	ui->cadreResetConsigne->setEnabled(true);
+	ui->cadreDeplacementConsigne->setEnabled(false);
+	ui->lancerGuidage->setText("Lancer le guidage");
 	switch (statut) {
 	case GUIDAGE_MARCHE:
 		ui->statutGuidage->setPalette(paletteTexteVert);
 		ui->statutGuidage->setText("Guidage en marche");
-		ui->instructionsDeplacementConsigne->setText("N'utilisez pas le joystick pour bouger le Soleil. À la place, utilisez ces touches (ou les flèches du clavier).");
+		ui->cadreResetConsigne->setEnabled(false);
+		ui->cadreDeplacementConsigne->setEnabled(true);
+		ui->instructionsGuidage->setText("L'autoguidage est en marche, il ne faut pas utiliser le joystick. Pour bouger le Soleil, déplacez la consigne.");
+		ui->lancerGuidage->setText("Arrêter le guidage");
 		break;
 	case GUIDAGE_MARCHE_MAIS_BRUIT:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
@@ -185,29 +198,24 @@ void FenetrePrincipale::modifierStatutGuidage(EtatGuidage statut) {
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: Pas de position du soleil");
 		ui->instructionsGuidage->setText("Aucune image n'a pu être effectuée, et donc aucune position courante n'est disponible.");
-		ui->instructionsDeplacementConsigne->setText("");
 		break;
 	case GUIDAGE_ARRET_BRUIT:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: signal/bruit trop faible");
 		ui->instructionsGuidage->setText("Le soleil était trop peu visible pendant trop longtemps (durée réglable dans menu > paramètres)");
-		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
 		break;
 	case GUIDAGE_ARRET_NORMAL:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: tout est normal");
-		ui->instructionsGuidage->setText("Utilisez le joystick pour centrer le Soleil puis appuyez sur 'Recentrer' et lancez l'autoguidage.");
-		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
+		ui->instructionsGuidage->setText("Pour démarrer : utilisez le joystick pour centrer le Soleil sur C1 puis appuyez sur 'Nouvelle pos. de consigne' et enfin sur 'Marche'.");
 		break;
 	case GUIDAGE_ARRET_DIVERGE:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: guidage sans effet");
-		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
 		break;
 	case GUIDAGE_ARRET_PANNE:
 		ui->statutGuidage->setPalette(paletteTexteRouge);
 		ui->statutGuidage->setText("Arrêt: caméra ou arduino off");
-		ui->instructionsDeplacementConsigne->setText("Utilisez le joystick pour bouger le Soleil.");
 		break;
 
 	default:
@@ -221,12 +229,15 @@ void FenetrePrincipale::modifierStatutPosition(EtatPosition statut) {
 		ui->ratioSignalBruit->setPalette(paletteTexteVert);
 		ui->widgetPositionCourante->setPalette(paletteTexteVert);
 		ui->instructionsSignalBruit->setText("Le Soleil est suffisemment visible, la position courante est fiable.");
-
+		ui->textePositionCourante->setText("Position courante du Soleil");
+		ui->textePositionCourante->setPalette(paletteTexteVert);
 		break;
 	case POSITION_INCOHERANTE:
 		ui->ratioSignalBruit->setPalette(paletteTexteRouge);
-		ui->widgetPositionCourante->setPalette(paletteTexteGris);
+		ui->widgetPositionCourante->setPalette(paletteTexteRouge);
 		ui->instructionsSignalBruit->setText("Le Soleil est peu visible, la position courante n'est pas fiable.");
+		ui->textePositionCourante->setText("Position courante du Soleil introuvable");
+		ui->textePositionCourante->setPalette(paletteTexteRouge);
 		break;
 	default:
 		break;
@@ -271,11 +282,16 @@ void FenetrePrincipale::on_consigneGauche_clicked() {
 	emit modificationConsigne(0,-1,(ui->vitesseDecalageLent->isChecked()));
 }
 void FenetrePrincipale::on_lancerGuidage_clicked() {
-    emit lancerGuidage();
+    if(etatBoutonMarche == true) {
+    	etatBoutonMarche = false;
+    	emit stopperGuidage();
+    }
+    else {
+    	etatBoutonMarche = true;
+		emit lancerGuidage();
+    }
 }
-void FenetrePrincipale::on_stopperGuidage_clicked() {
-	emit stopperGuidage();
-}
+
 void FenetrePrincipale::on_ouvrirParametres_triggered() {
 	emit demanderEnregistrementParametres();
 	Parametres fenetreParametres(this);

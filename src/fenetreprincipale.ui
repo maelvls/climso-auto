@@ -28,8 +28,8 @@
      <rect>
       <x>10</x>
       <y>820</y>
-      <width>681</width>
-      <height>51</height>
+      <width>361</width>
+      <height>61</height>
      </rect>
     </property>
     <property name="font">
@@ -84,17 +84,17 @@
        <pointsize>13</pointsize>
       </font>
      </property>
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="textePositionCourante">
       <property name="geometry">
        <rect>
         <x>50</x>
         <y>0</y>
-        <width>161</width>
+        <width>421</width>
         <height>31</height>
        </rect>
       </property>
       <property name="text">
-       <string>Position courante</string>
+       <string>Position courante du Soleil</string>
       </property>
      </widget>
      <widget class="QPushButton" name="afficherPositionCourante">
@@ -163,12 +163,12 @@
        <pointsize>13</pointsize>
       </font>
      </property>
-     <widget class="QLabel" name="label_2">
+     <widget class="QLabel" name="textePositionConsigne">
       <property name="geometry">
        <rect>
         <x>50</x>
         <y>0</y>
-        <width>181</width>
+        <width>401</width>
         <height>31</height>
        </rect>
       </property>
@@ -288,7 +288,7 @@
       <x>10</x>
       <y>540</y>
       <width>241</width>
-      <height>101</height>
+      <height>111</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -380,14 +380,14 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>60</y>
+       <y>70</y>
        <width>221</width>
        <height>41</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
+       <pointsize>10</pointsize>
       </font>
      </property>
      <property name="text">
@@ -398,13 +398,16 @@
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="frame">
+   <widget class="QFrame" name="cadreDeplacementConsigne">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
       <x>260</x>
       <y>540</y>
-      <width>221</width>
-      <height>271</height>
+      <width>201</width>
+      <height>141</height>
      </rect>
     </property>
     <property name="frameShape">
@@ -415,12 +418,12 @@
     </property>
     <widget class="QRadioButton" name="vitesseDecalageLent">
      <property name="enabled">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>160</y>
+       <x>0</x>
+       <y>50</y>
        <width>61</width>
        <height>21</height>
       </rect>
@@ -435,8 +438,8 @@
     <widget class="QRadioButton" name="vitesseDecalageRapide">
      <property name="geometry">
       <rect>
-       <x>150</x>
-       <y>140</y>
+       <x>0</x>
+       <y>30</y>
        <width>71</width>
        <height>21</height>
       </rect>
@@ -453,7 +456,7 @@
       <rect>
        <x>70</x>
        <y>30</y>
-       <width>81</width>
+       <width>61</width>
        <height>51</height>
       </rect>
      </property>
@@ -499,7 +502,7 @@
     <widget class="QToolButton" name="consigneDroite">
      <property name="geometry">
       <rect>
-       <x>150</x>
+       <x>130</x>
        <y>80</y>
        <width>61</width>
        <height>51</height>
@@ -530,8 +533,8 @@
      <property name="geometry">
       <rect>
        <x>70</x>
-       <y>130</y>
-       <width>81</width>
+       <y>80</y>
+       <width>61</width>
        <height>51</height>
       </rect>
      </property>
@@ -550,34 +553,12 @@
       <enum>Qt::DownArrow</enum>
      </property>
     </widget>
-    <widget class="QToolButton" name="consigneReset">
-     <property name="geometry">
-      <rect>
-       <x>70</x>
-       <y>80</y>
-       <width>81</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>13</pointsize>
-       <italic>false</italic>
-      </font>
-     </property>
-     <property name="toolTip">
-      <string>Rencentre la position de consigne sur la position courante du Soleil. On utilise souvent ce bouton lorsqu'on a centré le Soleil par joystick et juste avant de lancer l'autoguidage.</string>
-     </property>
-     <property name="text">
-      <string>Recentrer</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="label_6">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>0</y>
-       <width>201</width>
+       <width>171</width>
        <height>31</height>
       </rect>
      </property>
@@ -590,43 +571,17 @@
       </font>
      </property>
      <property name="text">
-      <string>2. Déplacer la consigne</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="instructionsDeplacementConsigne">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>190</y>
-       <width>211</width>
-       <height>81</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="wordWrap">
-      <bool>true</bool>
-     </property>
-    </widget>
-    <widget class="Line" name="line">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>180</y>
-       <width>201</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
+      <string>Déplacer consigne</string>
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="frame_2">
+   <widget class="QFrame" name="cadreGestionGuidage">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>490</x>
+      <x>470</x>
       <y>540</y>
       <width>201</width>
       <height>271</height>
@@ -643,7 +598,7 @@
       <rect>
        <x>10</x>
        <y>0</y>
-       <width>201</width>
+       <width>171</width>
        <height>31</height>
       </rect>
      </property>
@@ -656,7 +611,7 @@
       </font>
      </property>
      <property name="text">
-      <string>3. Gestion autoguidage</string>
+      <string>Gestion autoguidage</string>
      </property>
     </widget>
     <widget class="QLabel" name="statutGuidage">
@@ -686,9 +641,9 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>80</y>
-       <width>91</width>
-       <height>51</height>
+       <y>90</y>
+       <width>181</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
@@ -697,7 +652,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Marche</string>
+      <string>Lancer le guidage</string>
      </property>
      <property name="autoDefault">
       <bool>false</bool>
@@ -709,31 +664,13 @@
       <bool>false</bool>
      </property>
     </widget>
-    <widget class="QPushButton" name="stopperGuidage">
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>80</y>
-       <width>91</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="font">
-      <font>
-       <pointsize>13</pointsize>
-      </font>
-     </property>
-     <property name="text">
-      <string>Arrêt</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="instructionsGuidage">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>140</y>
        <width>181</width>
-       <height>121</height>
+       <height>131</height>
       </rect>
      </property>
      <property name="text">
@@ -757,7 +694,7 @@
      </property>
     </widget>
    </widget>
-   <widget class="QFrame" name="precisionPosition_2">
+   <widget class="QFrame" name="cadreReglageDiametre">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -805,7 +742,7 @@
        <x>10</x>
        <y>30</y>
        <width>221</width>
-       <height>61</height>
+       <height>51</height>
       </rect>
      </property>
      <property name="text">
@@ -819,7 +756,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>100</y>
+       <y>90</y>
        <width>131</width>
        <height>21</height>
       </rect>
@@ -832,7 +769,7 @@
      <property name="geometry">
       <rect>
        <x>150</x>
-       <y>100</y>
+       <y>90</y>
        <width>51</width>
        <height>20</height>
       </rect>
@@ -847,15 +784,15 @@
     <widget class="QPushButton" name="chercherDiametre">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>20</x>
        <y>120</y>
-       <width>221</width>
+       <width>201</width>
        <height>21</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>11</pointsize>
+       <pointsize>10</pointsize>
       </font>
      </property>
      <property name="text">
@@ -866,7 +803,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>90</y>
+       <y>80</y>
        <width>221</width>
        <height>16</height>
       </rect>
@@ -879,9 +816,9 @@
      <property name="geometry">
       <rect>
        <x>210</x>
-       <y>100</y>
+       <y>90</y>
        <width>21</width>
-       <height>16</height>
+       <height>21</height>
       </rect>
      </property>
      <property name="text">
@@ -892,6 +829,85 @@
      </property>
     </widget>
    </widget>
+   <widget class="QFrame" name="cadreResetConsigne">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>690</y>
+      <width>201</width>
+      <height>121</height>
+     </rect>
+    </property>
+    <property name="frameShape">
+     <enum>QFrame::Box</enum>
+    </property>
+    <property name="frameShadow">
+     <enum>QFrame::Raised</enum>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="midLineWidth">
+     <number>0</number>
+    </property>
+    <widget class="QToolButton" name="consigneReset">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>10</y>
+       <width>181</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+       <italic>false</italic>
+      </font>
+     </property>
+     <property name="toolTip">
+      <string>Rencentre la position de consigne sur la position courante du Soleil. On utilise souvent ce bouton lorsqu'on a centré le Soleil par joystick et juste avant de lancer l'autoguidage.</string>
+     </property>
+     <property name="text">
+      <string>Nouvelle pos. de consigne</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="testePrecision_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>50</y>
+       <width>181</width>
+       <height>61</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>ATTENTION: à n'utiliser qu'après un recentrage du Soleil via le joystick</string>
+     </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QLabel" name="testePrecision_5">
+    <property name="geometry">
+     <rect>
+      <x>380</x>
+      <y>820</y>
+      <width>311</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>ATTENTION: Utilisation du joystick = autoguidage éteint. Ne pas utiliser le joystick lorsque l'autoguidage est en marche.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
@@ -899,7 +915,7 @@
      <x>0</x>
      <y>0</y>
      <width>700</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuMenu">
