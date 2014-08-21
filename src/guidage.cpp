@@ -167,10 +167,10 @@ void Guidage::lancerGuidage() {
  * Demande d'arrêt du guidage
  */
 void Guidage::stopperGuidage() {
-	envoyerCmd(PIN_NORD, 1); // On remet à 0 les pins
-	envoyerCmd(PIN_SUD, 1);
-	envoyerCmd(PIN_EST, 1);
-	envoyerCmd(PIN_OUEST, 1);
+	envoyerCmd(PIN_NORD, 0); // On remet à 0 les pins
+	envoyerCmd(PIN_SUD, 0);
+	envoyerCmd(PIN_EST, 0);
+	envoyerCmd(PIN_OUEST, 0);
 	if(etatGuidage != GUIDAGE_MARCHE) { // Une autre méthode a modifié etatGuidage
 		emit envoiEtatGuidage(etatGuidage);
 	} else {
