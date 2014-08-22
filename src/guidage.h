@@ -30,8 +30,8 @@
 // Paramètres "en dur" ne pouvant être modifiés que par la recompilation :
 #define PIN_NORD			12 // Numéro du pin sur lequel seront envoyées les commandes Nord
 #define	PIN_SUD				11 // Numéro du pin sur lequel seront envoyées les commandes Sud
-#define	PIN_EST				10 // Numéro du pin sur lequel seront envoyées les commandes Est
-#define PIN_OUEST			9 // Numéro du pin sur lequel seront envoyées les commandes Ouest
+#define	PIN_EST				9 // Numéro du pin sur lequel seront envoyées les commandes Est
+#define PIN_OUEST			10 // Numéro du pin sur lequel seront envoyées les commandes Ouest
 #define POSITIONS_PAR_GUIDAGE	2 	// Nombre de positions (donc de captures) nécessaires avant de guider
 #define PERIODE_ENTRE_CONNEXIONS	1000 // Période entre deux vérifications de connexion à l'arduino
 #define DUREE_IMPULSION_MAX		10000 // en ms
