@@ -90,7 +90,7 @@ Guidage::Guidage() {
 	// Ouverture du fichier de log (format : dd-MM-yyyy_hh-mm pos_x pos_y consigne_x consigne_y)
 	// Il y a une entrée dans le log à chaque modification de la consigne
 	fichier_log = new QFile("log_"+QDateTime::currentDateTimeUtc().toString("dd-MM-yyyy")+".log");
-	fichier_log->open(QIODevice::Text | QIODevice::ReadWrite);
+	fichier_log->open(QIODevice::Text | QIODevice::ReadWrite | QIODevice::Append);
 	logPositions = new QTextStream(fichier_log);
 }
 
