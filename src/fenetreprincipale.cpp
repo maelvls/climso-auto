@@ -124,6 +124,8 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
 	ui->messages->installEventFilter(this);
 	ui->vitesseDecalageLent->installEventFilter(this);
 	ui->vitesseDecalageRapide->installEventFilter(this);
+
+	std::cout << "Programme lancé" << endl;
 }
 
 FenetrePrincipale::~FenetrePrincipale() {
