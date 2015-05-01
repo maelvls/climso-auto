@@ -8,7 +8,7 @@
 
 AC_PREREQ([2.61])
 AC_INIT([climso-auto], [0.2], [mael.valais@irap.omp.eu])
-
+AM_MAINTAINER_MODE([disable]) # pour éviter que ./configure ne demande aclocal-1.14
 # La fonction qui permet de vérifier que (pour un mac) le framework sbigudrv existe
 m4_include([m4/check_framework.m4])
 m4_include([m4/autotroll.m4])
