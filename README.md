@@ -3,7 +3,7 @@ climso-auto
 [![Build Status](https://travis-ci.org/maelvalais/climso-auto.svg?branch=master)](https://travis-ci.org/maelvalais/climso-auto)
 Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool (autoconf 2.61 minimum) et donc il sera nécessaire d'utiliser `autoreconf`. Voir section "pour compiler".
 
-La __TODO__ list et les problèmes à régler sont sur la page [`Issues`](https://github.com/mael65/climso-auto/issues). Les informations pour compiler et réparer l'arduino ou la caméra sont dans le [`Wiki`](https://github.com/mael65/climso-auto/wiki).
+La __TODO__ list et les problèmes à régler sont sur la page [`Issues`](https://github.com/maelvalais/climso-auto/issues). Les informations pour compiler et réparer l'arduino ou la caméra sont dans le [`Wiki`](https://github.com/maelvalais/climso-auto/wiki).
 
 # Le système climso-auto
 [Site du système CLIMSO](http://www.climso.fr/index.php/fr/climso/le-projet) pour comprendre le contexte du projet vis à vis des équipements CLIMSO.
