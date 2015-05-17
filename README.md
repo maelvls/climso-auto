@@ -248,6 +248,6 @@ Les logs sont disponibles dans le dossier `$HOME` (`~/`).
 Le format est `dd-MM-yyyy_hh-mm pos_x pos_y consigne_x consigne_y`.
 Les unités correspondent à la position dans l'image renvoyée par le capteur (l'origine est en haut à gauche et non en bas à gauche).
 
-Exemple d'utilisation de ces données avec le service plot.ly : https://plot.ly/~maelvalais/12/variations-entre-les-positions-reelles-et-les-positions-de-consigne-en-pointille/
+Exemple d'utilisation de ces données avec le service plot.ly : https://plot.ly/~maelvalais/16
 
 ![graph_29_08_2014](https://cloud.githubusercontent.com/assets/2195781/7670689/10f2f556-fcaf-11e4-80d7-27c1f5c319ac.png)
