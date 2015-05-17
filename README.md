@@ -239,3 +239,11 @@ En ssh, il suffit (si on a bien suivi https://help.github.com/articles/generatin
 
 ### Passer en mode debug
 ./configure CPPFLAGS="-DDEBUG=1"
+
+# Les logs d'autoguidage
+À chaque fois que le logiciel est ouvert, il ouvre un fichier au format `log_dd-MM-yyyy.log`. 
+Si le logiciel est fermé puis réouvert durant la même journée, le log continuera dans le même fichier.
+Les logs sont disponibles dans le dossier `$HOME` (`~/`).
+
+Le format est `dd-MM-yyyy_hh-mm pos_x pos_y consigne_x consigne_y`.
+Les unités correspondent à la position dans l'image renvoyée par le capteur (l'origine est en haut à gauche et non en bas à gauche).
