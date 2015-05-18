@@ -1,7 +1,8 @@
 climso-auto
 ===========
 [![Build Status](https://travis-ci.org/maelvalais/climso-auto.svg?branch=master)](https://travis-ci.org/maelvalais/climso-auto)
-Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareil CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool (autoconf 2.61 minimum) et donc il sera nécessaire d'utiliser `autoreconf`. Voir section "pour compiler".
+
+Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équatoriale des appareils CLIMSO au Pic du Midi. Ce dépôt correspond à la partie développement du projet, et n'est pas en mode distribution : le code doit être associé aux outils autotool (autoconf 2.61 minimum) et donc il sera nécessaire d'utiliser `autoreconf`. Voir section "pour compiler".
 
 La __TODO__ list et les problèmes à régler sont sur la page [`Issues`](https://github.com/maelvalais/climso-auto/issues). Les informations pour compiler et réparer l'arduino ou la caméra sont dans le [`Wiki`](https://github.com/maelvalais/climso-auto/wiki).
 
@@ -11,7 +12,7 @@ La __TODO__ list et les problèmes à régler sont sur la page [`Issues`](https:
 ## Schéma du système climso-auto
 ![Schéma simplifié du système](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.jpg)
 
-La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallonge USB par UTP.
+La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallonge USB par UTP (connecteurs de type RJ-45).
 
 ## Schéma de fonctionnement de l'algorithme de guidage
 ![Schéma de fonctionnement de l'algorithme de détection du soleil](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.jpg)
