@@ -8,7 +8,6 @@
  *  climso-auto
  *
  *  Created by Maël Valais on 18/04/2014.
- *  2014, Maël Valais
  *
  *  D'après arduino-serial-lib -- simple library for reading/writing serial ports
  * 	2006-2013, Tod E. Kurt, http://todbot.com/blog/

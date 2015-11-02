@@ -3,7 +3,6 @@
  *  climso-auto
  *
  *  Created by Maël Valais on 22/04/2014.
- *  Copyright (c) 2014 Maël Valais. All rights reserved.
  *
  *	Cette classe apporte les exceptions possible pour la classe Image.
  *

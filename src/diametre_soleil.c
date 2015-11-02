@@ -3,7 +3,6 @@
 //  climso-auto
 //
 //  Created by Maël Valais on 14/04/2014.
-//  Copyright (c) 2014 Maël Valais. All rights reserved.
 //
 //  Historique des modifs
 //  2014_04_15 LK : indiquees par "/**/" dans la marge
