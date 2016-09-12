@@ -249,12 +249,15 @@ void FenetrePrincipale::modifierStatutPosition(EtatPosition statut) {
 void FenetrePrincipale::modifierStatutConsigne(EtatConsigne statut) {
 	switch (statut) {
 	case CONSIGNE_OK:
+		paletteTexteJaune.setColor(QPalette::Window, Qt::black);
 		ui->widgetPositionConsigne->setPalette(paletteTexteJaune);
 		break;
 	case CONSIGNE_LOIN:
+		paletteTexteJaune.setColor(QPalette::Window, Qt::black);
 		ui->widgetPositionConsigne->setPalette(paletteTexteJaune);
 		break;
 	default:
+		paletteTexteJaune.setColor(QPalette::Window, Qt::black);
 		ui->widgetPositionConsigne->setPalette(paletteTexteJaune);
 		break;
 	}
