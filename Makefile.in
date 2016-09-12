@@ -159,7 +159,9 @@ am_climsoauto_OBJECTS = src/climsoauto-arduino.$(OBJEXT) \
 	src/climsoauto-capture.moc.$(OBJEXT) \
 	src/climsoauto-diametre_soleil.$(OBJEXT) \
 	src/climsoauto-parametres.$(OBJEXT) \
-	src/climsoauto-parametres.moc.$(OBJEXT)
+	src/climsoauto-parametres.moc.$(OBJEXT) \
+	src/climsoauto-camera_sbig.$(OBJEXT) \
+	src/climsoauto-camera_fake.$(OBJEXT)
 climsoauto_OBJECTS = $(am_climsoauto_OBJECTS)
 am__DEPENDENCIES_1 =
 climsoauto_DEPENDENCIES = $(am__DEPENDENCIES_1)
@@ -280,7 +282,7 @@ CPP = @CPP@
 CPPFLAGS = @CPPFLAGS@
 CXX = @CXX@
 CXXDEPMODE = @CXXDEPMODE@
-CXXFLAGS = -g -O2
+CXXFLAGS = -g -O0
 CYGPATH_W = @CYGPATH_W@
 DEFS = @DEFS@
 DEPDIR = @DEPDIR@
@@ -413,6 +415,7 @@ climsoauto_SOURCES = \
 	src/widgetimage.cpp src/widgetimage.moc.cpp \
 	src/capture.cpp src/capture.moc.cpp src/diametre_soleil.c\
 	src/parametres.cpp src/parametres.moc.cpp\
+	src/camera_sbig.cpp src/camera_fake.cpp\
 	\
 	src/arduino.h\
 	src/interpol.h\
@@ -424,6 +427,7 @@ climsoauto_SOURCES = \
 	src/widgetimage.h\
 	src/capture.h src/diametre_soleil.h\
 	src/parametres.h\
+	src/camera_sbig.h src/camera_fake.h\
 	\
 	src/fenetreprincipale.ui
 
@@ -577,6 +581,10 @@ src/climsoauto-parametres.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
 src/climsoauto-parametres.moc.$(OBJEXT): src/$(am__dirstamp) \
 	src/$(DEPDIR)/$(am__dirstamp)
+src/climsoauto-camera_sbig.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
+src/climsoauto-camera_fake.$(OBJEXT): src/$(am__dirstamp) \
+	src/$(DEPDIR)/$(am__dirstamp)
 
 climsoauto$(EXEEXT): $(climsoauto_OBJECTS) $(climsoauto_DEPENDENCIES) $(EXTRA_climsoauto_DEPENDENCIES) 
 	@rm -f climsoauto$(EXEEXT)
@@ -590,6 +598,8 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/climsoauto-arduino.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/climsoauto-camera_fake.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/climsoauto-camera_sbig.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/climsoauto-capture.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/climsoauto-capture.moc.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@src/$(DEPDIR)/climsoauto-csbigcam.Po@am__quote@
@@ -891,6 +901,34 @@ src/climsoauto-parametres.moc.obj: src/parametres.moc.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/parametres.moc.cpp' object='src/climsoauto-parametres.moc.obj' libtool=no @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -c -o src/climsoauto-parametres.moc.obj `if test -f 'src/parametres.moc.cpp'; then $(CYGPATH_W) 'src/parametres.moc.cpp'; else $(CYGPATH_W) '$(srcdir)/src/parametres.moc.cpp'; fi`
+
+src/climsoauto-camera_sbig.o: src/camera_sbig.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -MT src/climsoauto-camera_sbig.o -MD -MP -MF src/$(DEPDIR)/climsoauto-camera_sbig.Tpo -c -o src/climsoauto-camera_sbig.o `test -f 'src/camera_sbig.cpp' || echo '$(srcdir)/'`src/camera_sbig.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/climsoauto-camera_sbig.Tpo src/$(DEPDIR)/climsoauto-camera_sbig.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/camera_sbig.cpp' object='src/climsoauto-camera_sbig.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -c -o src/climsoauto-camera_sbig.o `test -f 'src/camera_sbig.cpp' || echo '$(srcdir)/'`src/camera_sbig.cpp
+
+src/climsoauto-camera_sbig.obj: src/camera_sbig.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -MT src/climsoauto-camera_sbig.obj -MD -MP -MF src/$(DEPDIR)/climsoauto-camera_sbig.Tpo -c -o src/climsoauto-camera_sbig.obj `if test -f 'src/camera_sbig.cpp'; then $(CYGPATH_W) 'src/camera_sbig.cpp'; else $(CYGPATH_W) '$(srcdir)/src/camera_sbig.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/climsoauto-camera_sbig.Tpo src/$(DEPDIR)/climsoauto-camera_sbig.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/camera_sbig.cpp' object='src/climsoauto-camera_sbig.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -c -o src/climsoauto-camera_sbig.obj `if test -f 'src/camera_sbig.cpp'; then $(CYGPATH_W) 'src/camera_sbig.cpp'; else $(CYGPATH_W) '$(srcdir)/src/camera_sbig.cpp'; fi`
+
+src/climsoauto-camera_fake.o: src/camera_fake.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -MT src/climsoauto-camera_fake.o -MD -MP -MF src/$(DEPDIR)/climsoauto-camera_fake.Tpo -c -o src/climsoauto-camera_fake.o `test -f 'src/camera_fake.cpp' || echo '$(srcdir)/'`src/camera_fake.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/climsoauto-camera_fake.Tpo src/$(DEPDIR)/climsoauto-camera_fake.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/camera_fake.cpp' object='src/climsoauto-camera_fake.o' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -c -o src/climsoauto-camera_fake.o `test -f 'src/camera_fake.cpp' || echo '$(srcdir)/'`src/camera_fake.cpp
+
+src/climsoauto-camera_fake.obj: src/camera_fake.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -MT src/climsoauto-camera_fake.obj -MD -MP -MF src/$(DEPDIR)/climsoauto-camera_fake.Tpo -c -o src/climsoauto-camera_fake.obj `if test -f 'src/camera_fake.cpp'; then $(CYGPATH_W) 'src/camera_fake.cpp'; else $(CYGPATH_W) '$(srcdir)/src/camera_fake.cpp'; fi`
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/$(DEPDIR)/climsoauto-camera_fake.Tpo src/$(DEPDIR)/climsoauto-camera_fake.Po
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/camera_fake.cpp' object='src/climsoauto-camera_fake.obj' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(climsoauto_CPPFLAGS) $(CPPFLAGS) $(climsoauto_CXXFLAGS) $(CXXFLAGS) -c -o src/climsoauto-camera_fake.obj `if test -f 'src/camera_fake.cpp'; then $(CYGPATH_W) 'src/camera_fake.cpp'; else $(CYGPATH_W) '$(srcdir)/src/camera_fake.cpp'; fi`
 
 ID: $(am__tagged_files)
 	$(am__define_uniq_tagged_files); mkid -fID $$unique

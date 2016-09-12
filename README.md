@@ -252,3 +252,13 @@ Les unités correspondent à la position dans l'image renvoyée par le capteur (
 Exemple d'utilisation de ces données avec le service plot.ly : https://plot.ly/~maelvalais/16
 
 ![graph_29_08_2014](https://cloud.githubusercontent.com/assets/2195781/7670689/10f2f556-fcaf-11e4-80d7-27c1f5c319ac.png)
+
+__Utiliser le programme sans caméra SBIG__
+Pour débugguer, j'ai créé un moyen d'afficher une image fixe à la place de la
+caméra. Pour faire ça, (pour le moment) il faut compiler avec
+
+    ./configure CPPFLAGS=-DFAKE_CAMERA
+ou bien directement
+    make CPPFLAGS=-DFAKE_CAMERA
+et il faut avoir l'image `fake.tif` au même endroit que l'endroit où
+`./climsoauto` est lancé. Cette image est fournie à la racine du projet.

@@ -37,6 +37,7 @@ climsoauto_SOURCES=\
 	src/widgetimage.cpp src/widgetimage.moc.cpp \
 	src/capture.cpp src/capture.moc.cpp src/diametre_soleil.c\
 	src/parametres.cpp src/parametres.moc.cpp\
+	src/camera_sbig.cpp src/camera_fake.cpp\
 	\
 	src/arduino.h\
 	src/interpol.h\
@@ -48,13 +49,14 @@ climsoauto_SOURCES=\
 	src/widgetimage.h\
 	src/capture.h src/diametre_soleil.h\
 	src/parametres.h\
+	src/camera_sbig.h src/camera_fake.h\
 	\
 	src/fenetreprincipale.ui
 
 # -Ox correspond au mode d'optimisation. -O2 est une bonne optimisation.
 # -O0 désactive l'optimisation  	
 CFLAGS=-g --pedantic -Wall -std=c99 -O2
-CXXFLAGS=-g -O2
+CXXFLAGS=-g -O0
 climsoauto_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
 climsoauto_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
 climsoauto_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
