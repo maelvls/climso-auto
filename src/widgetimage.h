@@ -13,9 +13,14 @@
 
 #ifndef WIDGETIMAGE_H_
 #define WIDGETIMAGE_H_
-
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QtWidgets>
+#else
 #include <QtGui/QLabel>
 #include <QtGui/QPainter>
+#endif
+
 #include "guidage.h"
 
 class WidgetImage: public QLabel {

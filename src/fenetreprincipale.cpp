@@ -23,6 +23,7 @@
 #include "fenetreprincipale.h"
 #include "fenetreprincipale_ui.h"
 #include "parametres.h"
+#include <QtGlobal>
 #include <QtCore/QTextCodec>
 
 /*
@@ -47,8 +48,10 @@ FenetrePrincipale::FenetrePrincipale(QWidget *parent) :
     paletteTexteJaune.setColor(QPalette::WindowText, Qt::yellow);
     paletteTexteGris.setColor(QPalette::WindowText, Qt::gray);
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
     // Faire en sorte que les chaines statiques "C-strings" soient considérées comme UTF-8
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+#endif
 
     guidage = new Guidage; // ATTENTION: pas d'envoi de signaux dans le constructeur !
     guidage->moveToThread(&threadGuidage);

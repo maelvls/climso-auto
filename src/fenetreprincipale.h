@@ -1,10 +1,16 @@
 #ifndef FENETREPRINCIPALE_H
 #define FENETREPRINCIPALE_H
 
-#include <QtGui/QMainWindow>
 #include <QtCore/QThread>
+#include <QtGlobal>
+#if QT_VERSION >= QT_VERSION_CHECK(5, 0, 0)
+#include <QtWidgets>
+#else
+#include <QtGui/QMainWindow>
 #include <QtGui/QPainter>
 #include <QtGui/QKeyEvent>
+#endif
+
 #include "csbigcam.h"
 #include "csbigimg.h"
 #include "image.h"
