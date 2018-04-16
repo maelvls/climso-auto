@@ -38,7 +38,8 @@
 #endif
 
 #if TARGET == ENV_MACOSX
-	#include <SBIGUDrv/sbigudrv.h>
+    // #include <SBIGUDrv/sbigudrv.h>
+	#include "sbigudrv.h"
 	#ifdef _DEBUG
 			#define _DEBUG		1
 	#endif
