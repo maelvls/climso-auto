@@ -100,7 +100,7 @@ __Lors de la tâche de compilation de l'executable :__
 # Pour comprendre le projet
 Pour maintenir le projet, il est nécessaire de comprendre la structure du projet que j'ai choisi.
 
-![Schéma de structure du projet](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/structure-fichiers.png)
+![Schéma de structure du projet](https://www.lucidchart.com/publicSegments/view/795720b2-12ec-44ea-a44e-11928676a4d7/image.png)
 
 ### Lire les fichiers très commentés
 Ces fichiers sont très commentés, les lire permettra sans doute de comprendre la structure choisie :
