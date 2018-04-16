@@ -10,6 +10,7 @@
 CameraSBIG::CameraSBIG() {
 	cam = NULL;
 	img = NULL;
+	cout << "Camera: using images from the SBIG camera. Use FAKE_TIF for giving a image instead.\n";
 }
 
 CameraSBIG::~CameraSBIG() {

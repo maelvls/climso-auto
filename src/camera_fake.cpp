@@ -7,10 +7,13 @@
 //
 
 #include "camera_fake.h" // Soit camera_sbig.cpp, soit camera_fake.cpp; sinon conflit de symboles
-
+// #include "stdlib.h" // for getenv()
 
 CameraFake::CameraFake() {
-	img = Image::depuisTiff("fake.tif");
+	const char* dir = getenv("FAKE_TIF");
+	dir = dir ? dir : "fake.tif";
+	cout << "Camera: using fake images from file '" << dir << "' (from environement variable FAKE_TIF)\n";
+	img = Image::depuisTiff(dir);
 }
 
 CameraFake::~CameraFake() {
