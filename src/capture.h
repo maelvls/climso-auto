@@ -50,6 +50,8 @@ class Capture: public QObject {
 private:
 	QTimer timerConnexion;
 	QTimer timerProchaineCapture;
+
+// The FAKE_CAMERA can be turned on using ./configure --enable-fake-camera
 #ifdef FAKE_CAMERA
 	CameraFake camera;
 #else
