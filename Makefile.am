@@ -55,8 +55,8 @@ climsoauto_SOURCES=\
 
 # -Ox correspond au mode d'optimisation. -O2 est une bonne optimisation.
 # -O0 désactive l'optimisation  	
-CFLAGS=-g --pedantic -Wall -std=c99 -O2
-CXXFLAGS=-g -O0
+# CFLAGS=-g --pedantic -Wall -std=c99 -O2
+# CXXFLAGS=-g -O0
 climsoauto_CXXFLAGS = $(QT_CXXFLAGS) $(AM_CXXFLAGS)
 climsoauto_CPPFLAGS = $(QT_CPPFLAGS) $(AM_CPPFLAGS)
 climsoauto_LDFLAGS  = $(QT_LDFLAGS) $(LDFLAGS)
