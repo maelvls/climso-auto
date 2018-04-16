@@ -1,14 +1,17 @@
 language: cpp
 compiler: gcc
 before_install:
+    - "true"
+
 install:
     - sudo apt-get update -qq
-    - sudo apt-get install -qq g++ gcc libtiff4 qt4-dev-tools qt4-qmake libusb-1.0-0
-    - wget ftp://ftp.sbig.com/pub/devsw/LinuxDevKit.tar.gz
-    - tar -xzf LinuxDevKit.tar.gz
+    - sudo apt-get install -qq g++ gcc libtiff5-dev qt4-dev-tools qt4-qmake libusb-1.0-0
+    - wget ftp://ftp.sbig.com/pub/devsw/LinuxDevKit.tar.gz -O - | tar -xz
     - sudo cp LinuxDevKit/x86/c/lib64/libsbigudrv.so /usr/local/lib
     - sudo cp LinuxDevKit/x86/c/testapp/sbigudrv.h /usr/local/include
-    - ./configure && make
+    - ./configure --enable-fake-camera
+    - make
+
 script:
     - echo "Bravo"
 notifications:
