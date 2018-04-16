@@ -49,7 +49,7 @@ Capture::Capture() {
 	ref_lapl = NULL;
 	position_c = position_l = 0;
 	diametre = 0;
-	QObject::connect(&timerProchaineCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()));
+	QObject::connect(&timerProchaineCapture,SIGNAL(timeout()),this,SLOT(captureEtPosition()), Qt::DirectConnection);
 	timerProchaineCapture.setSingleShot(true);
 	timerProchaineCapture.setInterval(DUREE_ENTRE_CAPTURES);
 	qRegisterMetaType<EtatCamera>("EtatCamera");

@@ -82,7 +82,7 @@ Guidage::Guidage() {
 	etatConsigne = CONSIGNE_NON_INITIALISEE;
 	etatPosition = POSITION_NON_INITIALISEE;
 
-	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,SLOT(connexionParTimer()));
+	QObject::connect(&timerConnexionAuto, SIGNAL(timeout()), this,SLOT(connexionParTimer()), Qt::DirectConnection);
 	connexionParTimer(); // lancer les connexions au démarrage
 	timerConnexionAuto.start();
 	chargerParametres();

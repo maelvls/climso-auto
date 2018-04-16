@@ -34,6 +34,7 @@
 
 #include "diametre_soleil.h"
 #include "image.h"
+#include "config.h"
 
 // ACTIVER LE DEBUG: ./configure CPPFLAGS="-DDEBUG=1" (si autotools) ou gcc -DDEBUG=1 sinon
 #ifdef DEBUG // Il faut activer la macro DEBUG pour enregistrer les images capturées et traitées en .tif
