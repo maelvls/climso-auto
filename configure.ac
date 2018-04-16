@@ -28,14 +28,13 @@ AC_CONFIG_AUX_DIR([config])
 # subdir-objects permet de garder les .o dans leurs dossiers respectifs
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 
+# Checks for programs.
+AC_PROG_CXX
+
 # Vérifie si la librairie Qt est présente
 AT_WITH_QT
 # Vérifie que la version de qt est > 4
 AT_REQUIRE_QT_VERSION(4)
-
-# Checks for programs.
-AC_PROG_CXX
-AC_PROG_CC
 
 # Checks for GNU/Linux libraries or Mac OS frameworks
 AC_CHECK_LIB([m], [main],[],[exit])
@@ -57,25 +56,21 @@ AC_CHECK_LIB([sbigudrv], [main], [], [
 ])
 
 # Checks for header files.
-AC_CHECK_HEADERS([fcntl.h stdint.h stdlib.h string.h sys/time.h termios.h unistd.h tiffio.h])
+AC_CHECK_HEADERS([tiffio.h])
 
-# Checks for typedefs, structures, and compiler characteristics.
-AC_HEADER_STDBOOL # AC_CHECK_HEADER_STDBOOL ne fonctionne pas en 2.61 (vient de la 2.69)
-AC_C_INLINE
-AC_TYPE_SIZE_T
-AC_TYPE_UINT16_T
-AC_TYPE_UINT32_T
-AC_TYPE_UINT8_T
-
-# Checks for library functions.
-AC_FUNC_MALLOC
-AC_FUNC_MKTIME
-AC_CHECK_FUNCS([floor getcwd isascii memset sqrt strchr strstr])
+AC_ARG_ENABLE([fake-camera],
+    AS_HELP_STRING([--enable-fake-camera], [Enable use of a fake camera instead
+	of the SBIG camera. A fixed image is read from the 'fake.tif' file.]),
+	[
+		if test x$enableval = xyes; then
+			AC_DEFINE([FAKE_CAMERA], [], [Use fake camera data instead of SBIG camera; it uses a fixed image 'fake.tif'])
+		fi
+	])
 
 # Fichiers Makefile à configurer ; ici, on en utilise qu'un seul mais en général, on
 # en utilise pour chaque sous-dossier source (on aurait pu mettre src/Makefile).
 # A chaque emplacement où on ajoute un Makefile, il faut avoir un Makefile.am.
-AC_CONFIG_FILES(Makefile:Makefile.in) 
+AC_CONFIG_FILES(Makefile:Makefile.in)
 AC_OUTPUT
 
 # ATTENTION: il faut toujours une ligne "vide" à la fin de ce fichier
