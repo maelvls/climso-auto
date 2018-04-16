@@ -11,6 +11,9 @@ AC_INIT([climso-auto], [0.2], [mael.valais@gmail.com])
 AM_MAINTAINER_MODE([disable]) # pour éviter que ./configure ne demande aclocal-1.14
 # La fonction qui permet de vérifier que (pour un mac) le framework sbigudrv existe
 m4_include([m4/check_framework.m4])
+# autotroll allows us to check for the presence of qmake and qt. I only
+# use autotroll.m4 (I re-wrote the autotroll.mk part).
+# Source of autotroll.m4: https://github.com/tsuna/autotroll
 m4_include([m4/autotroll.m4])
 
 # Vérifie que le ./configure agira bien sur les fichiers du projet ; simple test
