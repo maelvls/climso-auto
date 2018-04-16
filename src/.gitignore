@@ -1,2 +1,4 @@
 /.DS_Store
 /.deps
+*.moc.cpp
+*_ui.h

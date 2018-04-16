@@ -39,3 +39,12 @@
 /.cproject
 /.project
 /images-de-correlation
+climsoauto
+stamp-h1
+src/.dirstamp
+*.log
+climso-auto.xcodeproj
+aclocal.m4
+.vscode
+*.tar.gz
+config.h
