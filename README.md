@@ -257,8 +257,7 @@ __Utiliser le programme sans caméra SBIG__
 Pour débugguer, j'ai créé un moyen d'afficher une image fixe à la place de la
 caméra. Pour faire ça, (pour le moment) il faut compiler avec
 
-    ./configure CPPFLAGS=-DFAKE_CAMERA
-ou bien directement
-    make CPPFLAGS=-DFAKE_CAMERA
+    ./configure --enable-fake-camera
+
 et il faut avoir l'image `fake.tif` au même endroit que l'endroit où
 `./climsoauto` est lancé. Cette image est fournie à la racine du projet.
