@@ -7,15 +7,15 @@ Dépot du projet de logiciel d'automatisation de l'ajustement de la monture équ
 La __TODO__ list et les problèmes à régler sont sur la page [`Issues`](https://github.com/maelvalais/climso-auto/issues). Les informations pour compiler et réparer l'arduino ou la caméra sont dans le [`Wiki`](https://github.com/maelvalais/climso-auto/wiki).
 
 # Le système climso-auto
-[Site du système CLIMSO](http://www.climso.fr/index.php/fr/climso/le-projet) pour comprendre le contexte du projet vis à vis des équipements CLIMSO.
+[Site du système CLIMSO](http://www.climso.fr) pour comprendre le contexte du projet vis à vis des équipements CLIMSO.
 
 ## Schéma du système climso-auto
-![Schéma simplifié du système](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/arch-materielle.jpg)
+![Schéma simplifié du système](https://www.lucidchart.com/publicSegments/view/ab5ff04c-3c5d-4edf-ad8d-92ecd17014cc/image.png)
 
 La lisaison entre la caméra SBIG et l'ordinateur se fait à travers une rallonge USB par UTP (connecteurs de type RJ-45).
 
 ## Schéma de fonctionnement de l'algorithme de guidage
-![Schéma de fonctionnement de l'algorithme de détection du soleil](https://dl.dropboxusercontent.com/u/41771140/Image-climso-auto/algo-guidage.jpg)
+![Schéma de fonctionnement de l'algorithme de détection du soleil](https://www.lucidchart.com/publicSegments/view/8babf635-867d-48bf-8817-9ce9b87060fc/image.png)
 
 Le schéma ne présente pas l'interface utilisateur ni les intéractions possibles.
 Il s'agissait du programme de test lors des premières phases du projet.
