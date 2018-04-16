@@ -55,8 +55,13 @@ AC_CHECK_LIB([sbigudrv], [main], [], [
 	])
 ])
 
-# Checks for header files.
-AC_CHECK_HEADERS([tiffio.h])
+# Checks for header files. I use gl_ABSOLUTE_HEADER instead of AC_CHECK_HEADERS
+# because macOS + qmake. THe issue comes from the fact that qmake adds
+# '-isysroot' to the QT_CFLAGS which in turn prevents the search of headers
+# in standard paths like /usr/local/include. Using gl_ABSOLUTE_HEADER, I make
+# sure to add -I/path/found to CPPFLAGS.
+gl_ABSOLUTE_HEADER(tiffio.h)
+CPPFLAGS="-I`dirname $gl_cv_absolute_tiffio_h` $CPPFLAGS"
 
 AC_ARG_ENABLE([fake-camera],
     AS_HELP_STRING([--enable-fake-camera], [Enable use of a fake camera instead
