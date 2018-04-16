@@ -239,7 +239,7 @@ dnl Memo: AC_ARG_WITH(package, help-string, [if-given], [if-not-given])
     dnl (
     darwin*)
       at_darwin=yes
-      at_qmake_args='-spec macx-g++'
+      at_qmake_args='-spec macx-clang'
       ;;
   esac
   AC_MSG_RESULT([$at_darwin])
